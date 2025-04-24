@@ -1,10 +1,17 @@
+//react
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
+
+//components
+import { InformativeTitle } from "../components/InformativeTitle";
 
 export default function AvailabilitySchedulesScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Horarios Disponibles</Text>
+      <InformativeTitle
+        title={"Cochabamba - La Paz"}
+        description={"12 fechas disponibles"}
+      />
     </View>
   );
 }
@@ -12,13 +19,7 @@ export default function AvailabilitySchedulesScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
   },
 });
