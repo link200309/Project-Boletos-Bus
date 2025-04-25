@@ -1,15 +1,18 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 
+//components
+import { GenericContainer } from "../components/GenericContainer";
+
 export default function ReserveScreen({ navigation }) {
   return (
-    <View style={styles.container}>
+    <GenericContainer style={styles.container}>
       <Text style={styles.title}>Bienvenido</Text>
       <Button
         title="Ver disponibilidad"
         onPress={() => navigation.navigate("AvailabilitySchedules")}
       />
-    </View>
+    </GenericContainer>
   );
 }
 
@@ -18,7 +21,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
   },
   title: {
     fontSize: 24,
