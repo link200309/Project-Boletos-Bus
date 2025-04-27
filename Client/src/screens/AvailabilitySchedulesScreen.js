@@ -6,6 +6,7 @@ import { View, Text, Button, StyleSheet } from "react-native";
 import { InformativeTitle } from "../components/InformativeTitle";
 import { AvailableDates } from "../components/AvailableDates";
 import { GenericContainer } from "../components/GenericContainer";
+import { BlobBg } from "../components/BlobBg";
 
 export default function AvailabilitySchedulesScreen({ navigation }) {
   const [travels, setTravels] = useState([]);
@@ -57,7 +58,7 @@ export default function AvailabilitySchedulesScreen({ navigation }) {
         title={"Cochabamba - La Paz"}
         description={"12 fechas disponibles"}
       />
-
+      <BlobBg />
       <View style={styles.containerDates}>
         {travels.map((travel) => {
           const fecha = new Date(travel.fecha_salida);
@@ -69,13 +70,11 @@ export default function AvailabilitySchedulesScreen({ navigation }) {
           diaSemana = diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1);
           const mes = fecha.toLocaleDateString("es-ES", { month: "long" });
           return (
-            <>
-              <AvailableDates
-                day={diaSemana}
-                date={dia + " " + mes + " " + año}
-                key={travel.id_viaje}
-              />
-            </>
+            <AvailableDates
+              day={diaSemana}
+              date={dia + " " + mes + " " + año}
+              key={travel.id_viaje}
+            />
           );
         })}
       </View>

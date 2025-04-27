@@ -19,12 +19,14 @@
     "react-native": "0.76.9",
     "react-native-gesture-handler": "^2.25.0",
     "react-native-safe-area-context": "^5.4.0",
-    "react-native-screens": "^4.10.0"
+    "react-native-screens": "^4.10.0",
+    "react-native-svg": "^15.11.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "eslint": "^8.57.0",
-    "eslint-config-expo": "~8.0.1"
+    "eslint-config-expo": "~8.0.1",
+    "react-native-svg-transformer": "^1.5.0"
   },
   "private": true
 }
