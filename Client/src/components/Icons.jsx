@@ -26,3 +26,6 @@ export const LogoIcon = (props) => (
 export const CalendarIcon = (props) => (
   <FontAwesome name="calendar" size={24} color="black" {...props} />
 );
+export const Location = (props) => (
+  <MaterialCommunityIcons name="map-marker-outline" size={24} color="black" {...props}/>
+);

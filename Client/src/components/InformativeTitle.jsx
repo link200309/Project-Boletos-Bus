@@ -13,12 +13,15 @@ const Style = StyleSheet.create({
   container: {
     backgroundColor: "#4318D1",
     borderRadius: 20,
-    width: 370,
+    width: "100%",
+    maxWidth: 400,
     padding: 20,
   },
   text: {
     color: "white",
     fontSize: 25,
+    fontWeight: "bold",
+    marginBottom: 4,
   },
   description: {
     color: "white",
