@@ -89,6 +89,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   containerDates: {
-    marginTop: 20,
+    marginTop: 15,
   },
 });
