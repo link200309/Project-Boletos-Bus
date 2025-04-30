@@ -14,12 +14,9 @@ export default function ReserveScreen({ navigation }) {
         description={"Encuentra los mejores viajes"}
       />
       <BlobBg />
-      <TripSearchForm />
-      <Text style={styles.title}>mmmm</Text>
-      <Button 
-        title="Ver disponibilidad"
-        onPress={() => navigation.navigate("AvailabilitySchedules")}
-      />
+      <View style={styles.form}>
+        <TripSearchForm navigation={navigation} />
+      </View>
     </GenericContainer>
   );
 }
@@ -30,9 +27,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+  form: {
+    marginTop: 15,
   },
 });

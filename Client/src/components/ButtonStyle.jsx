@@ -6,7 +6,7 @@ export const ButtonStyle = ({
   variant = 1,
   onClick,
   width = "100%",
-  height = 50,
+  height = 40,
 }) => {
   const buttonStyle = [
     styles.button,
