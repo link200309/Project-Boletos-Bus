@@ -10,7 +10,7 @@ export const TripSearchForm = () => {
       <CitySelector label="origen" />
       <CitySelector label="destino" />
       <SeatCounter />
-      <ButtonStyle />
+      <ButtonStyle text={"Buscar viajes disponibles"} variant={1} height={50}/>
     </View>
   );
 };
