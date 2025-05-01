@@ -1,18 +1,13 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import SettingsScreen from "../../screens/SettingsScreen";
-import { LogoIcon } from "../../components/Icons";
+import { commonHeaderOptions } from "../../components/HeaderLogoTitle";
 
 const Stack = createStackNavigator();
 
 export default function SettingsStack() {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: "#7B5DDF" },
-        headerTitle: "RataBus",
-      }}
-    >
+    <Stack.Navigator screenOptions={commonHeaderOptions}>
       <Stack.Screen
         name="MySettings"
         component={SettingsScreen}

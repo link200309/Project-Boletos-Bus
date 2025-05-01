@@ -21,7 +21,6 @@ export default function TabNavigator() {
           } else if (route.name === "SettingsTab") {
             iconName = focused ? "settings" : "settings-outline";
           }
-
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         headerShown: false,
@@ -34,6 +33,7 @@ export default function TabNavigator() {
           tabBarLabel: "Inicio",
         }}
       />
+
       <Tab.Screen
         name="MyReservationsTab"
         component={MyReservationsStack}
@@ -41,6 +41,7 @@ export default function TabNavigator() {
           tabBarLabel: "Reservas",
         }}
       />
+
       <Tab.Screen
         name="SettingsTab"
         component={SettingsStack}
