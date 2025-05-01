@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import RNPickerSelect from "react-native-picker-select"; // Asegúrate de importar RNPickerSelect
-import { Location } from "./Icons"; // Asegúrate de que la ruta sea correcta
+import { Location } from "../../../components/Icons"; // Asegúrate de que la ruta sea correcta
 
 export const CitySelector = ({ label }) => {
   const placeholder = {
@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
     borderColor: "#E6E8FF",
     borderRadius: 20,
     backgroundColor: "#F8F9FF",
-    
   },
   icon: {
     marginVertical: 10,
