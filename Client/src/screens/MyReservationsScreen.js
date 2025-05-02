@@ -69,8 +69,10 @@ export default function MyReservationsScreen() {
   };
 
   return (
-    <GenericContainer style={styles.container}>
-      <BlobBg />
+    <GenericContainer style={styles.container} scroll={false}>
+      <View style={StyleSheet.absoluteFill}>
+          <BlobBg />
+      </View>
       <FlatList
         data={trips}
         keyExtractor={(item) => item.id.toString()}
