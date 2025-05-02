@@ -14,7 +14,7 @@ export const TripSearchForm = ({ navigation }) => {
         text={"Buscar viajes disponibles"}
         variant={1}
         height={50}
-        onClick={() => navigation.navigate("AvailabilitySchedules")}
+        onClick={() => navigation.navigate("AvailabilityDates")}
       />
     </View>
   );

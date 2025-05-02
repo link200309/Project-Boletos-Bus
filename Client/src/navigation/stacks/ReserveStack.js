@@ -1,6 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import ReserveScreen from "../../screens/Reserve/ReserveScreen";
+import AvailabilityDatesScreen from "../../screens/AvailabilitySchedules/AvailabilityDatesScreen";
 import AvailabilitySchedulesScreen from "../../screens/AvailabilitySchedules/AvailabilitySchedulesScreen";
 import { commonHeaderOptions } from "../../components/HeaderLogoTitle";
 
@@ -15,11 +16,22 @@ export default function ReserveStack() {
         options={{ title: "Inicio" }}
       />
       <Stack.Screen
+        name="AvailabilityDates"
+        component={AvailabilityDatesScreen}
+        options={{
+          title: "Disponibilidad",
+          headerTitle: "Fechas disponibles",
+          headerTitleStyle: {
+            fontSize: 20,
+          },
+        }}
+      />
+      <Stack.Screen
         name="AvailabilitySchedules"
         component={AvailabilitySchedulesScreen}
         options={{
           title: "Disponibilidad",
-          headerTitle: "Fechas disponibles",
+          headerTitle: "Horarios disponibles",
           headerTitleStyle: {
             fontSize: 20,
           },
