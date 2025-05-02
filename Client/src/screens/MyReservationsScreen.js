@@ -10,7 +10,7 @@ import {
 
 import TripCard from "../components/TripCard";
 import { GenericContainer } from "../components/GenericContainer";
-import { BlobBg } from "../components/BlobBg";
+import { BlobBg } from "../components/Background/BlobBg";
 
 const initialTrips = [
   {
@@ -70,19 +70,15 @@ export default function MyReservationsScreen() {
 
   return (
     <GenericContainer style={styles.container} scroll={false}>
+      <BlobBg />
       <View style={StyleSheet.absoluteFill}>
-          <BlobBg />
       </View>
       <FlatList
         data={trips}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
-          <TripCard
-            trip={item}
-            onEdit={handleEdit}
-            onCancel={confirmCancel}
-          />
+          <TripCard trip={item} onEdit={handleEdit} onCancel={confirmCancel} />
         )}
       />
 
