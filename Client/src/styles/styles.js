@@ -7,21 +7,32 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
   },
-  header: {
-    fontSize: 18,
+  Default: {
+    fontSize: 25,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: colors.white,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
     color: colors.primary,
   },
+  travelInfoContainer: {
+    backgroundColor: colors.primary,
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 15,
+  },
   travelInfo: {
-    marginBottom: 20,
-    padding: 10,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 5,
+    marginBottom: 10,
   },
   travelText: {
     fontSize: 14,
+    color: '#fff',
   },
   sectionTitle: {
     fontSize: 16,
@@ -32,7 +43,7 @@ const styles = StyleSheet.create({
   },
   passengerCount: {
     marginBottom: 15,
-    color: '#666',
+    color: '#fff',
   },
   passengerSection: {
     marginBottom: 20,
@@ -47,6 +58,9 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 5,
     fontSize: 14,
+  },
+  asterisks: {
+    color: 'red',
   },
   input: {
     height: 40,
@@ -146,8 +160,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
-
-  // Estilos para las pestañas
+  summaryContainer: {
+    backgroundColor: colors.primary,
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  summaryText: {
+    color: colors.white,
+    fontSize: 14,
+    textAlign: 'center',
+  },
   tabsContainer: {
     flexDirection: 'row',
     borderBottomWidth: 1,
@@ -160,22 +183,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 2,
     borderBottomColor: 'transparent',
-    backgroundColor: '#f5f5f5', // Fondo claro para pestañas inactivas
   },
   activeTab: {
-    backgroundColor: '#fff', // Fondo blanco para la pestaña activa
     borderBottomColor: colors.primary,
   },
   tabText: {
+    fontSize: 16,
     color: '#666',
-    fontWeight: 'bold',
   },
   activeTabText: {
     color: colors.primary,
+    fontWeight: 'bold',
   },
   tabContent: {
     paddingVertical: 10,
-    minHeight: 200, // Ajustar según el contenido
+    minHeight: 200,
   },
 });
 
