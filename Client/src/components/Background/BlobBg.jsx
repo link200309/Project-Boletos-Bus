@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
-import Blob1 from "../../assets/svgs/blob/blob1.svg";
+import Blob1 from "../../../assets/svgs/blob/blob1.svg";
 
 export const BlobBg = () => {
   return (

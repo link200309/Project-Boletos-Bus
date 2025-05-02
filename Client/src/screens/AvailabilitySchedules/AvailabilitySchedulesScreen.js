@@ -1,12 +1,11 @@
 //react
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
 
 //components
-import { InformativeTitle } from "../components/InformativeTitle";
-import { AvailableDates } from "../components/AvailableDates";
-import { GenericContainer } from "../components/GenericContainer";
-import { BlobBg } from "../components/BlobBg";
+import { InformativeTitle } from "../../components/InformativeTitle";
+import { GenericContainer } from "../../components/GenericContainer";
+import { BlobBg } from "../../components/Background/BlobBg";
+import { ListAvailableDates } from "./components/ListAvailableDates";
 
 export default function AvailabilitySchedulesScreen({ navigation }) {
   const [travels, setTravels] = useState([]);
@@ -53,42 +52,13 @@ export default function AvailabilitySchedulesScreen({ navigation }) {
   }, []);
 
   return (
-    <GenericContainer style={styles.container}>
+    <GenericContainer>
       <InformativeTitle
         title={"Cochabamba - La Paz"}
         description={"12 fechas disponibles"}
       />
       <BlobBg />
-      <View style={styles.containerDates}>
-        {travels.map((travel) => {
-          const fecha = new Date(travel.fecha_salida);
-          const dia = fecha.getDate();
-          const año = fecha.getFullYear();
-          let diaSemana = fecha.toLocaleDateString("es-ES", {
-            weekday: "long",
-          });
-          diaSemana = diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1);
-          const mes = fecha.toLocaleDateString("es-ES", { month: "long" });
-          return (
-            <AvailableDates
-              day={diaSemana}
-              date={dia + " " + mes + " " + año}
-              key={travel.id_viaje}
-            />
-          );
-        })}
-      </View>
+      <ListAvailableDates travels={travels} />
     </GenericContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 20,
-  },
-  containerDates: {
-    marginTop: 15,
-  },
-});

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 
 //icons
-import { CalendarIcon } from "../components/Icons";
+import { CalendarIcon } from "../../../components/Icons";
 
 export const AvailableDates = ({ day, date }) => {
   return (

@@ -12,7 +12,9 @@ export const GenericContainer = ({ children, style }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#F0F3FF",
-    padding: 10,
     flexGrow: 1,
+    flex: 1,
+    alignItems: "center",
+    padding: 20,
   },
 });

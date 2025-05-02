@@ -1,21 +1,22 @@
+//React
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
+//Components
+import { GenericContainer } from "../components/GenericContainer";
+
 export default function MyReservationsScreen() {
   return (
-    <View style={styles.container}>
+    <GenericContainer style={styles.container}>
       <Text style={styles.title}>Mis Reservas</Text>
       <Text style={styles.description}>Historial de reservas</Text>
-    </View>
+    </GenericContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
   },
   title: {
     fontSize: 24,

@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import ReserveScreen from "../../screens/Reserve/ReserveScreen";
-import AvailabilitySchedulesScreen from "../../screens/AvailabilitySchedulesScreen";
+import AvailabilitySchedulesScreen from "../../screens/AvailabilitySchedules/AvailabilitySchedulesScreen";
 import { commonHeaderOptions } from "../../components/HeaderLogoTitle";
 
 const Stack = createStackNavigator();

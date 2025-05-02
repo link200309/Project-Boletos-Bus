@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { CitySelector } from "./CitySelector";
-import { ButtonStyle } from "../../../components/ButtonStyle";
+import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { SeatCounter } from "./SeatCounter";
 
 export const TripSearchForm = ({ navigation }) => {
