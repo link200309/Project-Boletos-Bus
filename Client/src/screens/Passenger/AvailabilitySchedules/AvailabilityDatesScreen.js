@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from "react";
 
 //components
-import { InformativeTitle } from "../../components/InformativeTitle";
-import { GenericContainer } from "../../components/GenericContainer";
-import { BlobBg } from "../../components/Background/BlobBg";
+import { InformativeTitle } from "../../../components/InformativeTitle";
+import { GenericContainer } from "../../../components/GenericContainer";
+import { BlobBg } from "../../../components/Background/BlobBg";
 import { ListAvailableDates } from "./components/ListAvailableDates";
 
 export default function AvailabilityDatesScreen({ navigation }) {
@@ -42,7 +42,7 @@ export default function AvailabilityDatesScreen({ navigation }) {
         camino: "Carretera nueva",
       },
     },
-    
+
     {
       id_viaje: 3,
       fecha_salida: "2025-04-25",
@@ -55,7 +55,7 @@ export default function AvailabilityDatesScreen({ navigation }) {
         parada_intermedia: "Ironcollo",
         destino: "La Paz",
         distancia: "480 km",
-        tiempo_estimado: 6.30,
+        tiempo_estimado: 6.3,
         camino: "Ruta nacional 1",
       },
     },

@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 //components
-import { GenericContainer } from "../../components/GenericContainer";
-import { InformativeTitle } from "../../components/InformativeTitle";
-import { BlobBg } from "../../components//Background/BlobBg";
+import { GenericContainer } from "../../../components/GenericContainer";
+import { InformativeTitle } from "../../../components/InformativeTitle";
+import { BlobBg } from "../../../components/Background/BlobBg";
 import { TripSearchForm } from "./components/TripSearchForm";
 
 export default function ReserveScreen({ navigation }) {
