@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
+    width: 350
   },
   route: {
     fontSize: 16,

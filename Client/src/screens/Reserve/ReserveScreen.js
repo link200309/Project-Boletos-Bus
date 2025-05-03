@@ -3,12 +3,12 @@ import { View, Text, Button, StyleSheet } from "react-native";
 //components
 import { GenericContainer } from "../../components/GenericContainer";
 import { InformativeTitle } from "../../components/InformativeTitle";
-import { BlobBg } from "../../components/BlobBg";
+import { BlobBg } from "../../components//Background/BlobBg";
 import { TripSearchForm } from "./components/TripSearchForm";
 
 export default function ReserveScreen({ navigation }) {
   return (
-    <GenericContainer style={styles.container}>
+    <GenericContainer>
       <InformativeTitle
         title={"Seleccione un origen y destino"}
         description={"Encuentra los mejores viajes"}
@@ -22,11 +22,6 @@ export default function ReserveScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 20,
-  },
   form: {
     marginTop: 15,
   },

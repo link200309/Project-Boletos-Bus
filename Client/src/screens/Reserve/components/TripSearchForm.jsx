@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { CitySelector } from "./CitySelector";
-import { ButtonStyle } from "../../../components/ButtonStyle";
+import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { SeatCounter } from "./SeatCounter";
 
 export const TripSearchForm = ({ navigation }) => {
@@ -14,7 +14,7 @@ export const TripSearchForm = ({ navigation }) => {
         text={"Buscar viajes disponibles"}
         variant={1}
         height={50}
-        onClick={() => navigation.navigate("AvailabilitySchedules")}
+        onClick={() => navigation.navigate("AvailabilityDates")}
       />
     </View>
   );

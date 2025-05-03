@@ -17,9 +17,10 @@ export const GenericContainer = ({ children, style, scroll = false }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#F0F3FF",
+    flexGrow: 1,
     flex: 1,
-    position: "relative", // clave para absolute
-    overflow: "hidden",   // asegura que el blob no sobresalga feo
+    alignItems: "center",
+    padding: 20,
   },
 });
 
