@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 //Components
-import { GenericContainer } from "../components/GenericContainer";
+import { GenericContainer } from "../../components/GenericContainer";
 
 export default function SettingsScreen() {
   return (

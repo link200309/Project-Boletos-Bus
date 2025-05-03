@@ -8,9 +8,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import TripCard from "../components/TripCard";
-import { GenericContainer } from "../components/GenericContainer";
-import { BlobBg } from "../components/Background/BlobBg";
+import TripCard from "./components/TripCard";
+import { GenericContainer } from "../../../components/GenericContainer";
+import { BlobBg } from "../../../components/Background/BlobBg";
 
 const initialTrips = [
   {
@@ -71,8 +71,7 @@ export default function MyReservationsScreen() {
   return (
     <GenericContainer style={styles.container} scroll={false}>
       <BlobBg />
-      <View style={StyleSheet.absoluteFill}>
-      </View>
+      <View style={StyleSheet.absoluteFill}></View>
       <FlatList
         data={trips}
         keyExtractor={(item) => item.id.toString()}

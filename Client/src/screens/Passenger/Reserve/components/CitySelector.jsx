@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
-import { Location } from "../../../components/Icons";
+import { Location } from "../../../../components/Icons";
 
 export const CitySelector = ({ label }) => {
   const placeholder = {
