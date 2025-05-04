@@ -11,7 +11,9 @@ export const ButtonText = ({ text, onClick }) => {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "bold",
+    color: "#4318D1",
+    textAlign: "center",
   },
 });

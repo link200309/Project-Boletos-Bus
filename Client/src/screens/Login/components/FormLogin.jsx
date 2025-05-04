@@ -12,6 +12,10 @@ export const FormLogin = () => {
 
       <ButtonStyle text="Iniciar sesión" />
       <ButtonText text="¿Olvidaste tu contraseña?" />
+      <View style={styles.registerMessage}>
+        <Text style={styles.textRegisterMessage}>¿No tienes cuenta?</Text>
+        <ButtonText text="Regístrate" />
+      </View>
     </View>
   );
 };
@@ -35,5 +39,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
     elevation: 10,
+  },
+  registerMessage: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  textRegisterMessage: {
+    color: "#999",
+    fontSize: 14,
+    marginRight: 5,
   },
 });
