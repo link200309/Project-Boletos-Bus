@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import ReserveStack from "./stacks/ReserveStack";
 import MyReservationsStack from "./stacks/MyReservationsStack";
 import SettingsStack from "./stacks/SettingsStack";
+import Login from "../screens/Login/Login";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,7 +29,8 @@ export default function TabNavigator() {
     >
       <Tab.Screen
         name="ReserveTab"
-        component={ReserveStack}
+        //component={Login}
+         component={ReserveStack}
         options={{
           tabBarLabel: "Inicio",
         }}

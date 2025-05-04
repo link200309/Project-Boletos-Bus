@@ -2,9 +2,9 @@
 import { useRoute } from "@react-navigation/native";
 
 //components
-import { InformativeTitle } from "../../components/InformativeTitle";
-import { GenericContainer } from "../../components/GenericContainer";
-import { BlobBg } from "../../components/Background/BlobBg";
+import { InformativeTitle } from "../../../components/InformativeTitle";
+import { GenericContainer } from "../../../components/GenericContainer";
+import { BlobBg } from "../../../components/Background/BlobBg";
 import { ListAvailableSchedules } from "./components/ListAvailableSchedules";
 
 export default AvailabilitySchedulesScreen = ({ navigation }) => {
