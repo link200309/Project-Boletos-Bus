@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E6E8FF",
     borderRadius: 20,
-    backgroundColor: "#F8F9FF",
+    backgroundColor: "#F3F4F9",
     height: 60,
   },
   pressable: {

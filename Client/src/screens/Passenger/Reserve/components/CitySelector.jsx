@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     color: "#4318D1",
     fontWeight: "bold",
     marginBottom: 8,
+    fontSize: 14,
   },
   dropdownContainer: {
     flexDirection: "row",
@@ -50,8 +51,8 @@ const styles = StyleSheet.create({
     width: "100%",
     borderWidth: 1,
     borderColor: "#E6E8FF",
-    borderRadius: 20,
-    backgroundColor: "#F8F9FF",
+    borderRadius: 15,
+    backgroundColor: "#F3F4F9",
   },
   icon: {
     marginVertical: 10,

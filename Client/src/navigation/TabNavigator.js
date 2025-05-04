@@ -29,8 +29,8 @@ export default function TabNavigator() {
     >
       <Tab.Screen
         name="ReserveTab"
-        //component={Login}
-         component={ReserveStack}
+        component={Login}
+        // component={ReserveStack}
         options={{
           tabBarLabel: "Inicio",
         }}
