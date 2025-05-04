@@ -1,10 +1,11 @@
 import React from "react";
 import { View, StyleSheet, Image } from "react-native";
+import { GenericContainer } from "../../components/GenericContainer";
 import { FormLogin } from "./components/FormLogin";
 
 export default function Login() {
   return (
-    <View style={styles.container}>
+    <GenericContainer style={styles.container}>
       <View style={styles.logoContainer}>
         <Image
           source={require("../../../assets/logo.png")}
@@ -21,7 +22,7 @@ export default function Login() {
       <View style={styles.formContainer}>
         <FormLogin />
       </View>
-    </View>
+    </GenericContainer>
   );
 }
 
@@ -30,7 +31,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#320D7D",
+    backgroundColor: "#2B0B94",
+    padding: 0,
   },
   logoContainer: {
     paddingTop: 20,
