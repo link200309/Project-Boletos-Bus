@@ -1,5 +1,6 @@
 //react
 import { useRoute } from "@react-navigation/native";
+import { View } from "react-native";
 
 //components
 import { InformativeTitle } from "../../../components/InformativeTitle";
