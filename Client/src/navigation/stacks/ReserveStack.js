@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ReserveScreen from "../../screens/Passenger/Reserve/ReserveScreen";
 import AvailabilityDatesScreen from "../../screens/Passenger/AvailabilitySchedules/AvailabilityDatesScreen";
 import AvailabilitySchedulesScreen from "../../screens/Passenger/AvailabilitySchedules/AvailabilitySchedulesScreen";
-import { commonHeaderOptions } from "../../components/HeaderLogoTitle";
+import { commonHeaderOptions } from "../../components/Style/HeaderLogoTitle";
 
 const Stack = createStackNavigator();
 

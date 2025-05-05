@@ -1,27 +1,24 @@
 import React from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 export const GenericContainer = ({ children, style, scroll = false }) => {
-  const Container = scroll ? ScrollView : View;
+  if (scroll) {
+    return (
+      <ScrollView contentContainerStyle={[styles.container, style]}>
+        {children}
+      </ScrollView>
+    );
+  }
 
-  return (
-    <Container
-      contentContainerStyle={scroll ? [styles.container, style] : undefined}
-      style={!scroll ? [styles.container, style] : undefined}
-    >
-      {children}
-    </Container>
-  );
+  return <View style={[styles.container, style]}>{children}</View>;
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F0F3FF",
     flexGrow: 1,
     flex: 1,
     alignItems: "center",
-    paddingHorizontal: 20,
+    padding: 20,
     paddingTop: 30,
-    paddingBottom: 20,
   },
 });

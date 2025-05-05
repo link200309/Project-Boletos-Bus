@@ -1,9 +1,8 @@
 import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 //components
 import { GenericContainer } from "../../../components/GenericContainer";
 import { InformativeTitle } from "../../../components/InformativeTitle";
-import { BlobBg } from "../../../components/Background/BlobBg";
 import { TripSearchForm } from "./components/TripSearchForm";
 
 export default function ReserveScreen({ navigation }) {
@@ -13,7 +12,6 @@ export default function ReserveScreen({ navigation }) {
         title={"Seleccione un origen y destino"}
         description={"Encuentra los mejores viajes"}
       />
-      <BlobBg />
       <View style={styles.form}>
         <TripSearchForm navigation={navigation} />
       </View>

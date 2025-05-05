@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { InputLabel } from "../../../components/Input/InputLabel";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { ButtonText } from "../../../components/Button/ButtonText";
+import { GlobalStyles } from "../../../components/Style/GlobalStyles";
 
 export const FormLogin = () => {
   const [activeTab, setActiveTab] = useState("Pasajero");
@@ -28,7 +29,7 @@ export const FormLogin = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[GlobalStyles.formCard, styles.container]}>
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[styles.tab, activeTab === "Pasajero" && styles.activeTab]}
@@ -52,29 +53,14 @@ export const FormLogin = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FAFAFA",
-    width: "100%",
-    height: "100%",
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
-    padding: 30,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.5,
-    elevation: 10,
+    borderBottomEndRadius: 0,
+    borderBottomStartRadius: 0,
   },
   registerMessage: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   textRegisterMessage: {
     color: "#999",
@@ -83,13 +69,13 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: "row",
-    marginBottom: 25,
+    marginBottom: 30,
     borderBottomWidth: 1,
     borderColor: "#E6E8FF",
   },
   tab: {
     flex: 1,
-    paddingVertical: 10,
+    paddingBottom: 15,
     alignItems: "center",
   },
   activeTab: {

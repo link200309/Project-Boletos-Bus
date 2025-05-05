@@ -6,7 +6,7 @@ import { FormAgency } from "./components/FormAgency";
 
 export default function Register() {
   return (
-    <GenericContainer style={styles.container}>
+    <GenericContainer style={styles.container} >
       <ScrollView>
         <View style={styles.containerLogo}>
           <Image
