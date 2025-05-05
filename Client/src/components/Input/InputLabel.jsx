@@ -13,12 +13,12 @@ export const InputLabel = ({ label, placeholder }) => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    marginBottom: 20,
+    marginBottom: 15,
   },
   label: {
     color: "#4318D1",
     fontWeight: "bold",
-    marginBottom: 8,
+    marginBottom: 3,
     fontSize: 14,
   },
   input: {
@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
     borderColor: "#E6E8FF",
     borderRadius: 15,
     backgroundColor: "#F3F4F9",
-    height: 50,
+    height: 45,
     padding: 10,
-    fontSize: 16,
+    fontSize: 14,
   },
 });
