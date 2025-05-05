@@ -14,6 +14,7 @@ export default function ReserveScreen({ navigation }) {
         description={"Encuentra los mejores viajes"}
       />
       <BlobBg />
+    
       <View style={styles.form}>
         <TripSearchForm navigation={navigation} />
       </View>
