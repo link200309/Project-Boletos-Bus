@@ -1,16 +1,11 @@
 import React from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
-export const GenericContainer = ({ children, style, scroll = false }) => {
-  const Container = scroll ? ScrollView : View;
-
+export const GenericContainer = ({ children, style }) => {
   return (
-    <Container
-      contentContainerStyle={scroll ? [styles.container, style] : undefined}
-      style={!scroll ? [styles.container, style] : undefined}
-    >
+    <ScrollView contentContainerStyle={[styles.container, style]}>
       {children}
-    </Container>
+    </ScrollView>
   );
 };
 
@@ -23,5 +18,3 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 });
-
-
