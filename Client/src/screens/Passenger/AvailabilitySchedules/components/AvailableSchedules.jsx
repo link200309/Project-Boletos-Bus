@@ -1,7 +1,7 @@
 //react
 import { View, Text, StyleSheet } from "react-native";
-import { BusIcon, Location, ChairIcon } from "../../../components/Icons";
-import { ButtonStyle } from "../../../components/Button/ButtonStyle";
+import { BusIcon, Location, ChairIcon } from "../../../../components/Icons";
+import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 
 export const AvailableSchedules = ({ travel }) => {
   return (
@@ -24,11 +24,11 @@ export const AvailableSchedules = ({ travel }) => {
 
       <View style={styles.containerContent}>
         <View>
-        <Text style={[styles.text, { fontSize: 25 }]}>Bs. 95</Text>
+          <Text style={[styles.text, { fontSize: 25 }]}>Bs. 95</Text>
 
           <Text style={styles.text}>Por asiento</Text>
         </View>
-        <View style={{alignItems:"center"}}>
+        <View style={{ alignItems: "center" }}>
           <ChairIcon />
           <Text style={styles.text}>CAMA</Text>
         </View>
@@ -94,6 +94,6 @@ const styles = StyleSheet.create({
 
   text: {
     color: "#4318D1",
-    fontWeight: 500
+    fontWeight: 500,
   },
 });
