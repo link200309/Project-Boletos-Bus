@@ -1,8 +1,8 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import ReserveScreen from "../../screens/Reserve/ReserveScreen";
-import AvailabilityDatesScreen from "../../screens/AvailabilitySchedules/AvailabilityDatesScreen";
-import AvailabilitySchedulesScreen from "../../screens/AvailabilitySchedules/AvailabilitySchedulesScreen";
+import ReserveScreen from "../../screens/Passenger/Reserve/ReserveScreen";
+import AvailabilityDatesScreen from "../../screens/Passenger/AvailabilitySchedules/AvailabilityDatesScreen";
+import AvailabilitySchedulesScreen from "../../screens/Passenger/AvailabilitySchedules/AvailabilitySchedulesScreen";
 import { commonHeaderOptions } from "../../components/HeaderLogoTitle";
 
 const Stack = createStackNavigator();
