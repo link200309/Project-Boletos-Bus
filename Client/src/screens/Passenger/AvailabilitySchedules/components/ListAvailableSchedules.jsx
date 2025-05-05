@@ -1,21 +1,18 @@
 //Reeact
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 
 //Components
 import { AvailableSchedules } from "./AvailableSchedules";
 
 export const ListAvailableSchedules = ({ travels, navigation }) => {
   return (
-    <View style={styles.containerSchedules}>
-      {travels.map((travel, index) => {
+    <FlatList
+      data={travels}
+      keyExtractor={(travel) => travel.id_viaje}
+      renderItem={(travel, index) => {
         return <AvailableSchedules travel={travel} key={index} />;
-      })}
-    </View>
+      }}
+    />
   );
 };
 
-const styles = StyleSheet.create({
-  containerSchedules: {
-    marginTop: 25,
-  },
-});

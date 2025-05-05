@@ -3,22 +3,32 @@ import { View, Text, StyleSheet } from "react-native";
 import { BusIcon, Location, ChairIcon } from "../../../../components/Icons";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 
+//utils
+import { formatTime, formatDate } from "../utils";
+
 export const AvailableSchedules = ({ travel }) => {
   return (
     <View style={styles.container}>
       <View style={styles.containerContent}>
-        <Text style={styles.text}>Viernes 18 de Abril</Text>
-        <Text style={styles.text}>EL DORADO</Text>
+        <Text style={styles.text}>
+          {formatDate(travel.item.fecha_salida).formatedDate}
+        </Text>
+        <Text style={styles.text}>{travel.item.agencia}</Text>
       </View>
       <View style={{ ...styles.bodySchedule, ...styles.containerContent }}>
         <BusIcon />
-        <Text>07:30</Text>
+        <Text>{travel.item.hora_salida_programada.slice(0, 5)}</Text>
         <View style={styles.lineContainer}>
           <View style={styles.circle} />
           <View style={styles.line} />
           {/* <Text style={styles.duration}>5h 30min</Text> */}
         </View>
-        <Text>13:00</Text>
+        <Text>
+          {formatTime(
+            travel.item.hora_salida_programada,
+            travel.item.ruta.tiempo_estimado
+          )}
+        </Text>
         <Location />
       </View>
 
