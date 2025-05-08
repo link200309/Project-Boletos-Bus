@@ -5,13 +5,16 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "node --watch src/index.js"
+    "dev": "node --watch src/index.js",
+    "seed": "node prisma/seed.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "express": "5.1.0"
-  }
+    "@prisma/client": "^6.7.0",
+    "express": "^5.1.0",
+    "prisma": "^6.7.0"
+  },
+  "description": ""
 }
