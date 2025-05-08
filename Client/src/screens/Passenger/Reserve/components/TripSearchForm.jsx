@@ -3,20 +3,30 @@ import { View, StyleSheet } from "react-native";
 import { CitySelector } from "./CitySelector";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { SeatCounter } from "./SeatCounter";
+import { useForm, FormProvider } from "react-hook-form";
 
 export const TripSearchForm = ({ navigation }) => {
+  const methods = useForm();
+
+  const onSubmit = (data) => {
+    console.log(data);
+    navigation.navigate("AvailabilityDates", { formData: data });
+  };
+
   return (
-    <View style={Style.container}>
-      <CitySelector label="origen" />
-      <CitySelector label="destino" />
-      <SeatCounter />
-      <ButtonStyle
-        text={"Buscar viajes disponibles"}
-        variant={1}
-        height={50}
-        onClick={() => navigation.navigate("AvailabilityDates")}
-      />
-    </View>
+    <FormProvider {...methods}>
+      <View style={Style.container}>
+        <CitySelector label="origen" name="origen" />
+        <CitySelector label="destino" name="destino" />
+        <SeatCounter name="asientos" />
+        <ButtonStyle
+          text={"Buscar viajes disponibles"}
+          variant={1}
+          height={50}
+          onClick={methods.handleSubmit(onSubmit)}
+        />
+      </View>
+    </FormProvider>
   );
 };
 
