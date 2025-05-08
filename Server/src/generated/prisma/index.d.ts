@@ -6318,8 +6318,8 @@ export namespace Prisma {
   export type ViajeMinAggregateOutputType = {
     id_viaje: number | null
     fecha_salida: Date | null
-    hora_salida_programada: Date | null
-    hora_salida_real: Date | null
+    hora_salida_programada: string | null
+    hora_salida_real: string | null
     costo: Decimal | null
     id_bus: number | null
     id_ruta: number | null
@@ -6330,8 +6330,8 @@ export namespace Prisma {
   export type ViajeMaxAggregateOutputType = {
     id_viaje: number | null
     fecha_salida: Date | null
-    hora_salida_programada: Date | null
-    hora_salida_real: Date | null
+    hora_salida_programada: string | null
+    hora_salida_real: string | null
     costo: Decimal | null
     id_bus: number | null
     id_ruta: number | null
@@ -6497,8 +6497,8 @@ export namespace Prisma {
   export type ViajeGroupByOutputType = {
     id_viaje: number
     fecha_salida: Date
-    hora_salida_programada: Date
-    hora_salida_real: Date
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal
     id_bus: number
     id_ruta: number
@@ -6616,8 +6616,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id_viaje: number
       fecha_salida: Date
-      hora_salida_programada: Date
-      hora_salida_real: Date
+      hora_salida_programada: string
+      hora_salida_real: string
       costo: Prisma.Decimal
       id_bus: number
       id_ruta: number
@@ -7052,8 +7052,8 @@ export namespace Prisma {
   interface ViajeFieldRefs {
     readonly id_viaje: FieldRef<"Viaje", 'Int'>
     readonly fecha_salida: FieldRef<"Viaje", 'DateTime'>
-    readonly hora_salida_programada: FieldRef<"Viaje", 'DateTime'>
-    readonly hora_salida_real: FieldRef<"Viaje", 'DateTime'>
+    readonly hora_salida_programada: FieldRef<"Viaje", 'String'>
+    readonly hora_salida_real: FieldRef<"Viaje", 'String'>
     readonly costo: FieldRef<"Viaje", 'Decimal'>
     readonly id_bus: FieldRef<"Viaje", 'Int'>
     readonly id_ruta: FieldRef<"Viaje", 'Int'>
@@ -11392,8 +11392,8 @@ export namespace Prisma {
     NOT?: ViajeWhereInput | ViajeWhereInput[]
     id_viaje?: IntFilter<"Viaje"> | number
     fecha_salida?: DateTimeFilter<"Viaje"> | Date | string
-    hora_salida_programada?: DateTimeFilter<"Viaje"> | Date | string
-    hora_salida_real?: DateTimeFilter<"Viaje"> | Date | string
+    hora_salida_programada?: StringFilter<"Viaje"> | string
+    hora_salida_real?: StringFilter<"Viaje"> | string
     costo?: DecimalFilter<"Viaje"> | Decimal | DecimalJsLike | number | string
     id_bus?: IntFilter<"Viaje"> | number
     id_ruta?: IntFilter<"Viaje"> | number
@@ -11427,8 +11427,8 @@ export namespace Prisma {
     OR?: ViajeWhereInput[]
     NOT?: ViajeWhereInput | ViajeWhereInput[]
     fecha_salida?: DateTimeFilter<"Viaje"> | Date | string
-    hora_salida_programada?: DateTimeFilter<"Viaje"> | Date | string
-    hora_salida_real?: DateTimeFilter<"Viaje"> | Date | string
+    hora_salida_programada?: StringFilter<"Viaje"> | string
+    hora_salida_real?: StringFilter<"Viaje"> | string
     costo?: DecimalFilter<"Viaje"> | Decimal | DecimalJsLike | number | string
     id_bus?: IntFilter<"Viaje"> | number
     id_ruta?: IntFilter<"Viaje"> | number
@@ -11463,8 +11463,8 @@ export namespace Prisma {
     NOT?: ViajeScalarWhereWithAggregatesInput | ViajeScalarWhereWithAggregatesInput[]
     id_viaje?: IntWithAggregatesFilter<"Viaje"> | number
     fecha_salida?: DateTimeWithAggregatesFilter<"Viaje"> | Date | string
-    hora_salida_programada?: DateTimeWithAggregatesFilter<"Viaje"> | Date | string
-    hora_salida_real?: DateTimeWithAggregatesFilter<"Viaje"> | Date | string
+    hora_salida_programada?: StringWithAggregatesFilter<"Viaje"> | string
+    hora_salida_real?: StringWithAggregatesFilter<"Viaje"> | string
     costo?: DecimalWithAggregatesFilter<"Viaje"> | Decimal | DecimalJsLike | number | string
     id_bus?: IntWithAggregatesFilter<"Viaje"> | number
     id_ruta?: IntWithAggregatesFilter<"Viaje"> | number
@@ -11952,8 +11952,8 @@ export namespace Prisma {
 
   export type ViajeCreateInput = {
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     bus: BusCreateNestedOneWithoutViajesInput
     ruta: RutaCreateNestedOneWithoutViajesInput
@@ -11964,8 +11964,8 @@ export namespace Prisma {
   export type ViajeUncheckedCreateInput = {
     id_viaje?: number
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     id_bus: number
     id_ruta: number
@@ -11975,8 +11975,8 @@ export namespace Prisma {
 
   export type ViajeUpdateInput = {
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bus?: BusUpdateOneRequiredWithoutViajesNestedInput
     ruta?: RutaUpdateOneRequiredWithoutViajesNestedInput
@@ -11987,8 +11987,8 @@ export namespace Prisma {
   export type ViajeUncheckedUpdateInput = {
     id_viaje?: IntFieldUpdateOperationsInput | number
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     id_bus?: IntFieldUpdateOperationsInput | number
     id_ruta?: IntFieldUpdateOperationsInput | number
@@ -11999,8 +11999,8 @@ export namespace Prisma {
   export type ViajeCreateManyInput = {
     id_viaje?: number
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     id_bus: number
     id_ruta: number
@@ -12010,16 +12010,16 @@ export namespace Prisma {
 
   export type ViajeUpdateManyMutationInput = {
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type ViajeUncheckedUpdateManyInput = {
     id_viaje?: IntFieldUpdateOperationsInput | number
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     id_bus?: IntFieldUpdateOperationsInput | number
     id_ruta?: IntFieldUpdateOperationsInput | number
@@ -13742,8 +13742,8 @@ export namespace Prisma {
 
   export type ViajeCreateWithoutBusInput = {
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     ruta: RutaCreateNestedOneWithoutViajesInput
     chofer: ChoferCreateNestedOneWithoutViajesInput
@@ -13753,8 +13753,8 @@ export namespace Prisma {
   export type ViajeUncheckedCreateWithoutBusInput = {
     id_viaje?: number
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     id_ruta: number
     id_chofer: number
@@ -13857,8 +13857,8 @@ export namespace Prisma {
     NOT?: ViajeScalarWhereInput | ViajeScalarWhereInput[]
     id_viaje?: IntFilter<"Viaje"> | number
     fecha_salida?: DateTimeFilter<"Viaje"> | Date | string
-    hora_salida_programada?: DateTimeFilter<"Viaje"> | Date | string
-    hora_salida_real?: DateTimeFilter<"Viaje"> | Date | string
+    hora_salida_programada?: StringFilter<"Viaje"> | string
+    hora_salida_real?: StringFilter<"Viaje"> | string
     costo?: DecimalFilter<"Viaje"> | Decimal | DecimalJsLike | number | string
     id_bus?: IntFilter<"Viaje"> | number
     id_ruta?: IntFilter<"Viaje"> | number
@@ -14154,8 +14154,8 @@ export namespace Prisma {
 
   export type ViajeCreateWithoutRutaInput = {
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     bus: BusCreateNestedOneWithoutViajesInput
     chofer: ChoferCreateNestedOneWithoutViajesInput
@@ -14165,8 +14165,8 @@ export namespace Prisma {
   export type ViajeUncheckedCreateWithoutRutaInput = {
     id_viaje?: number
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     id_bus: number
     id_chofer: number
@@ -14232,8 +14232,8 @@ export namespace Prisma {
 
   export type ViajeCreateWithoutPagoInput = {
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     bus: BusCreateNestedOneWithoutViajesInput
     ruta: RutaCreateNestedOneWithoutViajesInput
@@ -14243,8 +14243,8 @@ export namespace Prisma {
   export type ViajeUncheckedCreateWithoutPagoInput = {
     id_viaje?: number
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     id_bus: number
     id_ruta: number
@@ -14347,8 +14347,8 @@ export namespace Prisma {
 
   export type ViajeCreateWithoutChoferInput = {
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     bus: BusCreateNestedOneWithoutViajesInput
     ruta: RutaCreateNestedOneWithoutViajesInput
@@ -14358,8 +14358,8 @@ export namespace Prisma {
   export type ViajeUncheckedCreateWithoutChoferInput = {
     id_viaje?: number
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     id_bus: number
     id_ruta: number
@@ -14556,8 +14556,8 @@ export namespace Prisma {
   export type ViajeCreateManyBusInput = {
     id_viaje?: number
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     id_ruta: number
     id_chofer: number
@@ -14586,8 +14586,8 @@ export namespace Prisma {
 
   export type ViajeUpdateWithoutBusInput = {
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ruta?: RutaUpdateOneRequiredWithoutViajesNestedInput
     chofer?: ChoferUpdateOneRequiredWithoutViajesNestedInput
@@ -14597,8 +14597,8 @@ export namespace Prisma {
   export type ViajeUncheckedUpdateWithoutBusInput = {
     id_viaje?: IntFieldUpdateOperationsInput | number
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     id_ruta?: IntFieldUpdateOperationsInput | number
     id_chofer?: IntFieldUpdateOperationsInput | number
@@ -14608,8 +14608,8 @@ export namespace Prisma {
   export type ViajeUncheckedUpdateManyWithoutBusInput = {
     id_viaje?: IntFieldUpdateOperationsInput | number
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     id_ruta?: IntFieldUpdateOperationsInput | number
     id_chofer?: IntFieldUpdateOperationsInput | number
@@ -14619,8 +14619,8 @@ export namespace Prisma {
   export type ViajeCreateManyRutaInput = {
     id_viaje?: number
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     id_bus: number
     id_chofer: number
@@ -14629,8 +14629,8 @@ export namespace Prisma {
 
   export type ViajeUpdateWithoutRutaInput = {
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bus?: BusUpdateOneRequiredWithoutViajesNestedInput
     chofer?: ChoferUpdateOneRequiredWithoutViajesNestedInput
@@ -14640,8 +14640,8 @@ export namespace Prisma {
   export type ViajeUncheckedUpdateWithoutRutaInput = {
     id_viaje?: IntFieldUpdateOperationsInput | number
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     id_bus?: IntFieldUpdateOperationsInput | number
     id_chofer?: IntFieldUpdateOperationsInput | number
@@ -14651,8 +14651,8 @@ export namespace Prisma {
   export type ViajeUncheckedUpdateManyWithoutRutaInput = {
     id_viaje?: IntFieldUpdateOperationsInput | number
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     id_bus?: IntFieldUpdateOperationsInput | number
     id_chofer?: IntFieldUpdateOperationsInput | number
@@ -14662,8 +14662,8 @@ export namespace Prisma {
   export type ViajeCreateManyPagoInput = {
     id_viaje?: number
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     id_bus: number
     id_ruta: number
@@ -14672,8 +14672,8 @@ export namespace Prisma {
 
   export type ViajeUpdateWithoutPagoInput = {
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bus?: BusUpdateOneRequiredWithoutViajesNestedInput
     ruta?: RutaUpdateOneRequiredWithoutViajesNestedInput
@@ -14683,8 +14683,8 @@ export namespace Prisma {
   export type ViajeUncheckedUpdateWithoutPagoInput = {
     id_viaje?: IntFieldUpdateOperationsInput | number
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     id_bus?: IntFieldUpdateOperationsInput | number
     id_ruta?: IntFieldUpdateOperationsInput | number
@@ -14694,8 +14694,8 @@ export namespace Prisma {
   export type ViajeUncheckedUpdateManyWithoutPagoInput = {
     id_viaje?: IntFieldUpdateOperationsInput | number
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     id_bus?: IntFieldUpdateOperationsInput | number
     id_ruta?: IntFieldUpdateOperationsInput | number
@@ -14705,8 +14705,8 @@ export namespace Prisma {
   export type ViajeCreateManyChoferInput = {
     id_viaje?: number
     fecha_salida: Date | string
-    hora_salida_programada: Date | string
-    hora_salida_real: Date | string
+    hora_salida_programada: string
+    hora_salida_real: string
     costo: Decimal | DecimalJsLike | number | string
     id_bus: number
     id_ruta: number
@@ -14715,8 +14715,8 @@ export namespace Prisma {
 
   export type ViajeUpdateWithoutChoferInput = {
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bus?: BusUpdateOneRequiredWithoutViajesNestedInput
     ruta?: RutaUpdateOneRequiredWithoutViajesNestedInput
@@ -14726,8 +14726,8 @@ export namespace Prisma {
   export type ViajeUncheckedUpdateWithoutChoferInput = {
     id_viaje?: IntFieldUpdateOperationsInput | number
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     id_bus?: IntFieldUpdateOperationsInput | number
     id_ruta?: IntFieldUpdateOperationsInput | number
@@ -14737,8 +14737,8 @@ export namespace Prisma {
   export type ViajeUncheckedUpdateManyWithoutChoferInput = {
     id_viaje?: IntFieldUpdateOperationsInput | number
     fecha_salida?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_programada?: DateTimeFieldUpdateOperationsInput | Date | string
-    hora_salida_real?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_salida_programada?: StringFieldUpdateOperationsInput | string
+    hora_salida_real?: StringFieldUpdateOperationsInput | string
     costo?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     id_bus?: IntFieldUpdateOperationsInput | number
     id_ruta?: IntFieldUpdateOperationsInput | number

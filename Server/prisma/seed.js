@@ -11,7 +11,7 @@ async function main() {
   await prisma.bus.deleteMany();
   await prisma.usuario.deleteMany();
   await prisma.agencia.deleteMany();
-  
+
   const usuario = await prisma.usuario.create({
     data: {
       correo_electronico: "agencia@transcopacabana.bo",
@@ -37,7 +37,7 @@ async function main() {
       marca: "Volvo",
       modelo: "2022X",
       año_modelo: 2022,
-      tipo_bus: "Cama",
+      tipo_bus: "CAMA",
       estado: "Operativo",
       id_agencia: usuario.id_usuario,
     },
@@ -59,7 +59,7 @@ async function main() {
         parada_intermedia: "Oruro",
         destino: "Cochabamba",
         distancia: "380km",
-        tiempo_estimado: "7h",
+        tiempo_estimado: "7",
         camino: "Asfaltado",
       },
       {
@@ -67,7 +67,7 @@ async function main() {
         parada_intermedia: "Montero",
         destino: "Cochabamba",
         distancia: "480km",
-        tiempo_estimado: "9h",
+        tiempo_estimado: "9",
         camino: "Asfaltado",
       },
       {
@@ -75,7 +75,7 @@ async function main() {
         parada_intermedia: "Potosí",
         destino: "Oruro",
         distancia: "350km",
-        tiempo_estimado: "6h",
+        tiempo_estimado: "6",
         camino: "Asfaltado",
       },
       {
@@ -83,7 +83,7 @@ async function main() {
         parada_intermedia: "Camiri",
         destino: "Santa Cruz",
         distancia: "410km",
-        tiempo_estimado: "8h",
+        tiempo_estimado: "8",
         camino: "Asfaltado",
       },
     ],
@@ -118,8 +118,8 @@ async function main() {
     await prisma.viaje.create({
       data: {
         fecha_salida: new Date(`${fechas[i]}T00:00:00Z`),
-        hora_salida_programada: new Date(`${fechas[i]}T06:00:00Z`),
-        hora_salida_real: new Date(`${fechas[i]}T06:15:00Z`),
+        hora_salida_programada: "08:00:00",
+        hora_salida_real: "08:00:00",
         costo: 80.5 + i * 5,
         id_bus: bus.id_bus,
         id_ruta: rutasCreadas[i].id_ruta,

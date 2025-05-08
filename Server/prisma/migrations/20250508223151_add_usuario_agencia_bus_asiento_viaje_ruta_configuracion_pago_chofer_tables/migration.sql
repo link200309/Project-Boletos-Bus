@@ -51,8 +51,8 @@ CREATE TABLE "Asiento" (
 CREATE TABLE "Viaje" (
     "id_viaje" SERIAL NOT NULL,
     "fecha_salida" TIMESTAMP(3) NOT NULL,
-    "hora_salida_programada" TIMESTAMP(3) NOT NULL,
-    "hora_salida_real" TIMESTAMP(3) NOT NULL,
+    "hora_salida_programada" VARCHAR(15) NOT NULL,
+    "hora_salida_real" VARCHAR(15) NOT NULL,
     "costo" DECIMAL(5,2) NOT NULL,
     "id_bus" INTEGER NOT NULL,
     "id_ruta" INTEGER NOT NULL,

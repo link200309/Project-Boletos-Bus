@@ -9,7 +9,6 @@ export const TripSearchForm = ({ navigation }) => {
   const methods = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
     navigation.navigate("AvailabilityDates", { formData: data });
   };
 
