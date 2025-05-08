@@ -7,13 +7,17 @@ import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { formatTime, formatDate } from "../utils";
 
 export const AvailableSchedules = ({ travel }) => {
+  console.log(travel.item);
+
   return (
     <View style={styles.container}>
       <View style={styles.containerContent}>
         <Text style={styles.text}>
           {formatDate(travel.item.fecha_salida).formatedDate}
         </Text>
-        <Text style={styles.text}>{travel.item.agencia}</Text>
+        <Text style={styles.text}>
+          {travel.item.bus.agencia.nombre_agencia}
+        </Text>
       </View>
       <View style={{ ...styles.bodySchedule, ...styles.containerContent }}>
         <BusIcon />
@@ -34,13 +38,15 @@ export const AvailableSchedules = ({ travel }) => {
 
       <View style={styles.containerContent}>
         <View>
-          <Text style={[styles.text, { fontSize: 25 }]}>Bs. 95</Text>
+          <Text style={[styles.text, { fontSize: 25 }]}>
+            {travel.item.costo}
+          </Text>
 
           <Text style={styles.text}>Por asiento</Text>
         </View>
         <View style={{ alignItems: "center" }}>
           <ChairIcon />
-          <Text style={styles.text}>CAMA</Text>
+          <Text style={styles.text}>{travel.item.bus.tipo_bus}</Text>
         </View>
         <ButtonStyle width="115" text={"Reservar"} />
       </View>
