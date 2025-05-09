@@ -4,9 +4,11 @@ import { GenericContainer } from "../../components/GenericContainer";
 import { FormPassenger } from "./components/FormPassenger";
 import { FormAgency } from "./components/FormAgency";
 
-export default function Register() {
+export default function RegisterScreen({ navigation }) {
+  console.log(navigation);
+
   return (
-    <GenericContainer style={styles.container} >
+    <GenericContainer style={styles.container}>
       <ScrollView>
         <View style={styles.containerLogo}>
           <Image

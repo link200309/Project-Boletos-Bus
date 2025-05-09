@@ -1,11 +1,30 @@
 import React from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 
-export const InputLabel = ({ label, placeholder }) => {
+export const InputLabel = ({
+  label,
+  placeholder,
+  value,
+  onChange,
+  error,
+  name,
+  keyboardType = "default",
+  secureTextEntry = false,
+}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
-      <TextInput placeholder={placeholder} style={styles.input} />
+      <TextInput
+        placeholder={placeholder}
+        style={styles.input}
+        value={value}
+        onChangeText={onChange}
+        keyboardType={keyboardType}
+        secureTextEntry={secureTextEntry}
+      />
+      {error && error[name] && (
+        <Text style={styles.errorText}>{error[name].message}</Text>
+      )}
     </View>
   );
 };
@@ -30,5 +49,12 @@ const styles = StyleSheet.create({
     height: 45,
     padding: 10,
     fontSize: 14,
+  },
+
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 10,
   },
 });

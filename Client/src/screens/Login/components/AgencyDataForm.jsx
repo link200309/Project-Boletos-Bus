@@ -1,4 +1,3 @@
-import React from "react";
 import { View } from "react-native";
 import { InputLabel } from "../../../components/Input/InputLabel";
 import { Selector } from "../../../components/Input/Selector";

@@ -13,7 +13,6 @@ export const formatTime = (time, tiempo_estimado) => {
 
   const horas = Math.floor(tiempo_estimado);
   const minutos = Math.round((tiempo_estimado % 1) * 100);
-
   const horaLlegada = new Date(
     horaSalida.getTime() + (horas * 60 + minutos) * 60 * 1000
   );

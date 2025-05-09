@@ -3,7 +3,7 @@ import { View, StyleSheet, Image } from "react-native";
 import { GenericContainer } from "../../components/GenericContainer";
 import { FormLogin } from "./components/FormLogin";
 
-export default function Login() {
+export default function LoginScreen({ navigation }) {
   return (
     <GenericContainer style={styles.container}>
       <View style={styles.logoContainer}>
@@ -20,7 +20,7 @@ export default function Login() {
       </View>
 
       <View style={styles.formContainer}>
-        <FormLogin />
+        <FormLogin navigation={navigation} />
       </View>
     </GenericContainer>
   );
@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#2B0B94",
     padding: 0,
+    marginBottom: 50,
   },
   logoContainer: {
     paddingTop: 20,
