@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import MyReservationsScreen from "../../screens/Passenger/MyReservations/MyReservationsScreen";
-import { commonHeaderOptions } from "../../components/HeaderLogoTitle";
+import { commonHeaderOptions } from "../../components/Style/HeaderLogoTitle";
 
 const Stack = createStackNavigator();
 

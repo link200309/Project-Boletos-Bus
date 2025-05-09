@@ -11,7 +11,7 @@ export const commonHeaderOptions = {
 const HeaderLogoTitle = () => (
   <View style={styles.header}>
     <Image
-      source={require("../../assets/logoNavbar.png")}
+      source={require("../../../assets/logoNavbar.png")}
       style={styles.logo}
       resizeMode="contain"
     />
