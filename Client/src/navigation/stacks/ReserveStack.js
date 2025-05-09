@@ -3,7 +3,11 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ReserveScreen from "../../screens/Passenger/Reserve/ReserveScreen";
 import AvailabilityDatesScreen from "../../screens/Passenger/AvailabilitySchedules/AvailabilityDatesScreen";
 import AvailabilitySchedulesScreen from "../../screens/Passenger/AvailabilitySchedules/AvailabilitySchedulesScreen";
+<<<<<<< HEAD
 import { commonHeaderOptions } from "../../components/Style/HeaderLogoTitle";
+=======
+import { commonHeaderOptions } from "../../components/HeaderLogoTitle";
+>>>>>>> 9958d9e461fc235e9cf746c19b517722464bb592
 
 const Stack = createStackNavigator();
 

@@ -2,35 +2,54 @@
 import { View, Text, StyleSheet } from "react-native";
 import { BusIcon, Location, ChairIcon } from "../../../../components/Icons";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
+<<<<<<< HEAD
+=======
+
+//utils
+import { formatTime, formatDate } from "../utils";
+>>>>>>> 9958d9e461fc235e9cf746c19b517722464bb592
 
 export const AvailableSchedules = ({ travel }) => {
+  console.log(travel.item);
+
   return (
     <View style={styles.container}>
       <View style={styles.containerContent}>
-        <Text style={styles.text}>Viernes 18 de Abril</Text>
-        <Text style={styles.text}>EL DORADO</Text>
+        <Text style={styles.text}>
+          {formatDate(travel.item.fecha_salida).formatedDate}
+        </Text>
+        <Text style={styles.text}>
+          {travel.item.bus.agencia.nombre_agencia}
+        </Text>
       </View>
       <View style={{ ...styles.bodySchedule, ...styles.containerContent }}>
         <BusIcon />
-        <Text>07:30</Text>
+        <Text>{travel.item.hora_salida_programada.slice(0, 5)}</Text>
         <View style={styles.lineContainer}>
           <View style={styles.circle} />
           <View style={styles.line} />
           {/* <Text style={styles.duration}>5h 30min</Text> */}
         </View>
-        <Text>13:00</Text>
+        <Text>
+          {formatTime(
+            travel.item.hora_salida_programada,
+            travel.item.ruta.tiempo_estimado
+          )}
+        </Text>
         <Location />
       </View>
 
       <View style={styles.containerContent}>
         <View>
-        <Text style={[styles.text, { fontSize: 25 }]}>Bs. 95</Text>
+          <Text style={[styles.text, { fontSize: 25 }]}>
+            Bs.{travel.item.costo}
+          </Text>
 
           <Text style={styles.text}>Por asiento</Text>
         </View>
-        <View style={{alignItems:"center"}}>
+        <View style={{ alignItems: "center" }}>
           <ChairIcon />
-          <Text style={styles.text}>CAMA</Text>
+          <Text style={styles.text}>{travel.item.bus.tipo_bus}</Text>
         </View>
         <ButtonStyle width="115" text={"Reservar"} />
       </View>
@@ -94,6 +113,6 @@ const styles = StyleSheet.create({
 
   text: {
     color: "#4318D1",
-    fontWeight: 500
+    fontWeight: 500,
   },
 });

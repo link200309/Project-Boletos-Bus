@@ -21,4 +21,8 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 30,
   },
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 9958d9e461fc235e9cf746c19b517722464bb592

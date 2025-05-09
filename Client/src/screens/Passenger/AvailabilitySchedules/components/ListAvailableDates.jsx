@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 //components
 import { AvailableDates } from "./AvailableDates";
 
+//utils
+import { formatDate } from "../utils";
+
 export const ListAvailableDates = ({ travels, navigation }) => {
   const [travelsFiltered, setTravelsFiltered] = useState([]);
 
@@ -14,18 +17,6 @@ export const ListAvailableDates = ({ travels, navigation }) => {
     );
     setTravelsFiltered(res);
   }, [travels]);
-
-  const formatDate = (departureDate) => {
-    const date = new Date(departureDate);
-    const day = date.getDate();
-    const year = date.getFullYear();
-    let weekDay = date.toLocaleDateString("es-ES", {
-      weekday: "long",
-    });
-    weekDay = weekDay.charAt(0).toUpperCase() + weekDay.slice(1);
-    const month = date.toLocaleDateString("es-ES", { month: "long" });
-    return { weekDay, formatedDate: `${day} ${month} ${year}` };
-  };
 
   const filterTravels = (fecha_salida) => {
     return travels.filter((travel) => {
