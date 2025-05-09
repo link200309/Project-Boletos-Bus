@@ -3,10 +3,13 @@ import { View, StyleSheet, Image, ScrollView } from "react-native";
 import { GenericContainer } from "../../components/GenericContainer";
 import { FormPassenger } from "./components/FormPassenger";
 import { FormAgency } from "./components/FormAgency";
+import { BackIcon } from "../../components/Icons";
 
-export default function Register() {
+export default function RegisterScreen({ navigation }) {
   return (
-    <GenericContainer style={styles.container} >
+    <GenericContainer style={styles.container}>
+      <BackIcon style={styles.btnBack} onPress={() => navigation.goBack()} />
+
       <ScrollView>
         <View style={styles.containerLogo}>
           <Image
@@ -46,5 +49,13 @@ const styles = StyleSheet.create({
     width: 120,
     height: 25,
     marginTop: 10,
+  },
+  btnBack: {
+    position: "absolute",
+    top: 60,
+    left: 20,
+    fontSize: 30,
+    color: "#fff",
+    zIndex: 1,
   },
 });

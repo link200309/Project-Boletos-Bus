@@ -1,30 +1,99 @@
+//React
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import { useForm, FormProvider, Controller } from "react-hook-form";
+
+//Components
 import { InputLabel } from "../../../components/Input/InputLabel";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { ButtonText } from "../../../components/Button/ButtonText";
 import { GlobalStyles } from "../../../components/Style/GlobalStyles";
 
-export const FormLogin = () => {
-  const [activeTab, setActiveTab] = useState("Pasajero");
-  const renderForm = () => {
-    return (
-      <>
-        <InputLabel
-          label="Correo electrónico"
-          placeholder="ejemplo@gmail.com"
-        />
-        <InputLabel label="Contraseña" placeholder="••••••••" />
+//Context
+import { AuthContext } from "../../../context/AuthContext";
+import { useContext } from "react";
 
-        <ButtonStyle text="Iniciar sesión" />
+export const FormLogin = ({ navigation }) => {
+  const [activeTab, setActiveTab] = useState("Pasajero");
+  const { login, isLoading } = useContext(AuthContext);
+  const methods = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = methods;
+
+  const renderForm = () => {
+    const onSubmit = (data) => {
+      login({ email: data.email, password: data.password });
+    };
+
+    return (
+      <FormProvider {...methods}>
+        <Controller
+          control={control}
+          name="email"
+          rules={{
+            required: "El correo electrónico es obligatorio",
+            pattern: {
+              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: "El formato del correo electrónico no es válido",
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputLabel
+              label="Correo electrónico"
+              placeholder="ejemplo@gmail.com"
+              value={value}
+              onChange={onChange}
+              error={errors}
+              name={"email"}
+              keyboardType="email-address"
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="password"
+          rules={{
+            required: "La contraseña es obligatorio",
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputLabel
+              label="Contraseña"
+              placeholder="••••••••"
+              value={value}
+              onChange={onChange}
+              error={errors}
+              name="password"
+              secureTextEntry={true}
+            />
+          )}
+        />
+
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <ButtonStyle text="Iniciar sesión" onClick={handleSubmit(onSubmit)} />
+        )}
 
         <ButtonText text="¿Olvidaste tu contraseña?" />
 
         <View style={styles.registerMessage}>
           <Text style={styles.textRegisterMessage}>¿No tienes cuenta?</Text>
-          <ButtonText text="Regístrate" />
+          <ButtonText
+            text="Regístrate"
+            onClick={() => navigation.navigate("Register")}
+          />
         </View>
-      </>
+      </FormProvider>
     );
   };
 
