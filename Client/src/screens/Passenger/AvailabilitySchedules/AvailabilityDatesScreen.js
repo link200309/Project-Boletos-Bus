@@ -106,7 +106,6 @@ export default function AvailabilityDatesScreen({ navigation }) {
         formData.destino,
         formData.asientos
       );
-      console.log("La respuesta es", response.data[0].bus.agencia);
       setTravels(response.data);
     }
     getTravelsApi();
@@ -115,8 +114,14 @@ export default function AvailabilityDatesScreen({ navigation }) {
   return (
     <GenericContainer>
       <InformativeTitle
-        title={"Cochabamba - La Paz"}
-        description={"12 fechas disponibles"}
+        title={`${formData.origen} — ${formData.destino}`}
+        description={
+          Array.from(
+            new Map(
+              travels.map((travel) => [travel.fecha_salida, travel])
+            ).values()
+          ).length + " Fecha(s) disponible(s)"
+        }
       />
       <BlobBg />
       <ListAvailableDates travels={travels} navigation={navigation} />

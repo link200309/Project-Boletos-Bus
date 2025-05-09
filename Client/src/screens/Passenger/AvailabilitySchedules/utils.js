@@ -25,12 +25,19 @@ export const formatTime = (time, tiempo_estimado) => {
 
 export const formatDate = (departureDate) => {
   const date = new Date(departureDate);
-  const day = date.getDate();
-  const year = date.getFullYear();
+  const day = date.getUTCDate();
+  const year = date.getUTCFullYear();
+
   let weekDay = date.toLocaleDateString("es-ES", {
     weekday: "long",
+    timeZone: "UTC",
   });
+
   weekDay = weekDay.charAt(0).toUpperCase() + weekDay.slice(1);
-  const month = date.toLocaleDateString("es-ES", { month: "long" });
-  return { weekDay, formatedDate: `${day + 1} ${month} ${year}` };
+
+  const month = date.toLocaleDateString("es-ES", {
+    month: "long",
+    timeZone: "UTC",
+  });
+  return { weekDay, formatedDate: `${day} ${month} ${year}` };
 };

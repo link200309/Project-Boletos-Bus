@@ -39,7 +39,7 @@ export const AvailableSchedules = ({ travel }) => {
       <View style={styles.containerContent}>
         <View>
           <Text style={[styles.text, { fontSize: 25 }]}>
-            {travel.item.costo}
+            Bs.{travel.item.costo}
           </Text>
 
           <Text style={styles.text}>Por asiento</Text>
