@@ -11,7 +11,7 @@ export const Selector = ({ label, items, placeholder }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{`Ciudad de ${label}`}</Text>
+      <Text style={styles.label}>{`${label}`}</Text>
       <View style={styles.dropdownContainer}>
         <RNPickerSelect
           placeholder={placeholderConst}
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   dropdown: {
-    height: 45,
+    height: 52,
     color: "#000",
     fontSize: 14,
     width: 310,

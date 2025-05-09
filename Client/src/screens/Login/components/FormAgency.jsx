@@ -9,11 +9,7 @@ import { LegalRepresentativeForm } from "./LegalRepresentativeForm";
 import { AdminAccountForm } from "./AccountForm";
 
 export const FormAgency = () => {
-  const items = [
-    { label: "Opción 1", value: "opcion1" },
-    { label: "Opción 2", value: "opcion2" },
-    { label: "Opción 3", value: "opcion3" },
-  ];
+  
   return (
     <View style={GlobalStyles.formCard}>
       <Text style={styles.textTitle}>Registro de Agencia</Text>
@@ -22,7 +18,7 @@ export const FormAgency = () => {
         contrato de servicio. BusRat con la Agencia de Viajes.
       </Text>
 
-      <AgencyDataForm items={items} />
+      <AgencyDataForm/>
       <LegalRepresentativeForm />
 
       <AdminAccountForm />

@@ -46,3 +46,6 @@ export const ChairIcon = (props) => (
 export const BusIcon = (props) => (
   <FontAwesome5 name="bus-alt" size={24} color="black" {...props} />
 );
+export const BackIcon = (props) => (
+  <Ionicons name="arrow-back" size={24} color="black" {...props} />
+);
