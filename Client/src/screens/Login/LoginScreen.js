@@ -1,11 +1,34 @@
-import React from "react";
-import { View, StyleSheet, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Image, Keyboard } from "react-native";
 import { GenericContainer } from "../../components/GenericContainer";
 import { FormLogin } from "./components/FormLogin";
 
 export default function LoginScreen({ navigation }) {
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", (e) => {
+      setKeyboardVisible(true);
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
   return (
-    <GenericContainer style={styles.container}>
+    <GenericContainer
+      style={{
+        ...styles.container,
+        paddingBottom: keyboardVisible ? keyboardHeight + 150 : 50,
+      }}
+    >
       <View style={styles.logoContainer}>
         <Image
           source={require("../../../assets/logo.png")}
@@ -32,7 +55,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#2B0B94",
     padding: 0,
-    marginBottom: 50,
   },
   logoContainer: {
     paddingTop: 20,
