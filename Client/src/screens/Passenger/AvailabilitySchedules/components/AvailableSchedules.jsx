@@ -2,12 +2,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import { BusIcon, Location, ChairIcon } from "../../../../components/Icons";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
-<<<<<<< HEAD
-=======
-
-//utils
 import { formatTime, formatDate } from "../utils";
->>>>>>> 9958d9e461fc235e9cf746c19b517722464bb592
 
 export const AvailableSchedules = ({ travel }) => {
   console.log(travel.item);
