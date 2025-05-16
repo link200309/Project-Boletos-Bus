@@ -13,23 +13,26 @@ export const ContactCard: React.FC<ContactCardProps> = ({ contact, setContact, c
     <View style={[styles.card, containerStyle]}>
       <Text style={styles.title}>Datos de contacto</Text>
 
+      <Text style={styles.label}>Correo Electrónico</Text>
       <TextInput
-        placeholder="Correo Electrónico"
         value={contact.email}
         onChangeText={(text) => setContact({ ...contact, email: text })}
         keyboardType="email-address"
         autoCapitalize="none"
         style={styles.input}
       />
-
+    
+      <Text style={styles.label}>
+        Nro de Celular <Text style={styles.asterisk}> * </Text>
+        </Text>
       <TextInput
-        placeholder="Nro de celular"
+        placeholder="Ingrea un Nro de celular"
         value={contact.phone}
         onChangeText={(text) => setContact({ ...contact, phone: text })}
         keyboardType="phone-pad"
         style={styles.input}
-      />
-    </View>
+      />           
+    </View>   
   );
 };
 
@@ -50,7 +53,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#4B2EC2',
+    color: '#000000',
+  },
+  label: {
+    marginBottom: 5,
+    color: '#000000',
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  asterisk:{
+    color: '#FF0000',
   },
   input: {
     backgroundColor: '#FFF',

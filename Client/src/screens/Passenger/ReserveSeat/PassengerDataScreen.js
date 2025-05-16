@@ -22,11 +22,14 @@ export default function PassengerDataScreen({ navigation, route }) {
     setPassengers(updatedPassengers);
   };
 
+  const goToTripSummaryScreen = () => {
+    navigation.navigate("TripSummaryScreen");
+  };
+
   return (
     <GenericContainer style={styles.container}>
       <BlobBg />
-
-      <ScrollView contentContainerStyle={styles.scrollContainer} horizontal>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.contentContainer}>
           <View style={styles.informativeTitleContainer}>
             <InformativeTitle
@@ -49,7 +52,7 @@ export default function PassengerDataScreen({ navigation, route }) {
 
           <TouchableOpacity
             style={styles.continueButton}
-            onPress={() => navigation.navigate('ResumenReserva', { passengers, contact, travelDetails })}
+            onPress={goToTripSummaryScreen}
           >
             <Text style={styles.continueButtonText}>Continuar</Text>
           </TouchableOpacity>
@@ -63,24 +66,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scrollContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: 'column',
+    alignItems: 'center',
     paddingBottom: 40,
     paddingRight: 40,
   },
   contentContainer: {
     flexDirection: 'column',
-    alignItems: 'flex-start',
-    paddingLeft: 20,
+    alignItems: 'center',
+    width: '100%',
   },
   informativeTitleContainer: {
     width: '100%',
     marginBottom: 20,
   },
   card: {
-    width: 350,
+    width: '100%',
     marginHorizontal: 10,
     marginVertical: 15,
   },
@@ -89,9 +94,8 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     marginVertical: 20,
-    width: 20,
-    alignSelf: 'flex-start',
-    marginLeft: 20,
+    width: '95%',
+    alignSelf: 'center',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOpacity: 0.05,
