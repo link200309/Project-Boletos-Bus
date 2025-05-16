@@ -2,6 +2,8 @@ import express from "express";
 import userRoutes from "./routes/user.routes.js";
 import travelRouter from "./routes/travel.routes.js";
 import cors from "cors";
+import busRoutes from "./routes/buses.routes.js";
+import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -13,3 +15,5 @@ app.use(cors());
 app.use(express.json());
 app.use(userRoutes);
 app.use("/travel", travelRouter);
+app.use(busRoutes)
+app.use(authRoutes)

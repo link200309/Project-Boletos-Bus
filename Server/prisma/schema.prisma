@@ -16,28 +16,34 @@ datasource db {
 
 model Usuario {
   id_usuario         Int       @id @default(autoincrement())
-  correo_electronico String    @db.VarChar(50)
-  contraseña         String    @db.VarChar(30)
+  tipo_usuario       String    @db.VarChar(30) // Ej: "cliente", "agencia", "admin"
+  nombre_usuario     String    @db.VarChar(80)
+  correo_electronico String    @unique @db.VarChar(80)
+  contraseña         String    @db.VarChar(100)
   numero_celular     Int
 
-  agencia            Agencia?
+  agencia            Agencia? // Relación opcional con Agencia
 }
+
 
 model Agencia {
-  id_usuario         Int     @id
-  nombre_agencia     String  @db.VarChar(50)
-  tipo_sociedad      String  @db.VarChar(20)
-  NIT                String  @db.VarChar(20)
-  departamento       String  @db.VarChar(20)
-  ciudad             String  @db.VarChar(30)
-  direccion          String  @db.VarChar(50)
-  estado             String  @db.VarChar(20)
+  id_agencia         Int       @id @default(autoincrement())
+  id_usuario         Int       @unique
+  nombre_agencia     String    @db.VarChar(80)
+  tipo_sociedad      String    @db.VarChar(30)
+  NIT                String    @db.VarChar(20)
+  departamento       String    @db.VarChar(30)
+  ciudad             String    @db.VarChar(40)
+  direccion          String    @db.VarChar(100)
+  estado             String    @db.VarChar(30)
 
-  usuario            Usuario @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
-  buses          Bus[]
-  choferes       Chofer[]
-  configuraciones Configuracion_Pago[]
+  usuario            Usuario   @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+
+  buses              Bus[]
+  choferes           Chofer[]
+  configuraciones    Configuracion_Pago[]
 }
+
 
 model Bus {
   id_bus     Int     @id @default(autoincrement())
@@ -49,11 +55,12 @@ model Bus {
   estado     String  @db.VarChar(20)
 
   id_agencia  Int
-  agencia    Agencia @relation(fields: [id_agencia], references: [id_usuario], onDelete: Cascade)
+  agencia     Agencia @relation(fields: [id_agencia], references: [id_agencia], onDelete: Cascade)
 
   asientos   Asiento[]
   viajes     Viaje[]
 }
+
 
 model Asiento {
   id_asiento Int     @id @default(autoincrement())
@@ -107,9 +114,9 @@ model Configuracion_Pago {
   estado         String @db.VarChar(20)
 
   id_agencia      Int
-  agencia        Agencia @relation(fields: [id_agencia], references: [id_usuario],onDelete: Cascade)
+  agencia         Agencia @relation(fields: [id_agencia], references: [id_agencia], onDelete: Cascade)
 
-  viajes           Viaje[]  
+  viajes          Viaje[]
 }
 
 model Chofer {
@@ -123,7 +130,7 @@ model Chofer {
   estado              String  @db.VarChar(20)
 
   id_agencia           Int
-  agencia             Agencia @relation(fields: [id_agencia], references: [id_usuario], onDelete: Cascade)
+  agencia              Agencia @relation(fields: [id_agencia], references: [id_agencia], onDelete: Cascade)
 
   viajes              Viaje[]
 }
