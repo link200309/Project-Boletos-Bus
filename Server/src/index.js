@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.routes.js";
 import choferRoutes from "./routes/chofer.routes.js";
 import busRoutes from "./routes/bus.routes.js";
 import asientoRoutes from "./routes/asiento.routes.js";
+import viajeRoutes from "./routes/viaje.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -24,3 +25,4 @@ app.use(authRoutes)
 app.use("/choferes", choferRoutes);
 app.use("/bus", busRoutes);
 app.use("/asiento", asientoRoutes);
+app.use("/viajes", viajeRoutes);
