@@ -32,7 +32,7 @@ export const getBuses = (req, res) => {
                        "direccion": "Plaza Sucre, Av. 6 de Agosto",
                        "telefono": "N/D",
                        "coordenadas": {
-                         "latitud": -16.16558576888352
+                         "latitud": -16.16558576888352,
                          "longitud": -69.08817443058417
                        },
                        "notas": "Parada principal en Copacabana (localidad turística a orillas del lago Titicaca)."
@@ -44,7 +44,7 @@ export const getBuses = (req, res) => {
                        "direccion": "Zona frontera (Desaguadero)",
                        "telefono": "N/D",
                        "coordenadas": {
-                         "latitud": -16.562889470300362
+                         "latitud": -16.562889470300362,
                          "longitud": -69.04477187213917
                        },
                        "notas": "Parada fronteriza en la localidad de Desaguadero (frontera con Perú)."
