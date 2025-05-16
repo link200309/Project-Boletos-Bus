@@ -3,17 +3,21 @@ import { PrismaClient } from "../src/generated/prisma/index.js";
 const prisma = new PrismaClient();
 
 async function main() {
+  // Limpieza
   await prisma.viaje.deleteMany();
   await prisma.chofer.deleteMany();
   await prisma.configuracion_Pago.deleteMany();
   await prisma.ruta.deleteMany();
   await prisma.asiento.deleteMany();
   await prisma.bus.deleteMany();
-  await prisma.usuario.deleteMany();
   await prisma.agencia.deleteMany();
+  await prisma.usuario.deleteMany();
 
+  // Crear usuario y agencia (relacionados)
   const usuario = await prisma.usuario.create({
     data: {
+      tipo_usuario: "agencia",
+      nombre_usuario: "transcopacabana",
       correo_electronico: "agencia@transcopacabana.bo",
       contraseña: "segura123",
       numero_celular: 71234567,
@@ -29,8 +33,10 @@ async function main() {
         },
       },
     },
+    include: { agencia: true },
   });
 
+  // Crear bus
   const bus = await prisma.bus.create({
     data: {
       placa: "1234ABC",
@@ -39,10 +45,11 @@ async function main() {
       año_modelo: 2022,
       tipo_bus: "CAMA",
       estado: "Operativo",
-      id_agencia: usuario.id_usuario,
+      id_agencia: usuario.agencia.id_agencia,
     },
   });
 
+  // Crear asientos
   await prisma.asiento.createMany({
     data: Array.from({ length: 40 }, (_, i) => ({
       numero: `${i + 1}`,
@@ -52,7 +59,8 @@ async function main() {
     })),
   });
 
-  const rutas = await prisma.ruta.createMany({
+  // Crear rutas
+  await prisma.ruta.createMany({
     data: [
       {
         origen: "La Paz",
@@ -89,17 +97,19 @@ async function main() {
     ],
   });
 
-  const rutasCreadas = await prisma.ruta.findMany();
+  const rutas = await prisma.ruta.findMany();
 
+  // Crear configuración de pago
   const pago = await prisma.configuracion_Pago.create({
     data: {
       ruta_codigo_qr: "https://pagos.bo/qr/abc123",
       fecha_creacion: new Date(),
       estado: "Activo",
-      id_agencia: usuario.id_usuario,
+      id_agencia: usuario.agencia.id_agencia,
     },
   });
 
+  // Crear chofer
   const chofer = await prisma.chofer.create({
     data: {
       nombre: "Juan",
@@ -109,12 +119,13 @@ async function main() {
       categoria_licencia: "B",
       direccion_contacto: "Calle 12 de Octubre, El Alto",
       estado: "Activo",
-      id_agencia: usuario.id_usuario,
+      id_agencia: usuario.agencia.id_agencia,
     },
   });
 
+  // Crear viajes
   const fechas = ["2025-05-10", "2025-05-11", "2025-05-12", "2025-05-13"];
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < fechas.length; i++) {
     await prisma.viaje.create({
       data: {
         fecha_salida: new Date(`${fechas[i]}T00:00:00Z`),
@@ -122,7 +133,7 @@ async function main() {
         hora_salida_real: "08:00:00",
         costo: 80.5 + i * 5,
         id_bus: bus.id_bus,
-        id_ruta: rutasCreadas[i].id_ruta,
+        id_ruta: rutas[i].id_ruta,
         id_chofer: chofer.id_chofer,
         id_pago: pago.id_pago,
       },
@@ -133,5 +144,10 @@ async function main() {
 }
 
 main()
-  .catch((e) => console.error(e))
-  .finally(async () => await prisma.$disconnect());
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
