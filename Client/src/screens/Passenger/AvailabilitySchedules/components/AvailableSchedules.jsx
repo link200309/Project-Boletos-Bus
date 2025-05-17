@@ -4,7 +4,7 @@ import { BusIcon, Location, ChairIcon } from "../../../../components/Icons";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { formatTime, formatDate } from "../utils";
 
-export const AvailableSchedules = ({ travel }) => {
+export const AvailableSchedules = ({ travel, navigation }) => {
   console.log(travel.item);
 
   return (
@@ -46,7 +46,11 @@ export const AvailableSchedules = ({ travel }) => {
           <ChairIcon />
           <Text style={styles.text}>{travel.item.bus.tipo_bus}</Text>
         </View>
-        <ButtonStyle width="115" text={"Reservar"} />
+        <ButtonStyle
+          width="115"
+          text={"Reservar"}
+          onClick={() => navigation.navigate("PassengerData")}
+        />
       </View>
     </View>
   );

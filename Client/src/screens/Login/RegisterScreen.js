@@ -1,4 +1,3 @@
-import React from "react";
 import { View, StyleSheet, Image, ScrollView } from "react-native";
 import { GenericContainer } from "../../components/GenericContainer";
 import { FormPassenger } from "./components/FormPassenger";
