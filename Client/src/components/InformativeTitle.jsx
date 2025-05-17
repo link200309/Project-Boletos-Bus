@@ -1,9 +1,12 @@
 import { View, Text, StyleSheet } from "react-native";
 
-export const InformativeTitle = ({ title, description }) => {
+export const InformativeTitle = ({ title, cifra, description }) => {
   return (
     <View style={Style.container}>
-      <Text style={Style.text}>{title}</Text>
+      <View style={Style.containerTitle}>
+        <Text style={Style.text}>{title}</Text>
+        <Text style={Style.text}>{cifra}</Text>
+      </View>
       <Text style={Style.description}>{description}</Text>
     </View>
   );
@@ -16,6 +19,12 @@ const Style = StyleSheet.create({
     width: "100%",
     maxWidth: 400,
     padding: 20,
+  },
+  containerTitle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
   },
   text: {
     color: "white",

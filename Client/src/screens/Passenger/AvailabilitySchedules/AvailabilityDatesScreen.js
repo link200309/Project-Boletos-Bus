@@ -101,12 +101,17 @@ export default function AvailabilityDatesScreen({ navigation }) {
 
   useEffect(() => {
     async function getTravelsApi() {
-      const response = await getTravels(
-        formData.origen,
-        formData.destino,
-        formData.asientos
-      );
-      setTravels(response.data);
+      try {
+        const response = await getTravels(
+          formData.origen,
+          formData.destino,
+          formData.asientos
+        );
+        setTravels(response.data);
+        console.log("Travels:", response.data);
+      } catch (error) {
+        console.error("Error fetching travels:", error);
+      }
     }
     getTravelsApi();
   }, []);

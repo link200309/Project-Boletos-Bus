@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = process.env.BASE_URL || "http://192.168.0.8:4000"; //Pongan la IP de su pc en la red de su wifichoza xd
+const baseURL = process.env.BASE_URL || "http://192.168.155.106:4000"; //Pongan la IP de su pc en la red de su wifichoza xd
 
 const travelApi = axios.create({
   baseURL,
