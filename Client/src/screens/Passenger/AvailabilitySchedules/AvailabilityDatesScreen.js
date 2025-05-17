@@ -108,6 +108,7 @@ export default function AvailabilityDatesScreen({ navigation }) {
           formData.asientos
         );
         setTravels(response.data);
+        console.log("Travels:", response.data);
       } catch (error) {
         console.error("Error fetching travels:", error);
       }

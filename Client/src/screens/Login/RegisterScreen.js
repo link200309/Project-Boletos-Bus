@@ -21,8 +21,8 @@ export default function RegisterScreen({ navigation }) {
           />
         </View>
 
-        <FormPassenger />
-        {/* <FormAgency /> */}
+        {/* <FormPassenger /> */}
+        <FormAgency />
       </ScrollView>
     </GenericContainer>
   );
