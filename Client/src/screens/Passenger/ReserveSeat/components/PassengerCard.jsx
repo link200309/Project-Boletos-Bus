@@ -3,14 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { MaterialIcons } from '@expo/vector-icons';
 
-interface PassengerCardProps {
-    index: number;
-    passenger: any;
-    handlePassengerChange: (index: number, field: string, value: string) => void;
-    containerStyle?: object;
-}
-
-export const PassengerCard: React.FC<PassengerCardProps> = ({ index, passenger, handlePassengerChange, containerStyle }) => {
+export const PassengerCard = ({ index, passenger, handlePassengerChange, containerStyle }) => {
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
 
     const showDatePicker = () => {
@@ -21,7 +14,7 @@ export const PassengerCard: React.FC<PassengerCardProps> = ({ index, passenger, 
         setDatePickerVisible(false);
     };
 
-    const handleConfirm = (date: Date) => {
+    const handleConfirm = (date) => {
         const formattedDate = date.toLocaleDateString("es-ES");
         handlePassengerChange(index, 'birthDate', formattedDate);
         hideDatePicker();

@@ -1,30 +1,25 @@
+// PriceSummaryContainer.jsx
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-interface PriceSummaryContainerProps {
-  ticketPrice: number;
-  passengerCount: number;
-  onConfirm: () => void;
-}
-
-const PriceSummaryContainer: React.FC<PriceSummaryContainerProps> = ({ ticketPrice, passengerCount, onConfirm }) => {
+export default function PriceSummaryContainer({ ticketPrice, passengerCount, onConfirm }) {
   const totalPrice = ticketPrice * passengerCount;
 
   return (
     <View style={styles.container}>
       <View style={styles.priceDetails}>
         <View>
-            <Text style={styles.priceLabel}>Precio por pasaje</Text>
-            <Text style={styles.priceDetailsText}>Bs. {ticketPrice} × {passengerCount}</Text>
+          <Text style={styles.priceLabel}>Precio por pasaje</Text>
+          <Text style={styles.priceDetailsText}>Bs. {ticketPrice} × {passengerCount}</Text>
         </View>
-      <Text style={styles.totalPrice}>Bs. {totalPrice}</Text>
-        </View>
+        <Text style={styles.totalPrice}>Bs. {totalPrice}</Text>
+      </View>
       <TouchableOpacity style={styles.confirmButton} onPress={onConfirm}>
         <Text style={styles.confirmButtonText}>Confirmar reserva</Text>
       </TouchableOpacity>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -75,5 +70,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-export default PriceSummaryContainer;

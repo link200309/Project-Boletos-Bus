@@ -87,17 +87,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: "center",
     alignItems: "center",
+    paddingLeft: 20,
   },
   scrollContainer: {
     flexDirection: "column",
     alignItems: "center",
     paddingBottom: 40,
-    paddingRight: 40,
   },
   contentContainer: {
     flexDirection: "column",
     alignItems: "center",
-    width: "100%",
+    width: "95%",
   },
   informativeTitleContainer: {
     width: "100%",

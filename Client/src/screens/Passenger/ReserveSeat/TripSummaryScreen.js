@@ -45,21 +45,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: "center",
     alignItems: "center",
+    paddingLeft: 5,
   },
   scrollContainer: {
     flexDirection: "column",
     alignItems: "center",
     paddingBottom: 40,
-    paddingRight: 40,
+    paddingRight: 20,
   },
   contentContainer: {
     flexDirection: "column",
     alignItems: "center",
-    width: "100%",
+    width: "85%",
   },
   informativeTitleContainer: {
     width: "100%",
     marginBottom: 20,
-    maxWidth: 340,
   },
 });

@@ -14,7 +14,7 @@ const TabsContainer = () => {
       seat: 'A01'
     },
     {
-      name: 'Maria Calle',
+      name: 'Maa Calle',
       ci: '7654321',
       birthDate: '05-03-1995',
       seat: 'A02'
@@ -53,31 +53,46 @@ const TabsContainer = () => {
             <View style={styles.iconContainer}>
               <Icon name="location-outline" style={styles.icon} />
             </View>
-            <Text style={styles.detailText}>Cochabamba → La Paz</Text>
+            <View>
+              <Text style={styles.detailTextTitle}>Origen y destino</Text>
+              <Text style={styles.detailText}>Cochabamba → La Paz</Text>
+            </View>
           </View>
           <View style={styles.detailRow}>
             <View style={styles.iconContainer}>
               <Icon name="calendar-outline" style={styles.icon} />
             </View>
-            <Text style={styles.detailText}>18 de Abril - 07:30 → 13:00</Text>
+            <View>
+              <Text style={styles.detailTextTitle}>Horario de viaje</Text>
+              <Text style={styles.detailText}>18 de Abril - 07:30 → 13:00</Text>
+          </View>
           </View>
           <View style={styles.detailRow}>
             <View style={styles.iconContainer}>
               <Icon name="business-outline" style={styles.icon} />
             </View>
-            <Text style={styles.detailText}>EL DORADO</Text>
+            <View>
+              <Text style={styles.detailTextTitle}>Agencia</Text>
+              <Text style={styles.detailText}>EL DORADO</Text>
+          </View>
           </View>
           <View style={styles.detailRow}>
             <View style={styles.iconContainer}>
               <Icon name="bus-outline" style={styles.icon} />
             </View>
-            <Text style={styles.detailText}>SEMI-CAMA</Text>
+            <View>
+              <Text style={styles.detailTextTitle}>Asientos</Text>
+              <Text style={styles.detailText}>SEMI-CAMA</Text>
+          </View>
           </View>
           <View style={styles.detailRow}>
             <View style={styles.iconContainer}>
               <Icon name="pricetag-outline" style={styles.icon} />
             </View>
-            <Text style={styles.detailText}>Bs. 90</Text>
+            <View>
+              <Text style={styles.detailTextTitle}>Precio por pasaje</Text>
+              <Text style={styles.detailText}>Bs. 90</Text>
+            </View>
           </View>
         </View>
       ) : (
@@ -156,6 +171,10 @@ const styles = StyleSheet.create({
   icon: {
     color: '#4B2EC2',
     fontSize: 24,
+  },
+   detailTextTitle: {
+    fontSize: 16,
+    color: '#000000',
   },
   detailText: {
     fontSize: 16,
