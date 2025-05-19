@@ -1,4 +1,3 @@
-// PriceSummaryContainer.jsx
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -7,15 +6,21 @@ export default function PriceSummaryContainer({ ticketPrice, passengerCount, onC
 
   return (
     <View style={styles.container}>
-      <View style={styles.priceDetails}>
-        <View>
-          <Text style={styles.priceLabel}>Precio por pasaje</Text>
-          <Text style={styles.priceDetailsText}>Bs. {ticketPrice} × {passengerCount}</Text>
+      <View style={styles.priceSection}>
+        <View style={styles.priceRow}>
+          <View>
+            <Text style={styles.priceLabel}>Precio por pasaje</Text>
+            <Text style={styles.priceDetails}>Bs. {ticketPrice} × {passengerCount}</Text>
+          </View>
+          <Text style={styles.totalPrice}>Bs. {totalPrice}</Text>
         </View>
-        <Text style={styles.totalPrice}>Bs. {totalPrice}</Text>
       </View>
-      <TouchableOpacity style={styles.confirmButton} onPress={onConfirm}>
-        <Text style={styles.confirmButtonText}>Confirmar reserva</Text>
+
+      <TouchableOpacity 
+        style={styles.confirmButton} 
+        onPress={onConfirm}
+      >
+        <Text style={styles.buttonText}>Confirmar reserva</Text>
       </TouchableOpacity>
     </View>
   );
@@ -23,49 +28,46 @@ export default function PriceSummaryContainer({ ticketPrice, passengerCount, onC
 
 const styles = StyleSheet.create({
   container: {
+    borderRadius: 20,
+    width: 370,
+    padding: 25,
+    marginTop: 20,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
-    marginVertical: 20,
-    marginHorizontal: 16,
     shadowColor: '#000',
     shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 4,
-    alignItems: 'center',
-    width: '100%',
-    alignSelf: 'center',
+    shadowRadius: 8,
+    elevation: 2,
   },
-  priceDetails: {
+  priceSection: {
+    marginBottom: 20,
+  },
+  priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 20,
+    alignItems: 'center',
   },
   priceLabel: {
     fontSize: 16,
-    color: '#333',
+    color: '#000000',
+    marginBottom: 5,
   },
-  priceDetailsText: {
+  priceDetails: {
     fontSize: 14,
-    color: '#666',
+    color: '#666666',
   },
   totalPrice: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#000',
-    alignSelf: 'flex-end',
-    marginBottom: 20,
+    color: '#000000',
   },
   confirmButton: {
     backgroundColor: '#4B2EC2',
-    paddingVertical: 15,
-    borderRadius: 8,
-    width: '100%',
+    padding: 15,
+    borderRadius: 10,
     alignItems: 'center',
   },
-  confirmButtonText: {
-    color: '#FFF',
+  buttonText: {
+    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
   },

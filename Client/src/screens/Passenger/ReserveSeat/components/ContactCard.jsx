@@ -1,76 +1,76 @@
-// ContactCard.tsx
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 
-interface ContactCardProps {
-  contact: any;
-  setContact: (contact: any) => void;
-  containerStyle?: object;
-}
-
-export const ContactCard: React.FC<ContactCardProps> = ({ contact, setContact, containerStyle }) => {
+export default function ContactCard({ contact, setContact, containerStyle }) {
   return (
-    <View style={[styles.card, containerStyle]}>
-      <Text style={styles.title}>Datos de contacto</Text>
+    <View style={[styles.container, containerStyle]}>
+      <Text style={styles.headerText}>Datos de contacto</Text>
 
-      <Text style={styles.label}>Correo Electrónico</Text>
-      <TextInput
-        value={contact.email}
-        onChangeText={(text) => setContact({ ...contact, email: text })}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        style={styles.input}
-      />
-    
-      <Text style={styles.label}>
-        Nro de Celular <Text style={styles.asterisk}> * </Text>
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Correo Electrónico</Text>
+        <TextInput
+          value={contact.email}
+          onChangeText={(text) => setContact({ ...contact, email: text })}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          style={styles.inputField}
+          placeholder="ejemplo@correo.com"
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>
+          Nro de Celular <Text style={styles.required}>*</Text>
         </Text>
-      <TextInput
-        placeholder="Ingrea un Nro de celular"
-        value={contact.phone}
-        onChangeText={(text) => setContact({ ...contact, phone: text })}
-        keyboardType="phone-pad"
-        style={styles.input}
-      />           
-    </View>   
+        <TextInput
+          placeholder="Ingresa un Nro de celular"
+          value={contact.phone}
+          onChangeText={(text) => setContact({ ...contact, phone: text })}
+          keyboardType="phone-pad"
+          style={styles.inputField}
+        />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
+  container: {
+    borderRadius: 20,
+    width: 370,
+    padding: 25,
+    marginTop: 20,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-    margin: 10,
     shadowColor: '#000',
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
-    width: '95%',
-    alignSelf: 'center',
   },
-  title: {
+  headerText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
     color: '#000000',
+    marginBottom: 20,
+  },
+  inputGroup: {
+    marginBottom: 20,
   },
   label: {
-    marginBottom: 5,
+    marginBottom: 8,
     color: '#000000',
     fontWeight: 'bold',
     fontSize: 13,
   },
-  asterisk:{
+  required: {
     color: '#FF0000',
   },
-  input: {
+  inputField: {
     backgroundColor: '#FFF',
-    padding: 10,
+    padding: 15,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#E6E8FF',
-    marginBottom: 10,
-    width: '100%',
+    color: '#000000',
   },
 });
+

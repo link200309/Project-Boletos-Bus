@@ -20,76 +20,59 @@ export const PassengerCard = ({ index, passenger, handlePassengerChange, contain
         hideDatePicker();
     };
 
-    const handleTextChange = (index, field, value) => {
-        let newValue = value.toUpperCase();
-
-        if (field === 'firstName' || field === 'lastName') {
-            // Allow only letters, spaces, and limit to 20 characters, transform to uppercase
-            newValue = newValue.replace(/[^A-ZÁÉÍÓÚÜÑ\s]/g, '').substring(0, 20);
-        }
-        if (field === 'identityNumber') {
-            // Allow only numbers and limit to 10 characters
-            newValue = newValue.replace(/[^0-9]/g, '').substring(0, 10);
-        }
-        if (field === 'birthDate') {
-            // Allow only numbers, limit to 8 characters, and format as dd/mm/yyyy
-            newValue = newValue.replace(/[^0-9]/g, '').substring(0, 8);
-            if (newValue.length === 8) {
-                newValue = `${newValue.substring(0, 2)}/${newValue.substring(2, 4)}/${newValue.substring(4, 8)}`;
-            }
-        }
-        handlePassengerChange(index, field, newValue);
-    };
-
     return (
-        <View style={[styles.card, containerStyle]}>
+        <View style={[styles.container, containerStyle]}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>Pasajero {index + 1}</Text>
                 <Text style={styles.seat}>Asiento: {passenger.seat}</Text>
             </View>
 
-            <Text style={styles.label}>
-                Nombre <Text style={styles.asterisk}> * </Text>
-            </Text>
-            <TextInput
-                placeholder="Ingresa nombre(s)"
-                value={passenger.firstName}
-                onChangeText={(text) => handleTextChange(index, 'firstName', text)}
-                style={styles.input}
-            />
+            <View style={styles.inputGroup}>
+                <Text style={styles.label}>
+                    Nombre <Text style={styles.asterisk}>*</Text>
+                </Text>
+                <TextInput
+                    placeholder="Ingresa nombre(s)"
+                    value={passenger.firstName}
+                    onChangeText={(text) => handlePassengerChange(index, 'firstName', text)}
+                    style={styles.input}
+                />
+            </View>
 
-            <Text style={styles.label}>
-                Apellido <Text style={styles.asterisk}> * </Text>
-            </Text>
-            <TextInput
-                placeholder="Ingresa apellido(s)"
-                value={passenger.lastName}
-                onChangeText={(text) => handleTextChange(index, 'lastName', text)}
-                style={styles.input}
-            />
+            <View style={styles.inputGroup}>
+                <Text style={styles.label}>
+                    Apellido <Text style={styles.asterisk}>*</Text>
+                </Text>
+                <TextInput
+                    placeholder="Ingresa apellido(s)"
+                    value={passenger.lastName}
+                    onChangeText={(text) => handlePassengerChange(index, 'lastName', text)}
+                    style={styles.input}
+                />
+            </View>
 
             <View style={styles.rowContainer}>
-                <View style={styles.halfContainer}>
+                <View style={[styles.halfContainer, styles.inputGroup]}>
                     <Text style={styles.label}>
-                        N° de Identidad <Text style={styles.asterisk}> * </Text> 
+                        N° de Identidad <Text style={styles.asterisk}>*</Text>
                     </Text>
                     <TextInput
                         placeholder="N° de Identidad"
                         value={passenger.identityNumber}
-                        onChangeText={(text) => handleTextChange(index, 'identityNumber', text)}
+                        onChangeText={(text) => handlePassengerChange(index, 'identityNumber', text)}
                         keyboardType="numeric"
                         style={styles.input}
                     />
                 </View>
 
-                <View style={styles.halfContainer}>
+                <View style={[styles.halfContainer, styles.inputGroup]}>
                     <Text style={styles.label}>
-                        Fecha de Nacimiento  <Text style={styles.asterisk}> * </Text>
+                        Fecha de Nacimiento <Text style={styles.asterisk}>*</Text>
                     </Text>
                     <View style={styles.dateInputContainer}>
                         <TextInput
                             value={passenger.birthDate}
-                            onChangeText={(text) => handleTextChange(index, 'birthDate', text)}
+                            onChangeText={(text) => handlePassengerChange(index, 'birthDate', text)}
                             keyboardType="numeric"
                             style={styles.dateInput}
                         />
@@ -112,23 +95,22 @@ export const PassengerCard = ({ index, passenger, handlePassengerChange, contain
 };
 
 const styles = StyleSheet.create({
-    card: {
+    container: {
+        borderRadius: 20,
+        width: 370,
+        padding: 25,
+        marginTop: 20,
         backgroundColor: '#FFFFFF',
-        borderRadius: 16,
-        padding: 16,
-        margin: 10,
         shadowColor: '#000',
         shadowOpacity: 0.05,
         shadowRadius: 8,
         elevation: 2,
-        width: '90%',
-        alignSelf: 'center',
     },
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 15,
     },
     title: {
         fontSize: 18,
@@ -140,23 +122,24 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#000000',
     },
+    inputGroup: {
+        marginBottom: 15,
+    },
     label: {
-        marginBottom: 5,
+        marginBottom: 8,
         color: '#000000',
         fontWeight: 'bold',
         fontSize: 13,
     },
-    asterisk:{
+    asterisk: {
         color: '#FF0000',
     },
     input: {
         backgroundColor: '#FFF',
-        padding: 10,
+        padding: 15,
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#E6E8FF',
-        marginBottom: 10,
-        width: '100%',
         color: '#000000',
     },
     rowContainer: {
@@ -174,11 +157,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#E6E8FF',
-        marginBottom: 10,
     },
     dateInput: {
         flex: 1,
-        paddingVertical: 10,
+        paddingVertical: 15,
         color: '#000000',
     },
     calendarIcon: {
