@@ -20,6 +20,27 @@ export const PassengerCard = ({ index, passenger, handlePassengerChange, contain
         hideDatePicker();
     };
 
+    const handleTextChange = (index, field, value) => {
+        let newValue = value.toUpperCase();
+
+        if (field === 'firstName' || field === 'lastName') {
+            // Allow only letters, spaces, and limit to 20 characters, transform to uppercase
+            newValue = newValue.replace(/[^A-ZÁÉÍÓÚÜÑ\s]/g, '').substring(0, 20);
+        }
+        if (field === 'identityNumber') {
+            // Allow only numbers and limit to 10 characters
+            newValue = newValue.replace(/[^0-9]/g, '').substring(0, 10);
+        }
+        if (field === 'birthDate') {
+            // Allow only numbers, limit to 8 characters, and format as dd/mm/yyyy
+            newValue = newValue.replace(/[^0-9]/g, '').substring(0, 8);
+            if (newValue.length === 8) {
+                newValue = `${newValue.substring(0, 2)}/${newValue.substring(2, 4)}/${newValue.substring(4, 8)}`;
+            }
+        }
+        handlePassengerChange(index, field, newValue);
+    };
+
     return (
         <View style={[styles.card, containerStyle]}>
             <View style={styles.headerContainer}>
@@ -33,7 +54,7 @@ export const PassengerCard = ({ index, passenger, handlePassengerChange, contain
             <TextInput
                 placeholder="Ingresa nombre(s)"
                 value={passenger.firstName}
-                onChangeText={(text) => handlePassengerChange(index, 'firstName', text)}
+                onChangeText={(text) => handleTextChange(index, 'firstName', text)}
                 style={styles.input}
             />
 
@@ -43,7 +64,7 @@ export const PassengerCard = ({ index, passenger, handlePassengerChange, contain
             <TextInput
                 placeholder="Ingresa apellido(s)"
                 value={passenger.lastName}
-                onChangeText={(text) => handlePassengerChange(index, 'lastName', text)}
+                onChangeText={(text) => handleTextChange(index, 'lastName', text)}
                 style={styles.input}
             />
 
@@ -55,7 +76,7 @@ export const PassengerCard = ({ index, passenger, handlePassengerChange, contain
                     <TextInput
                         placeholder="N° de Identidad"
                         value={passenger.identityNumber}
-                        onChangeText={(text) => handlePassengerChange(index, 'identityNumber', text)}
+                        onChangeText={(text) => handleTextChange(index, 'identityNumber', text)}
                         keyboardType="numeric"
                         style={styles.input}
                     />
@@ -68,7 +89,7 @@ export const PassengerCard = ({ index, passenger, handlePassengerChange, contain
                     <View style={styles.dateInputContainer}>
                         <TextInput
                             value={passenger.birthDate}
-                            onChangeText={(text) => handlePassengerChange(index, 'birthDate', text)}
+                            onChangeText={(text) => handleTextChange(index, 'birthDate', text)}
                             keyboardType="numeric"
                             style={styles.dateInput}
                         />

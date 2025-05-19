@@ -26,6 +26,7 @@ const TabsContainer = () => {
       seat: 'A03'
     }
   ];
+  
 
   return (
     <View style={styles.container}>

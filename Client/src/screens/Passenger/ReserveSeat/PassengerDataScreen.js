@@ -15,7 +15,7 @@ import { ContactCard } from "./components/ContactCard";
 
 export default function PassengerDataScreen({ navigation, route }) {
   const {
-    selectedSeats = ["A01", "A02"],
+    selectedSeats = ["A01"], //trabajar para la cantidad de seleccion de asientos
     travelDetails = {
       route: "Cochabamba → La Paz",
       date: "Viernes 20 de mayo",
