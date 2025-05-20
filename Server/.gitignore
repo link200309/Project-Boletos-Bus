@@ -1,0 +1,5 @@
+node_modules
+.gitignore
+/src/generated/prisma
+.env
+/.env.local

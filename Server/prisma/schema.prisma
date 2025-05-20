@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id_usuario         Int       @id @default(autoincrement())
+  tipo_usuario       String    @db.VarChar(30) // Ej: "cliente", "agencia", "admin"
+  nombre_usuario     String    @db.VarChar(80)
+  correo_electronico String    @unique @db.VarChar(80)
+  contraseña         String    @db.VarChar(100)
+  numero_celular     Int
+
+  agencia            Agencia? // Relación opcional con Agencia
+}
+
+
+model Agencia {
+  id_agencia         Int       @id @default(autoincrement())
+  id_usuario         Int       @unique
+  nombre_agencia     String    @db.VarChar(80)
+  tipo_sociedad      String    @db.VarChar(30)
+  NIT                String    @db.VarChar(20)
+  departamento       String    @db.VarChar(30)
+  ciudad             String    @db.VarChar(40)
+  direccion          String    @db.VarChar(100)
+  estado             String    @db.VarChar(30)
+
+  usuario            Usuario   @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+
+  buses              Bus[]
+  choferes           Chofer[]
+  configuraciones    Configuracion_Pago[]
+}
+
+
+model Bus {
+  id_bus     Int     @id @default(autoincrement())
+  placa      String  @db.VarChar(20)
+  marca      String  @db.VarChar(30)
+  modelo     String  @db.VarChar(30)
+  año_modelo Int
+  tipo_bus   String  @db.VarChar(30)
+  estado     String  @db.VarChar(20)
+
+  id_agencia  Int
+  agencia     Agencia @relation(fields: [id_agencia], references: [id_agencia], onDelete: Cascade)
+
+  asientos   Asiento[]
+  viajes     Viaje[]
+}
+
+
+model Asiento {
+  id_asiento Int     @id @default(autoincrement())
+  numero     String  @db.VarChar(20)
+  ubicacion  String  @db.VarChar(20)
+  estado     String  @db.VarChar(20)
+
+  id_bus      Int
+  bus        Bus     @relation(fields: [id_bus], references: [id_bus], onDelete: Cascade)
+}
+
+
+model Viaje {
+  id_viaje              Int                  @id @default(autoincrement())
+  fecha_salida          DateTime
+  hora_salida_programada String             @db.VarChar(15)
+  hora_salida_real      String              @db.VarChar(15)
+  costo                 Decimal              @db.Decimal(5,2)
+
+
+  id_bus                Int
+  bus                   Bus                  @relation(fields: [id_bus], references: [id_bus])
+
+  id_ruta               Int
+  ruta                  Ruta                 @relation(fields: [id_ruta], references: [id_ruta])
+
+  id_chofer             Int
+  chofer                Chofer               @relation(fields: [id_chofer], references: [id_chofer])
+
+  id_pago               Int
+  pago                  Configuracion_Pago   @relation(fields: [id_pago], references: [id_pago])
+}
+
+
+model Ruta {
+  id_ruta          Int     @id @default(autoincrement())
+  origen           String  @db.VarChar(30)
+  parada_intermedia String @db.VarChar(30)
+  destino          String  @db.VarChar(30)
+  distancia        String  @db.VarChar(20)
+  tiempo_estimado  String  @db.VarChar(20)
+  camino           String  @db.VarChar(50)
+
+  viajes           Viaje[]
+}
+
+model Configuracion_Pago {
+  id_pago       Int     @id @default(autoincrement())
+  ruta_codigo_qr String @db.VarChar(100)
+  fecha_creacion DateTime
+  estado         String @db.VarChar(20)
+
+  id_agencia      Int
+  agencia         Agencia @relation(fields: [id_agencia], references: [id_agencia], onDelete: Cascade)
+
+  viajes          Viaje[]
+}
+
+model Chofer {
+  id_chofer           Int     @id @default(autoincrement())
+  nombre              String  @db.VarChar(50)
+  apellido            String  @db.VarChar(50)
+  carnet_identidad    String  @db.VarChar(15)
+  numero_celular      String  @db.VarChar(10)
+  categoria_licencia  String  @db.VarChar(10)
+  direccion_contacto  String  @db.VarChar(50)
+  estado              String  @db.VarChar(20)
+
+  id_agencia           Int
+  agencia              Agencia @relation(fields: [id_agencia], references: [id_agencia], onDelete: Cascade)
+
+  viajes              Viaje[]
+}
