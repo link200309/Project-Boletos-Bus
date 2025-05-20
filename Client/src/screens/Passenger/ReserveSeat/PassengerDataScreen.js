@@ -56,12 +56,35 @@ export default function PassengerDataScreen({ navigation, route }) {
           ))}
 
           <ContactCard contact={contact} setContact={setContact} />
-
-          <TouchableOpacity onPress={() => navigation.navigate("TripSummary")}>
-            <Text>Continuar</Text>
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={() => navigation.navigate("TripSummary")}
+          >
+            <Text style={styles.continueButtonText}>Continuar</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </GenericContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  continueButton: {
+    backgroundColor: "#4B2EC2",
+    padding: 15,
+    borderRadius: 8,
+    marginVertical: 20,
+    width: "95%",
+    alignSelf: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  continueButtonText: {
+    color: "#FFF",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+});
