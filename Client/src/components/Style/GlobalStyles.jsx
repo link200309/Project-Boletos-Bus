@@ -14,5 +14,6 @@ export const GlobalStyles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 2.5,
     elevation: 5,
+    marginTop: 20,
   },
 });
