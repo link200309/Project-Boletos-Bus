@@ -5,7 +5,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { GenericContainer } from "../../../components/GenericContainer";
 import { InformativeTitle } from "../../../components/InformativeTitle";
 import { BlobBg } from "../../../components/Background/BlobBg";
-import SeatSelection from "./components/SeatSelection";
+import { SeatSelection } from "./components/SeatSelection";
 
 export default function AvailabilitySeatScreen() {
   return (
