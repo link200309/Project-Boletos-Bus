@@ -1,19 +1,10 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
-import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
-import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
+import { View, StyleSheet } from "react-native";
+import { Seat } from "./Seat";
 
 export const SeatGrid = () => {
-  const [selectedFloor, setSelectedFloor] = useState("superior"); // 'superior' o 'inferior'
-  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [selectedFloor, setSelectedFloor] = useState("superior");
 
-  // Datos estáticos de asientos
   const upperFloorSeats = [
     { id: "01", status: "available" },
     { id: "02", status: "available" },
@@ -48,76 +39,69 @@ export const SeatGrid = () => {
     { id: "08", status: "occupied" },
   ];
 
-  const handleSeatPress = (seatId, status) => {
-    if (status === "available" || selectedSeats.includes(seatId)) {
-      if (selectedSeats.includes(seatId)) {
-        setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
-      } else {
-        setSelectedSeats([...selectedSeats, seatId]);
-      }
-    }
-  };
-
-  const getSeatStyle = (seat) => {
-    if (seat.status === "tv") {
-      return styles.tvSeat;
-    }
-    if (selectedSeats.includes(seat.id)) {
-      return styles.selectedSeat;
-    }
-    switch (seat.status) {
-      case "available":
-        return styles.availableSeat;
-      case "occupied":
-        return styles.occupiedSeat;
-      case "unavailable":
-        return styles.unavailableSeat;
-      default:
-        return styles.availableSeat;
-    }
-  };
-
-  const getSeatTextStyle = (seat) => {
-    if (seat.status === "tv") {
-      return styles.tvText;
-    }
-    if (selectedSeats.includes(seat.id)) {
-      return styles.selectedText;
-    }
-    if (seat.status === "occupied") {
-      return styles.occupiedText;
-    }
-    if (seat.status === "unavailable") {
-      return styles.unavailableText;
-    }
-    return styles.availableText;
-  };
-
-  const renderSeat = (seat) => (
-    <TouchableOpacity
-      key={seat.id}
-      style={[styles.seat, getSeatStyle(seat)]}
-      onPress={() => handleSeatPress(seat.id, seat.status)}
-      disabled={
-        seat.status === "occupied" ||
-        seat.status === "unavailable" ||
-        seat.status === "tv"
-      }
-    >
-      <Text style={getSeatTextStyle(seat)}>
-        {seat.status === "tv" ? "TV" : seat.id}
-      </Text>
-    </TouchableOpacity>
-  );
-
   const currentSeats =
     selectedFloor === "superior" ? upperFloorSeats : lowerFloorSeats;
 
+  // Filtrar los TV
+  const tvSeats = currentSeats.filter((seat) => seat.status === "tv");
+
+  // Filtrar los asientos normales
+  const normalSeats = currentSeats.filter((seat) => seat.status !== "tv");
+
+  // Agrupar en filas de 3 normales + 1 TV (por fila)
+  const groupedRows = [];
+  let i = 0;
+  let j = 0;
+  while (i < normalSeats.length || j < tvSeats.length) {
+    const row = [];
+    for (let col = 0; col < 4; col++) {
+      if (col === 2) {
+        // Tercera columna solo TVs
+        if (j < tvSeats.length) {
+          row.push({ ...tvSeats[j], col });
+          j++;
+        } else {
+          row.push(null); // Espacio vacío
+        }
+      } else {
+        if (i < normalSeats.length) {
+          row.push({ ...normalSeats[i], col });
+          i++;
+        } else {
+          row.push(null);
+        }
+      }
+    }
+    groupedRows.push(row);
+  }
+
   return (
     <View style={styles.seatMap}>
-      <ScrollView contentContainerStyle={styles.seatsContainer}>
-        {currentSeats.map(renderSeat)}
-      </ScrollView>
+      {groupedRows.map((row, rowIndex) => (
+        <View key={rowIndex} style={styles.row}>
+          {row.map((seat, colIndex) =>
+            seat ? (
+              <View
+                key={seat.id}
+                style={[
+                  styles.seatWrapper,
+                  colIndex === 2 && styles.tvColumn,
+                ]}
+              >
+                <Seat id={seat.id} status={seat.status} />
+              </View>
+            ) : (
+              <View
+                key={`empty-${rowIndex}-${colIndex}`}
+                style={[
+                  styles.seatWrapper,
+                  colIndex === 2 && styles.tvColumn,
+                ]}
+              />
+            )
+          )}
+        </View>
+      ))}
     </View>
   );
 };
@@ -128,61 +112,16 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
   },
-  seatsContainer: {
+  row: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
+    justifyContent: "space-between",
+    marginBottom: 12,
   },
-  seat: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
+  seatWrapper: {
+    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 8,
   },
-  availableSeat: {
-    backgroundColor: "#FFFFFF",
-    borderWidth: 2,
-    borderColor: "#6366F1",
-  },
-  selectedSeat: {
-    backgroundColor: "#6366F1",
-  },
-  occupiedSeat: {
-    backgroundColor: "#EF4444",
-  },
-  unavailableSeat: {
-    backgroundColor: "#6B7280",
-  },
-  tvSeat: {
-    backgroundColor: "#6366F1",
-    borderWidth: 2,
-    borderColor: "#4F46E5",
-  },
-  availableText: {
-    color: "#6366F1",
-    fontWeight: "600",
-    fontSize: 12,
-  },
-  selectedText: {
-    color: "#FFFFFF",
-    fontWeight: "600",
-    fontSize: 12,
-  },
-  occupiedText: {
-    color: "#FFFFFF",
-    fontWeight: "600",
-    fontSize: 12,
-  },
-  unavailableText: {
-    color: "#FFFFFF",
-    fontWeight: "600",
-    fontSize: 12,
-  },
-  tvText: {
-    color: "#FFFFFF",
-    fontWeight: "600",
-    fontSize: 10,
+  tvColumn: {
+    flex: 1.5,
   },
 });

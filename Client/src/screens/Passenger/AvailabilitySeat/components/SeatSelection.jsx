@@ -5,7 +5,7 @@ import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { SeatGrid } from "./SeatGrid";
 
 export const SeatSelection = () => {
-  const [selectedFloor, setSelectedFloor] = useState("superior"); // 'superior' o 'inferior'
+  const [selectedFloor, setSelectedFloor] = useState("superior");
   const [selectedSeats, setSelectedSeats] = useState([]);
 
   return (
