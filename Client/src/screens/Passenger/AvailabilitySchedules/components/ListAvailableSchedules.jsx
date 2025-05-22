@@ -10,7 +10,7 @@ export const ListAvailableSchedules = ({ travels, navigation }) => {
       data={travels}
       keyExtractor={(travel) => travel.id_viaje}
       renderItem={(travel, index) => {
-        return <AvailableSchedules travel={travel} key={index} />;
+        return <AvailableSchedules travel={travel} key={index} navigation={navigation} />;
       }}
     />
   );

@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const TabsContainer = () => {
   const [activeTab, setActiveTab] = useState('detalles');
 
-  // Datos de ejemplo para pasajeros
   const passengers = [
     {
       name: 'Juan Pérez',
@@ -29,8 +28,8 @@ const TabsContainer = () => {
 
   return (
     <View style={styles.container}>
-      {/* Pestañas */}
-      <View style={styles.tabContainer}>
+      {/* Tabs */}
+      <View style={styles.tabBar}>
         <TouchableOpacity 
           style={[styles.tab, activeTab === 'detalles' && styles.activeTab]}
           onPress={() => setActiveTab('detalles')}
@@ -46,51 +45,70 @@ const TabsContainer = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Contenido */}
+      {/* Content */}
       {activeTab === 'detalles' ? (
-         <View style={styles.detailsContent}>
-          <View style={styles.detailRow}>
-            <View style={styles.iconContainer}>
+        <View style={styles.detailsContainer}>
+          <View style={styles.detailItem}>
+            <View style={styles.iconWrapper}>
               <Icon name="location-outline" style={styles.icon} />
             </View>
-            <Text style={styles.detailText}>Cochabamba → La Paz</Text>
+            <View style={styles.textWrapper}>
+              <Text style={styles.detailTitle}>Origen y destino</Text>
+              <Text style={styles.detailContent}>Cochabamba → La Paz</Text>
+            </View>
           </View>
-          <View style={styles.detailRow}>
-            <View style={styles.iconContainer}>
+
+          <View style={styles.detailItem}>
+            <View style={styles.iconWrapper}>
               <Icon name="calendar-outline" style={styles.icon} />
             </View>
-            <Text style={styles.detailText}>18 de Abril - 07:30 → 13:00</Text>
+            <View style={styles.textWrapper}>
+              <Text style={styles.detailTitle}>Horario de viaje</Text>
+              <Text style={styles.detailContent}>18 de Abril - 07:30 → 13:00</Text>
+            </View>
           </View>
-          <View style={styles.detailRow}>
-            <View style={styles.iconContainer}>
+
+          <View style={styles.detailItem}>
+            <View style={styles.iconWrapper}>
               <Icon name="business-outline" style={styles.icon} />
             </View>
-            <Text style={styles.detailText}>EL DORADO</Text>
+            <View style={styles.textWrapper}>
+              <Text style={styles.detailTitle}>Agencia</Text>
+              <Text style={styles.detailContent}>EL DORADO</Text>
+            </View>
           </View>
-          <View style={styles.detailRow}>
-            <View style={styles.iconContainer}>
+
+          <View style={styles.detailItem}>
+            <View style={styles.iconWrapper}>
               <Icon name="bus-outline" style={styles.icon} />
             </View>
-            <Text style={styles.detailText}>SEMI-CAMA</Text>
+            <View style={styles.textWrapper}>
+              <Text style={styles.detailTitle}>Asientos</Text>
+              <Text style={styles.detailContent}>SEMI-CAMA</Text>
+            </View>
           </View>
-          <View style={styles.detailRow}>
-            <View style={styles.iconContainer}>
+
+          <View style={styles.detailItem}>
+            <View style={styles.iconWrapper}>
               <Icon name="pricetag-outline" style={styles.icon} />
             </View>
-            <Text style={styles.detailText}>Bs. 90</Text>
+            <View style={styles.textWrapper}>
+              <Text style={styles.detailTitle}>Precio por pasaje</Text>
+              <Text style={styles.detailContent}>Bs. 90</Text>
+            </View>
           </View>
         </View>
       ) : (
-        <View style={styles.passengerContent}>
-          <Text style={styles.sectionTitle}>Pasajeros</Text>
+        <View style={styles.passengersContainer}>
+          <Text style={styles.sectionHeader}>Pasajeros</Text>
           {passengers.map((passenger, index) => (
             <View key={index} style={styles.passengerCard}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <View style={styles.passengerHeader}>
                 <Text style={styles.passengerName}>{passenger.name}</Text>
-                <Text style={styles.seatText}>Asiento {passenger.seat}</Text>
+                <Text style={styles.seatLabel}>Asiento {passenger.seat}</Text>
               </View>
-              <Text style={styles.passengerInfo}>CI: {passenger.ci}</Text>
-              <Text style={styles.passengerInfo}>Fecha Nacimiento: {passenger.birthDate}</Text>
+              <Text style={styles.passengerDetail}>CI: {passenger.ci}</Text>
+              <Text style={styles.passengerDetail}>Fecha Nacimiento: {passenger.birthDate}</Text>
             </View>
           ))}
         </View>
@@ -101,20 +119,21 @@ const TabsContainer = () => {
 
 const styles = StyleSheet.create({
   container: {
+    borderRadius: 20,
+    width: 370,
+    padding: 25,
+    marginTop: 20,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    margin: 10,
     shadowColor: '#000',
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
-    width: '100%',
-    alignSelf: 'center',
   },
-  tabContainer: {
+  tabBar: {
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
+    marginBottom: 20,
   },
   tab: {
     flex: 1,
@@ -123,7 +142,7 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomWidth: 2,
-    borderBottomColor: '#000',
+    borderBottomColor: '#4B2EC2',
     marginBottom: -1,
   },
   tabText: {
@@ -132,67 +151,81 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   activeTabText: {
-    color: '#000',
+    color: '#4B2EC2',
     fontWeight: 'bold',
   },
-  detailsContent: {
-    padding: 16,
+  detailsContainer: {
+    padding: 5,
   },
-  detailRow: {
+  detailItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  iconContainer: {
+  iconWrapper: {
     backgroundColor: '#F0F3FF',
     borderRadius: 12,
-    padding: 8,
-    marginRight: 16,
+    padding: 10,
+    marginRight: 15,
+    width: 44,
+    height: 44,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 40,
-    height: 40,
   },
   icon: {
     color: '#4B2EC2',
     fontSize: 24,
   },
-  detailText: {
+  textWrapper: {
+    flex: 1,
+  },
+  detailTitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 2,
+  },
+  detailContent: {
     fontSize: 16,
-    color: '#555',
+    color: '#000',
+    fontWeight: '500',
   },
-  passengerContent: {
-    padding: 16,
+  passengersContainer: {
+    padding: 5,
   },
-  sectionTitle: {
+  sectionHeader: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 16,
     color: '#000',
+    marginBottom: 15,
   },
   passengerCard: {
-    backgroundColor: '#F0F3FF',
-    borderRadius: 16,
+    backgroundColor: '#F7F8FF',
+    borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#eee',
+    borderColor: '#E6E8FF',
+  },
+  passengerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
   },
   passengerName: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#000',
-    marginBottom: 6,
   },
-  passengerInfo: {
-    fontSize: 14,
-    color: '#555',
-    marginBottom: 4,
-  },
-  seatText: {
+  seatLabel: {
     fontSize: 14,
     color: '#666',
     fontWeight: '500',
+  },
+  passengerDetail: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 4,
   },
 });
 

@@ -60,7 +60,6 @@ class TravelController {
             asientos_disponibles: viaje.bus.asientos,
           },
         }));
-
       res.status(200).json(viajesFiltrados);
     } catch (error) {
       console.error(error);

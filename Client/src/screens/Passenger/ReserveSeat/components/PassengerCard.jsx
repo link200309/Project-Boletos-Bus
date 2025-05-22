@@ -3,14 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { MaterialIcons } from '@expo/vector-icons';
 
-interface PassengerCardProps {
-    index: number;
-    passenger: any;
-    handlePassengerChange: (index: number, field: string, value: string) => void;
-    containerStyle?: object;
-}
-
-export const PassengerCard: React.FC<PassengerCardProps> = ({ index, passenger, handlePassengerChange, containerStyle }) => {
+export const PassengerCard = ({ index, passenger, handlePassengerChange, containerStyle }) => {
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
 
     const showDatePicker = () => {
@@ -21,43 +14,47 @@ export const PassengerCard: React.FC<PassengerCardProps> = ({ index, passenger, 
         setDatePickerVisible(false);
     };
 
-    const handleConfirm = (date: Date) => {
+    const handleConfirm = (date) => {
         const formattedDate = date.toLocaleDateString("es-ES");
         handlePassengerChange(index, 'birthDate', formattedDate);
         hideDatePicker();
     };
 
     return (
-        <View style={[styles.card, containerStyle]}>
+        <View style={[styles.container, containerStyle]}>
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>Pasajero {index + 1}</Text>
                 <Text style={styles.seat}>Asiento: {passenger.seat}</Text>
             </View>
 
-            <Text style={styles.label}>
-                Nombre <Text style={styles.asterisk}> * </Text>
-            </Text>
-            <TextInput
-                placeholder="Ingresa nombre(s)"
-                value={passenger.firstName}
-                onChangeText={(text) => handlePassengerChange(index, 'firstName', text)}
-                style={styles.input}
-            />
+            <View style={styles.inputGroup}>
+                <Text style={styles.label}>
+                    Nombre <Text style={styles.asterisk}>*</Text>
+                </Text>
+                <TextInput
+                    placeholder="Ingresa nombre(s)"
+                    value={passenger.firstName}
+                    onChangeText={(text) => handlePassengerChange(index, 'firstName', text)}
+                    style={styles.input}
+                />
+            </View>
 
-            <Text style={styles.label}>
-                Apellido <Text style={styles.asterisk}> * </Text>
-            </Text>
-            <TextInput
-                placeholder="Ingresa apellido(s)"
-                value={passenger.lastName}
-                onChangeText={(text) => handlePassengerChange(index, 'lastName', text)}
-                style={styles.input}
-            />
+            <View style={styles.inputGroup}>
+                <Text style={styles.label}>
+                    Apellido <Text style={styles.asterisk}>*</Text>
+                </Text>
+                <TextInput
+                    placeholder="Ingresa apellido(s)"
+                    value={passenger.lastName}
+                    onChangeText={(text) => handlePassengerChange(index, 'lastName', text)}
+                    style={styles.input}
+                />
+            </View>
 
             <View style={styles.rowContainer}>
-                <View style={styles.halfContainer}>
+                <View style={[styles.halfContainer, styles.inputGroup]}>
                     <Text style={styles.label}>
-                        N° de Identidad <Text style={styles.asterisk}> * </Text> 
+                        N° de Identidad <Text style={styles.asterisk}>*</Text>
                     </Text>
                     <TextInput
                         placeholder="N° de Identidad"
@@ -68,9 +65,9 @@ export const PassengerCard: React.FC<PassengerCardProps> = ({ index, passenger, 
                     />
                 </View>
 
-                <View style={styles.halfContainer}>
+                <View style={[styles.halfContainer, styles.inputGroup]}>
                     <Text style={styles.label}>
-                        Fecha de Nacimiento  <Text style={styles.asterisk}> * </Text>
+                        Fecha de Nacimiento <Text style={styles.asterisk}>*</Text>
                     </Text>
                     <View style={styles.dateInputContainer}>
                         <TextInput
@@ -98,23 +95,22 @@ export const PassengerCard: React.FC<PassengerCardProps> = ({ index, passenger, 
 };
 
 const styles = StyleSheet.create({
-    card: {
+    container: {
+        borderRadius: 20,
+        width: 370,
+        padding: 25,
+        marginTop: 20,
         backgroundColor: '#FFFFFF',
-        borderRadius: 16,
-        padding: 16,
-        margin: 10,
         shadowColor: '#000',
         shadowOpacity: 0.05,
         shadowRadius: 8,
         elevation: 2,
-        width: '90%',
-        alignSelf: 'center',
     },
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 15,
     },
     title: {
         fontSize: 18,
@@ -126,23 +122,24 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#000000',
     },
+    inputGroup: {
+        marginBottom: 15,
+    },
     label: {
-        marginBottom: 5,
+        marginBottom: 8,
         color: '#000000',
         fontWeight: 'bold',
         fontSize: 13,
     },
-    asterisk:{
+    asterisk: {
         color: '#FF0000',
     },
     input: {
         backgroundColor: '#FFF',
-        padding: 10,
+        padding: 15,
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#E6E8FF',
-        marginBottom: 10,
-        width: '100%',
         color: '#000000',
     },
     rowContainer: {
@@ -160,11 +157,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#E6E8FF',
-        marginBottom: 10,
     },
     dateInput: {
         flex: 1,
-        paddingVertical: 10,
+        paddingVertical: 15,
         color: '#000000',
     },
     calendarIcon: {
