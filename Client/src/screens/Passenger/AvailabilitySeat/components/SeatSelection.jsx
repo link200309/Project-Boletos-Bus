@@ -8,6 +8,14 @@ export const SeatSelection = () => {
   const [selectedFloor, setSelectedFloor] = useState("superior");
   const [selectedSeats, setSelectedSeats] = useState([]);
 
+  const handleSeatSelection = (seatId) => {
+    if (selectedSeats.includes(seatId)) {
+      setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
+    } else {
+      setSelectedSeats([...selectedSeats, seatId]);
+    }
+  };
+
   return (
     <View style={GlobalStyles.formCard}>
       <Text style={styles.title}>Selección de asientos</Text>
@@ -38,20 +46,24 @@ export const SeatSelection = () => {
         <ButtonStyle
           text={"Piso Superior"}
           onClick={() => setSelectedFloor("superior")}
-          variant={[selectedFloor === "superior" ? 1 : 2]}
+          variant={selectedFloor === "superior" ? 1 : 2}
           height={40}
           sizeText={14}
         />
         <ButtonStyle
           text={"Piso Inferior"}
           onClick={() => setSelectedFloor("inferior")}
-          variant={[selectedFloor === "inferior" ? 1 : 2]}
+          variant={selectedFloor === "inferior" ? 1 : 2}
           height={40}
           sizeText={14}
         />
       </View>
 
-      <SeatGrid />
+      <SeatGrid
+        selectedFloor={selectedFloor}
+        selectedSeats={selectedSeats}
+        onSeatSelect={handleSeatSelection}
+      />
 
       <View style={styles.footer}>
         <View>

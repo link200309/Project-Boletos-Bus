@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Seat } from "./Seat";
 
-export const SeatGrid = () => {
-  const [selectedFloor, setSelectedFloor] = useState("superior");
-
+export const SeatGrid = ({ selectedFloor, selectedSeats, onSeatSelect }) => {
   const upperFloorSeats = [
     { id: "01", status: "available" },
     { id: "02", status: "available" },
@@ -41,14 +39,9 @@ export const SeatGrid = () => {
 
   const currentSeats =
     selectedFloor === "superior" ? upperFloorSeats : lowerFloorSeats;
-
-  // Filtrar los TV
   const tvSeats = currentSeats.filter((seat) => seat.status === "tv");
-
-  // Filtrar los asientos normales
   const normalSeats = currentSeats.filter((seat) => seat.status !== "tv");
 
-  // Agrupar en filas de 3 normales + 1 TV (por fila)
   const groupedRows = [];
   let i = 0;
   let j = 0;
@@ -56,7 +49,6 @@ export const SeatGrid = () => {
     const row = [];
     for (let col = 0; col < 4; col++) {
       if (col === 2) {
-        // Tercera columna solo TVs
         if (j < tvSeats.length) {
           row.push({ ...tvSeats[j], col });
           j++;
@@ -83,20 +75,19 @@ export const SeatGrid = () => {
             seat ? (
               <View
                 key={seat.id}
-                style={[
-                  styles.seatWrapper,
-                  colIndex === 2 && styles.tvColumn,
-                ]}
+                style={[styles.seatWrapper, colIndex === 2 && styles.tvColumn]}
               >
-                <Seat id={seat.id} status={seat.status} />
+                <Seat
+                  id={seat.id}
+                  status={seat.status}
+                  isSelected={selectedSeats.includes(seat.id)}
+                  onPress={onSeatSelect}
+                />
               </View>
             ) : (
               <View
                 key={`empty-${rowIndex}-${colIndex}`}
-                style={[
-                  styles.seatWrapper,
-                  colIndex === 2 && styles.tvColumn,
-                ]}
+                style={[styles.seatWrapper, colIndex === 2 && styles.tvColumn]}
               />
             )
           )}

@@ -1,22 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 
-export const Seat = ({ id, status }) => {
-  const [selectedSeats, setSelectedSeats] = useState([]);
-  const handleSeatPress = (id, status) => {
-    if (status === "available" || selectedSeats.includes(id)) {
-      if (selectedSeats.includes(id)) {
-        setSelectedSeats(selectedSeats.filter((seatId) => seatId !== id));
-      } else {
-        setSelectedSeats([...selectedSeats, id]);
-      }
+export const Seat = ({ id, status, isSelected, onPress }) => {
+  const handleSeatPress = () => {
+    if (status === "available") {
+      onPress(id);
     }
   };
+
   const getSeatStyle = () => {
     if (status === "tv") {
       return styles.tvSeat;
     }
-    if (selectedSeats.includes(id)) {
+    if (isSelected) {
       return styles.selectedSeat;
     }
     switch (status) {
@@ -30,11 +26,12 @@ export const Seat = ({ id, status }) => {
         return styles.availableSeat;
     }
   };
+
   const getSeatTextStyle = () => {
     if (status === "tv") {
       return styles.tvText;
     }
-    if (selectedSeats.includes(id)) {
+    if (isSelected) {
       return styles.selectedText;
     }
     if (status === "occupied") {
@@ -48,16 +45,13 @@ export const Seat = ({ id, status }) => {
 
   return (
     <TouchableOpacity
-      key={id}
-      style={[styles.seat, getSeatStyle({ id, status })]}
-      onPress={() => handleSeatPress(id, status)}
+      style={[styles.seat, getSeatStyle()]}
+      onPress={handleSeatPress}
       disabled={
         status === "occupied" || status === "unavailable" || status === "tv"
       }
     >
-      <Text style={getSeatTextStyle({ id, status })}>
-        {status === "tv" ? "TV" : id}
-      </Text>
+      <Text style={getSeatTextStyle()}>{status === "tv" ? "TV" : id}</Text>
     </TouchableOpacity>
   );
 };
