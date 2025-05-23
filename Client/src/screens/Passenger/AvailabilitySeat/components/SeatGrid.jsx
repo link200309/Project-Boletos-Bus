@@ -53,7 +53,7 @@ export const SeatGrid = ({ selectedFloor, selectedSeats, onSeatSelect }) => {
           row.push({ ...tvSeats[j], col });
           j++;
         } else {
-          row.push(null); // Espacio vacío
+          row.push(null);
         }
       } else {
         if (i < normalSeats.length) {
@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 12,
   },
   seatWrapper: {
     flex: 1,

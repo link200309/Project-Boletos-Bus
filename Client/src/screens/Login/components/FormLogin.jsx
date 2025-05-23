@@ -84,7 +84,10 @@ export const FormLogin = ({ navigation }) => {
           <ButtonStyle text="Iniciar sesión" onClick={handleSubmit(onSubmit)} />
         )}
 
-        <ButtonText text="¿Olvidaste tu contraseña?" />
+        <ButtonText
+          text="¿Olvidaste tu contraseña?"
+          onClick={() => navigation.navigate("RecoverPassword")}
+        />
 
         <View style={styles.registerMessage}>
           <Text style={styles.textRegisterMessage}>¿No tienes cuenta?</Text>

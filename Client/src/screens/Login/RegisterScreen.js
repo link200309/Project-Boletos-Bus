@@ -6,25 +6,24 @@ import { BackIcon } from "../../components/Icons";
 
 export default function RegisterScreen({ navigation }) {
   return (
-    <GenericContainer style={styles.container}>
+    <>
       <BackIcon style={styles.btnBack} onPress={() => navigation.goBack()} />
-
       <ScrollView>
-        <View style={styles.containerLogo}>
-          <Image
-            source={require("../../../assets/logo.png")}
-            style={styles.logo}
-          />
-          <Image
-            source={require("../../../assets/logoName.png")}
-            style={styles.logoName}
-          />
-        </View>
-
-        {/* <FormPassenger /> */}
-        <FormAgency />
+        <GenericContainer style={styles.container}>
+          <View style={styles.containerLogo}>
+            <Image
+              source={require("../../../assets/logo.png")}
+              style={styles.logo}
+            />
+            <Image
+              source={require("../../../assets/logoName.png")}
+              style={styles.logoName}
+            />
+          </View>
+          <FormAgency />
+        </GenericContainer>
       </ScrollView>
-    </GenericContainer>
+    </>
   );
 }
 const styles = StyleSheet.create({

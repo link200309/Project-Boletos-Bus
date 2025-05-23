@@ -4,10 +4,12 @@ import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { SeatGrid } from "./SeatGrid";
 
-export const SeatSelection = () => {
+export const SeatSelection = ({ navigation }) => {
+  const onSubmit = (data) => {
+    navigation.navigate("AvailabilitySeat", { formData: data });
+  };
   const [selectedFloor, setSelectedFloor] = useState("superior");
   const [selectedSeats, setSelectedSeats] = useState([]);
-
   const handleSeatSelection = (seatId) => {
     if (selectedSeats.includes(seatId)) {
       setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
@@ -72,7 +74,9 @@ export const SeatSelection = () => {
             {selectedSeats.length} asiento(s)
           </Text>
         </View>
-        <ButtonStyle text={"Continuar"} />
+        <ButtonStyle
+          text={"Continuar"}
+        />
       </View>
     </View>
   );
