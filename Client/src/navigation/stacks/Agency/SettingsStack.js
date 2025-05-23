@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import SettingsScreen from "../../screens/Passenger/SettingsScreen";
-import { commonHeaderOptions } from "../../components/Style/HeaderLogoTitle";
+import SettingsScreen from "../../../screens/Agency/SettingsScreen";
+import { commonHeaderOptions } from "../../../components/Style/HeaderLogoTitle";
 
 const Stack = createStackNavigator();
 

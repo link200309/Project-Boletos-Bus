@@ -1,6 +1,6 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import TabNavigator from "./src/navigation/TabNavigator";
+import TabNavigator from "./src/navigation/TabPassengerNavigator";
 import LoginScreen from "./src/screens/Login/LoginScreen";
 import RegisterScreen from "./src/screens/Login/RegisterScreen";
 import { AuthProvider } from "./src/context/AuthContext";
