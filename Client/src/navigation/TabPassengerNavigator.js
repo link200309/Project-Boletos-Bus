@@ -1,13 +1,13 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import ReserveStack from "./stacks/ReserveStack";
-import MyReservationsStack from "./stacks/MyReservationsStack";
-import SettingsStack from "./stacks/SettingsStack";
+import ReserveStack from "./stacks/Passenger/ReserveStack";
+import MyReservationsStack from "./stacks/Passenger/MyReservationsStack";
+import SettingsStack from "./stacks/Passenger/SettingsStack";
 
 const Tab = createBottomTabNavigator();
 
-export default function TabNavigator() {
+export default function TabPassengerNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

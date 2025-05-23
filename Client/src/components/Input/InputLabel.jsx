@@ -5,7 +5,11 @@ export const InputLabel = ({
   label,
   placeholder,
   value,
+<<<<<<< HEAD
   onChange,
+=======
+  onChange, // ✅ cambio aquí
+>>>>>>> 4effc34c266764a35c0ea60373e82418fc3a13bb
   error,
   name,
   keyboardType = "default",
@@ -18,7 +22,11 @@ export const InputLabel = ({
         placeholder={placeholder}
         style={styles.input}
         value={value}
+<<<<<<< HEAD
         onChangeText={onChange}
+=======
+        onChangeText={onChange} // ✅ cambio aquí
+>>>>>>> 4effc34c266764a35c0ea60373e82418fc3a13bb
         keyboardType={keyboardType}
         secureTextEntry={secureTextEntry}
       />

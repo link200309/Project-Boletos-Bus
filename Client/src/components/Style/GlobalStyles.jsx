@@ -5,7 +5,8 @@ export const GlobalStyles = StyleSheet.create({
     backgroundColor: "#FAFAFA",
     width: "100%",
     borderRadius: 20,
-    padding: 30,
+    padding: 20,
+    paddingBottom: 10,
     shadowColor: "grey",
     shadowOffset: {
       width: 0,

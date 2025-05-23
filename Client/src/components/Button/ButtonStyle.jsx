@@ -8,11 +8,13 @@ export const ButtonStyle = ({
   width = "100%",
   height = 50,
   sizeText = 18,
+  style,
 }) => {
   const buttonStyle = [
     styles.button,
     variant === 1 ? styles.buttonVariant1 : styles.buttonVariant2,
     { width, height },
+    style,
   ];
 
   const textStyle = [
@@ -22,9 +24,9 @@ export const ButtonStyle = ({
   ];
 
   return (
-      <Pressable style={buttonStyle} onPress={onClick}>
-        <Text style={textStyle}>{text}</Text>
-      </Pressable>
+    <Pressable style={buttonStyle} onPress={onClick}>
+      <Text style={textStyle}>{text}</Text>
+    </Pressable>
   );
 };
 
