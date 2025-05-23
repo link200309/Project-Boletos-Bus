@@ -4,7 +4,9 @@ import { FormPassenger } from "./components/FormPassenger";
 import { FormAgency } from "./components/FormAgency";
 import { BackIcon } from "../../components/Icons";
 
-export default function RegisterScreen({ navigation }) {
+export default function RegisterScreen({ navigation, route }) {
+  const { userType = "Pasajero" } = route.params || {};
+
   return (
     <>
       <BackIcon style={styles.btnBack} onPress={() => navigation.goBack()} />
@@ -20,16 +22,18 @@ export default function RegisterScreen({ navigation }) {
               style={styles.logoName}
             />
           </View>
-          <FormAgency />
+          {userType === "Pasajero" ? <FormPassenger /> : <FormAgency />}
         </GenericContainer>
       </ScrollView>
     </>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#2B0B94",
+    minHeight: "100%",
   },
   containerLogo: {
     justifyContent: "center",

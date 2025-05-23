@@ -8,16 +8,15 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useForm, FormProvider, Controller } from "react-hook-form";
-
 //Components
 import { InputLabel } from "../../../components/Input/InputLabel";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { ButtonText } from "../../../components/Button/ButtonText";
 import { GlobalStyles } from "../../../components/Style/GlobalStyles";
-
 //Context
 import { AuthContext } from "../../../context/AuthContext";
 import { useContext } from "react";
+import { accountValidationRules } from "./validation";
 
 export const FormLogin = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState("Pasajero");
@@ -39,13 +38,7 @@ export const FormLogin = ({ navigation }) => {
         <Controller
           control={control}
           name="email"
-          rules={{
-            required: "El correo electrónico es obligatorio",
-            pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: "El formato del correo electrónico no es válido",
-            },
-          }}
+          rules={accountValidationRules.email}
           render={({ field: { onChange, value } }) => (
             <InputLabel
               label="Correo electrónico"
@@ -62,13 +55,11 @@ export const FormLogin = ({ navigation }) => {
         <Controller
           control={control}
           name="password"
-          rules={{
-            required: "La contraseña es obligatorio",
-          }}
+          rules={accountValidationRules.password}
           render={({ field: { onChange, value } }) => (
             <InputLabel
               label="Contraseña"
-              placeholder="••••••••"
+              placeholder="Contraseña"
               value={value}
               onChange={onChange}
               error={errors}
@@ -93,7 +84,9 @@ export const FormLogin = ({ navigation }) => {
           <Text style={styles.textRegisterMessage}>¿No tienes cuenta?</Text>
           <ButtonText
             text="Regístrate"
-            onClick={() => navigation.navigate("Register")}
+            onClick={() =>
+              navigation.navigate("Register", { userType: activeTab })
+            }
           />
         </View>
       </FormProvider>
@@ -142,7 +135,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
     marginBottom: 30,
-    borderBottomWidth: 1,
+    borderBottom: 1,
     borderColor: "#E6E8FF",
   },
   tab: {

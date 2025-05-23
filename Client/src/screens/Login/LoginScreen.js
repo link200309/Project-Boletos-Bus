@@ -41,7 +41,6 @@ export default function LoginScreen({ navigation }) {
           resizeMode="contain"
         />
       </View>
-
       <View style={styles.formContainer}>
         <FormLogin navigation={navigation} />
       </View>

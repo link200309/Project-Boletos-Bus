@@ -1,12 +1,25 @@
 import React from "react";
 import { View, StyleSheet, Image, Text } from "react-native";
 import { GenericContainer } from "../../components/GenericContainer";
+import { useForm, FormProvider, Controller } from "react-hook-form";
 import { BackIcon } from "../../components/Icons";
 import { GlobalStyles } from "../../components/Style/GlobalStyles";
 import { InputLabel } from "../../components/Input/InputLabel";
 import { ButtonStyle } from "../../components/Button/ButtonStyle";
+import { accountValidationRules } from "./components/validation";
 
 export default function RecoverPassword({ navigation }) {
+  const methods = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = methods;
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
   return (
     <GenericContainer style={styles.container}>
       <BackIcon style={styles.btnBack} onPress={() => navigation.goBack()} />
@@ -26,13 +39,23 @@ export default function RecoverPassword({ navigation }) {
           Introduce el correo electrónico asociado a tu cuenta de BusRat y te
           enviaremos un correo con un enlace para restaurar tu contraseña.
         </Text>
-        <InputLabel
-          label="Correo electrónico"
-          placeholder="ejemplo@gmail.com"
-          name={"email"}
-          keyboardType="email-address"
+        <Controller
+          control={control}
+          name="email"
+          rules={accountValidationRules.email}
+          render={({ field: { onChange, value } }) => (
+            <InputLabel
+              label="Correo electrónico"
+              placeholder="ejemplo@gmail.com"
+              value={value}
+              onChange={onChange}
+              error={errors}
+              name={"email"}
+              keyboardType="email-address"
+            />
+          )}
         />
-        <ButtonStyle text="Enviar correo" />
+        <ButtonStyle text="Enviar correo" onClick={handleSubmit(onSubmit)} />
       </View>
     </GenericContainer>
   );
