@@ -10,7 +10,7 @@ export default function SettingsStack() {
     <Stack.Navigator screenOptions={commonHeaderOptions}>
       <Stack.Screen
         name="MySettings"
-        component={SettingsScreen}
+        component={AvailabilitySeatScreen}
         options={{ title: "Configuración" }}
       />
     </Stack.Navigator>

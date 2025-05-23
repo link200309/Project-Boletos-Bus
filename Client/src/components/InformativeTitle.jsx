@@ -1,19 +1,20 @@
 //React
 import { View, Text, StyleSheet } from "react-native";
 
-//Components
-import { ButtonStyle } from "./Button/ButtonStyle";
-
 export const InformativeTitle = ({
   title,
+  cifra,
   description,
   btnText = "",
   onClick,
 }) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
+    <View style={Style.container}>
+      <View style={Style.containerTitle}>
+        <Text style={Style.text}>{title}</Text>
+        <Text style={Style.text}>{cifra}</Text>
+      </View>
+      <Text style={Style.description}>{description}</Text>
       {btnText != "" && (
         <ButtonStyle
           text={btnText}
@@ -32,6 +33,12 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 400,
     padding: 20,
+  },
+  containerTitle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 4,
   },
   text: {
     color: "white",

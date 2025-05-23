@@ -7,6 +7,7 @@ export const ButtonStyle = ({
   onClick,
   width = "100%",
   height = 50,
+  sizeText = 18,
   style,
 }) => {
   const buttonStyle = [
@@ -19,6 +20,7 @@ export const ButtonStyle = ({
   const textStyle = [
     styles.text,
     variant === 1 ? styles.textVariant1 : styles.textVariant2,
+    { fontSize: sizeText },
   ];
 
   return (
@@ -47,7 +49,7 @@ const styles = StyleSheet.create({
     borderColor: "#4318D1",
   },
   text: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
   },
   textVariant1: {

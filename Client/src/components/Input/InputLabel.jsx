@@ -5,7 +5,7 @@ export const InputLabel = ({
   label,
   placeholder,
   value,
-  onChange,
+  onChangeText, // ✅ cambio aquí
   error,
   name,
   keyboardType = "default",
@@ -18,7 +18,7 @@ export const InputLabel = ({
         placeholder={placeholder}
         style={styles.input}
         value={value}
-        onChangeText={onChange}
+        onChangeText={onChangeText} // ✅ cambio aquí
         keyboardType={keyboardType}
         secureTextEntry={secureTextEntry}
       />
@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 14,
   },
-
   errorText: {
     color: "red",
     fontSize: 12,

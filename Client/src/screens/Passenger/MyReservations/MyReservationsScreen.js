@@ -69,7 +69,7 @@ export default function MyReservationsScreen() {
   };
 
   return (
-    <GenericContainer style={styles.container} scroll={false}>
+    <GenericContainer style={styles.container}>
       <BlobBg />
       <FlatList
         data={trips}

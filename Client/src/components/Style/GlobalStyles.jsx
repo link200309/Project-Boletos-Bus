@@ -6,13 +6,14 @@ export const GlobalStyles = StyleSheet.create({
     width: "100%",
     borderRadius: 20,
     padding: 30,
-    shadowColor: "#000",
+    shadowColor: "grey",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.5,
-    elevation: 10,
+    shadowRadius: 2.5,
+    elevation: 5,
+    marginTop: 20,
   },
 });
