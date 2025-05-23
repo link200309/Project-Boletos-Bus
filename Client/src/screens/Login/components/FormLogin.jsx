@@ -30,7 +30,7 @@ export const FormLogin = ({ navigation }) => {
 
   const renderForm = () => {
     const onSubmit = (data) => {
-      login({ email: data.email, password: data.password });
+      login({ email: data.email, password: data.password, rol: activeTab });
     };
 
     return (

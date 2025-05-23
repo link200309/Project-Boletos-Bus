@@ -13,11 +13,11 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const login = async ({ email, password }) => {
+  const login = async ({ email, password, rol }) => {
     setIsLoading(true);
     try {
       setTimeout(() => {
-        const fakeUser = { id: 1, name: "Juan", email };
+        const fakeUser = { id: 1, name: "Juan", email, rol };
         setUser(fakeUser);
         setIsLoading(false);
       }, 1000);
