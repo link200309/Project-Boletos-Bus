@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ReserveScreen from "../../screens/Passenger/Reserve/ReserveScreen";
 import AvailabilityDatesScreen from "../../screens/Passenger/AvailabilitySchedules/AvailabilityDatesScreen";
 import AvailabilitySchedulesScreen from "../../screens/Passenger/AvailabilitySchedules/AvailabilitySchedulesScreen";
+import AvailabilitySeatScreen from "../../screens/Passenger/AvailabilitySeat/AvailabilitySeatScreen";
 import PassengerDataScreen from "../../screens/Passenger/ReserveSeat/PassengerDataScreen";
 import TripSummaryScreen from "../../screens/Passenger/ReserveSeat/TripSummaryScreen";
 import { commonHeaderOptions } from "../../components/Style/HeaderLogoTitle";
@@ -39,7 +40,17 @@ export default function ReserveStack() {
           },
         }}
       />
-
+      <Stack.Screen
+        name="AvailabilitySeat"
+        component={AvailabilitySeatScreen}
+        options={{
+          title: "Seleccion de asiento(s)",
+          headerTitle: "Seleccion de asiento(s)",
+          headerTitleStyle: {
+            fontSize: 20,
+          },
+        }}
+      />
       <Stack.Screen
         name="PassengerData"
         component={PassengerDataScreen}
@@ -51,7 +62,6 @@ export default function ReserveStack() {
           },
         }}
       />
-
       <Stack.Screen
         name="TripSummary"
         component={TripSummaryScreen}

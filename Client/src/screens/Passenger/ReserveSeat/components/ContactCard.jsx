@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import React from "react";
+import { View, Text, TextInput, StyleSheet } from "react-native";
 
 export default function ContactCard({ contact, setContact, containerStyle }) {
   return (
@@ -32,7 +32,7 @@ export default function ContactCard({ contact, setContact, containerStyle }) {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -40,16 +40,16 @@ const styles = StyleSheet.create({
     width: 370,
     padding: 25,
     marginTop: 20,
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
   },
   headerText: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000000',
+    fontWeight: "bold",
+    color: "#000000",
     marginBottom: 20,
   },
   inputGroup: {
@@ -57,19 +57,19 @@ const styles = StyleSheet.create({
   },
   label: {
     marginBottom: 8,
-    color: '#000000',
-    fontWeight: 'bold',
+    color: "#000000",
+    fontWeight: "bold",
     fontSize: 13,
   },
   required: {
-    color: '#FF0000',
+    color: "#FF0000",
   },
   inputField: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     padding: 15,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#E6E8FF',
-    color: '#000000',
+    borderColor: "#E6E8FF",
+    color: "#000000",
   },
 });

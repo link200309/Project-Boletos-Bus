@@ -4,33 +4,36 @@ import { FormPassenger } from "./components/FormPassenger";
 import { FormAgency } from "./components/FormAgency";
 import { BackIcon } from "../../components/Icons";
 
-export default function RegisterScreen({ navigation }) {
+export default function RegisterScreen({ navigation, route }) {
+  const { userType = "Pasajero" } = route.params || {};
+
   return (
-    <GenericContainer style={styles.container}>
+    <>
       <BackIcon style={styles.btnBack} onPress={() => navigation.goBack()} />
-
       <ScrollView>
-        <View style={styles.containerLogo}>
-          <Image
-            source={require("../../../assets/logo.png")}
-            style={styles.logo}
-          />
-          <Image
-            source={require("../../../assets/logoName.png")}
-            style={styles.logoName}
-          />
-        </View>
-
-        {/* <FormPassenger /> */}
-        <FormAgency />
+        <GenericContainer style={styles.container}>
+          <View style={styles.containerLogo}>
+            <Image
+              source={require("../../../assets/logo.png")}
+              style={styles.logo}
+            />
+            <Image
+              source={require("../../../assets/logoName.png")}
+              style={styles.logoName}
+            />
+          </View>
+          {userType === "Pasajero" ? <FormPassenger /> : <FormAgency />}
+        </GenericContainer>
       </ScrollView>
-    </GenericContainer>
+    </>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#2B0B94",
+    minHeight: "100%",
   },
   containerLogo: {
     justifyContent: "center",
