@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "../generated/prisma/index.js";
 
-
 const prisma = new PrismaClient();
 const CLAVE_SECRETA = process.env.JWT_SECRET || "clave_super_segura";
 
@@ -13,12 +12,15 @@ export const postRegister = async (req, res) => {
     correo_electronico,
     contraseña,
     numero_celular,
-    datos_agencia, // solo si tipo_usuario === "agencia"
+    fecha_nacimiento,     // ← nuevo campo esperado en el request
+    datos_agencia,        // solo si tipo_usuario === "agencia"
   } = req.body;
 
   try {
     // Validaciones básicas
-    if (!tipo_usuario || !nombre_usuario || !correo_electronico || !contraseña || !numero_celular) {
+    if (
+      !tipo_usuario || !nombre_usuario || !correo_electronico || !contraseña || !numero_celular
+    ) {
       return res.status(400).json({ mensaje: "Faltan datos obligatorios" });
     }
 
@@ -32,6 +34,13 @@ export const postRegister = async (req, res) => {
 
     const contraseñaHasheada = await bcrypt.hash(contraseña, 10);
 
+    // Parsear fecha de nacimiento si existe
+    let parsedFecha = undefined;
+    if (fecha_nacimiento) {
+      const [dd, mm, yyyy] = fecha_nacimiento.split("/");
+      parsedFecha = new Date(`${yyyy}-${mm}-${dd}`);
+    }
+
     // Crear el usuario general
     const nuevoUsuario = await prisma.usuario.create({
       data: {
@@ -40,6 +49,7 @@ export const postRegister = async (req, res) => {
         correo_electronico,
         contraseña: contraseñaHasheada,
         numero_celular,
+        fecha_nacimiento: parsedFecha,
       },
     });
 
@@ -64,7 +74,10 @@ export const postRegister = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensaje: "Error al registrar el usuario", error: error.message });
+    res.status(500).json({
+      mensaje: "Error al registrar el usuario",
+      error: error.message,
+    });
   }
 };
 

@@ -5,7 +5,6 @@ import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { GlobalStyles } from "../../../components/Style/GlobalStyles";
 import { AgencyDataForm } from "./AgencyDataForm";
 import { LegalRepresentativeForm } from "./LegalRepresentativeForm";
-import { AccountForm } from "./AccountForm";
 import { AuthContext } from "../../../context/AuthContext";
 
 export const FormAgency = () => {
