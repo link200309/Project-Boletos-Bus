@@ -1,18 +1,25 @@
+//React
 import React from "react";
 import { StyleSheet } from "react-native";
-import { ButtonStyle } from "../../components/Button/ButtonStyle";
 
 //Components
-import { GenericContainer } from "../../components/GenericContainer";
+import { GenericContainer } from "../../../components/GenericContainer";
+import { InformativeTitle } from "../../../components/InformativeTitle";
 
 export default function ManageTravelsScreen() {
+  const addTravel = () => {
+    console.log("Viaje agregado");
+  };
+
   return (
     <GenericContainer style={styles.container}>
-      <ButtonStyle
-        width="180"
-        height={"50"}
-        text={"Soy la pantalla de gestion de viajes :D"}
+      <InformativeTitle
+        title={"Gestionar viajes"}
+        description={"Viajes totales: 4"}
+        btnText={"+ Viaje"}
+        onClick={addTravel}
       />
+      
     </GenericContainer>
   );
 }

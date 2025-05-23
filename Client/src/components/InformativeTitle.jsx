@@ -1,15 +1,31 @@
+//React
 import { View, Text, StyleSheet } from "react-native";
 
-export const InformativeTitle = ({ title, description }) => {
+//Components
+import { ButtonStyle } from "./Button/ButtonStyle";
+
+export const InformativeTitle = ({
+  title,
+  description,
+  btnText = "",
+  onClick,
+}) => {
   return (
-    <View style={Style.container}>
-      <Text style={Style.text}>{title}</Text>
-      <Text style={Style.description}>{description}</Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>{title}</Text>
+      <Text style={styles.description}>{description}</Text>
+      {btnText != "" && (
+        <ButtonStyle
+          text={btnText}
+          style={styles.btnAddTravel}
+          onClick={onClick}
+        />
+      )}
     </View>
   );
 };
 
-const Style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     backgroundColor: "#4318D1",
     borderRadius: 20,
@@ -25,5 +41,8 @@ const Style = StyleSheet.create({
   },
   description: {
     color: "white",
+  },
+  btnAddTravel: {
+    backgroundColor: "#10B981",
   },
 });

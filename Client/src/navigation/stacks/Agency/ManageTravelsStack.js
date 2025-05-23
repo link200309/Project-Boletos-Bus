@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import ManageTravelsScreen from "../../../screens/Agency/ManageTravelsScreen";
+import ManageTravelsScreen from "../../../screens/Agency/ManageTravels/ManageTravelsScreen";
 import { commonHeaderOptions } from "../../../components/Style/HeaderLogoTitle";
 
 const Stack = createStackNavigator();
