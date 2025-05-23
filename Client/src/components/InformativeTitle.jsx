@@ -9,12 +9,12 @@ export const InformativeTitle = ({
   onClick,
 }) => {
   return (
-    <View style={Style.container}>
-      <View style={Style.containerTitle}>
-        <Text style={Style.text}>{title}</Text>
-        <Text style={Style.text}>{cifra}</Text>
+    <View style={styles.container}>
+      <View style={styles.containerTitle}>
+        <Text style={styles.text}>{title}</Text>
+        <Text style={styles.text}>{cifra}</Text>
       </View>
-      <Text style={Style.description}>{description}</Text>
+      <Text style={styles.description}>{description}</Text>
       {btnText != "" && (
         <ButtonStyle
           text={btnText}
