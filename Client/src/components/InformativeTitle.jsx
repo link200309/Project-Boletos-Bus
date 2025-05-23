@@ -1,5 +1,6 @@
 //React
 import { View, Text, StyleSheet } from "react-native";
+import { ButtonStyle } from "./Button/ButtonStyle";
 
 export const InformativeTitle = ({
   title,
