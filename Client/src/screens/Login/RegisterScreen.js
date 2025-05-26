@@ -4,7 +4,7 @@ import { FormPassenger } from "./components/FormPassenger";
 import { FormAgency } from "./components/FormAgency";
 import { BackIcon } from "../../components/Icons";
 
-export default function RegisterScreen({ navigation, route }) {
+export default function RegisterAgencyScreen({ navigation, route }) {
   const { userType = "Pasajero" } = route.params || {};
 
   return (
