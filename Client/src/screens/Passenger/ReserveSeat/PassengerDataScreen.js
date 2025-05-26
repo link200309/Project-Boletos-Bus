@@ -1,4 +1,4 @@
-// PassengerDataScreen.jsx
+// PassengerDataScreen.js
 import React, { useEffect, useState } from "react";
 import { ScrollView, TouchableOpacity, Text, StyleSheet, View } from "react-native";
 import { GenericContainer } from "../../../components/GenericContainer";
@@ -9,7 +9,7 @@ import ContactCard from "./components/ContactCard";
 
 export default function PassengerDataScreen({ navigation, route }) {
   const {
-    selectedSeats = ["A01"],
+    selectedSeats = [],
     travelDetails = {
       route: "Cochabamba → La Paz",
       date: "Viernes 20 de mayo",
@@ -39,13 +39,12 @@ export default function PassengerDataScreen({ navigation, route }) {
     <GenericContainer>
       <BlobBg />
       <InformativeTitle
-            title={`${passengers.length} pasajeros seleccionados`}
-            description={`${travelDetails.route}\n${travelDetails.date} ${travelDetails.time}`}
-          />
+        title={`${passengers.length} pasajeros seleccionados`}
+        description={`${travelDetails.route}\n${travelDetails.date} ${travelDetails.time}`}
+      />
 
       <ScrollView>
         <View>
-          
           {passengers.map((passenger, index) => (
             <PassengerCard
               key={index}
@@ -58,7 +57,12 @@ export default function PassengerDataScreen({ navigation, route }) {
           <ContactCard contact={contact} setContact={setContact} />
           <TouchableOpacity
             style={styles.continueButton}
-            onPress={() => navigation.navigate("TripSummary")}
+            onPress={() =>
+              navigation.navigate("TripSummary", {
+                passengers,
+                contact,
+              })
+            }
           >
             <Text style={styles.continueButtonText}>Continuar</Text>
           </TouchableOpacity>
