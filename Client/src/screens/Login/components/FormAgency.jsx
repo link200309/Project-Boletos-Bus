@@ -87,7 +87,6 @@ export const FormAgency = () => {
       <FormProvider {...methods}>
         <AgencyDataForm errors={errors} />
         <LegalRepresentativeForm errors={errors} />
-        <AccountForm errors={errors} />
         {isLoading ? (
           <ActivityIndicator
             size="large"

@@ -1,17 +1,21 @@
+import React from "react";
 import { View, StyleSheet, Image, ScrollView } from "react-native";
 import { GenericContainer } from "../../components/GenericContainer";
 import { FormPassenger } from "./components/FormPassenger";
 import { FormAgency } from "./components/FormAgency";
 import { BackIcon } from "../../components/Icons";
 
-export default function RegisterAgencyScreen({ navigation, route }) {
+export default function RegisterScreen({ navigation, route }) {
   const { userType = "Pasajero" } = route.params || {};
 
   return (
     <>
+      {/* Botón de volver */}
       <BackIcon style={styles.btnBack} onPress={() => navigation.goBack()} />
+
       <ScrollView>
         <GenericContainer style={styles.container}>
+          {/* Logo */}
           <View style={styles.containerLogo}>
             <Image
               source={require("../../../assets/logo.png")}
@@ -22,6 +26,8 @@ export default function RegisterAgencyScreen({ navigation, route }) {
               style={styles.logoName}
             />
           </View>
+
+          {/* Formulario dinámico según tipo de usuario */}
           {userType === "Pasajero" ? <FormPassenger /> : <FormAgency />}
         </GenericContainer>
       </ScrollView>
