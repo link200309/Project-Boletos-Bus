@@ -1,43 +1,22 @@
+// TabsContainer.jsx
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const TabsContainer = () => {
+const TabsContainer = ({ passengers = [], contact = {} }) => {
   const [activeTab, setActiveTab] = useState('detalles');
-
-  const passengers = [
-    {
-      name: 'Juan Pérez',
-      ci: '1234567',
-      birthDate: '10-09-2000',
-      seat: 'A01'
-    },
-    {
-      name: 'Maria Calle',
-      ci: '7654321',
-      birthDate: '05-03-1995',
-      seat: 'A02'
-    },
-    {
-      name: 'Carlos Gómez',
-      ci: '9876543',
-      birthDate: '15-11-1988',
-      seat: 'A03'
-    }
-  ];
 
   return (
     <View style={styles.container}>
-      {/* Tabs */}
       <View style={styles.tabBar}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.tab, activeTab === 'detalles' && styles.activeTab]}
           onPress={() => setActiveTab('detalles')}
         >
           <Text style={[styles.tabText, activeTab === 'detalles' && styles.activeTabText]}>Detalles</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={[styles.tab, activeTab === 'pasajeros' && styles.activeTab]}
           onPress={() => setActiveTab('pasajeros')}
         >
@@ -45,7 +24,6 @@ const TabsContainer = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Content */}
       {activeTab === 'detalles' ? (
         <View style={styles.detailsContainer}>
           <View style={styles.detailItem}>
@@ -104,10 +82,10 @@ const TabsContainer = () => {
           {passengers.map((passenger, index) => (
             <View key={index} style={styles.passengerCard}>
               <View style={styles.passengerHeader}>
-                <Text style={styles.passengerName}>{passenger.name}</Text>
+                <Text style={styles.passengerName}>{passenger.firstName} {passenger.lastName}</Text>
                 <Text style={styles.seatLabel}>Asiento {passenger.seat}</Text>
               </View>
-              <Text style={styles.passengerDetail}>CI: {passenger.ci}</Text>
+              <Text style={styles.passengerDetail}>CI: {passenger.identityNumber}</Text>
               <Text style={styles.passengerDetail}>Fecha Nacimiento: {passenger.birthDate}</Text>
             </View>
           ))}

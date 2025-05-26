@@ -9,7 +9,7 @@ import ContactCard from "./components/ContactCard";
 
 export default function PassengerDataScreen({ navigation, route }) {
   const {
-    selectedSeats = [],
+    selectedSeats = [""],
     travelDetails = {
       route: "Cochabamba → La Paz",
       date: "Viernes 20 de mayo",
