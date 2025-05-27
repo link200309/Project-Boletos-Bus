@@ -3,27 +3,32 @@ import jwt from "jsonwebtoken";
 import { PrismaClient } from "../generated/prisma/index.js";
 
 const prisma = new PrismaClient();
-const CLAVE_SECRETA = process.env.JWT_SECRET || "clave_super_segura";
+const CLAVE_SECRETA = process.env.JWT_SECRET;
 
+// Registro de usuarios (cliente o agencia)
 export const postRegister = async (req, res) => {
   const {
     tipo_usuario,
-    nombre_usuario,
+    nombre,
+    apellido,
+    ci,
     correo_electronico,
     contraseña,
     numero_celular,
-    fecha_nacimiento,     // ← nuevo campo esperado en el request
-    datos_agencia,        // solo si tipo_usuario === "agencia"
+    fecha_nacimiento,
+    datos_agencia,
   } = req.body;
 
   try {
-    // Validaciones básicas
+    // Validación básica
     if (
-      !tipo_usuario || !nombre_usuario || !correo_electronico || !contraseña || !numero_celular
+      !tipo_usuario || !nombre || !apellido || !correo_electronico ||
+      !contraseña || !ci || !numero_celular
     ) {
       return res.status(400).json({ mensaje: "Faltan datos obligatorios" });
     }
 
+    // Verificar duplicados
     const existente = await prisma.usuario.findUnique({
       where: { correo_electronico },
     });
@@ -32,20 +37,22 @@ export const postRegister = async (req, res) => {
       return res.status(400).json({ mensaje: "Este correo ya está registrado" });
     }
 
+    // Hash de contraseña
     const contraseñaHasheada = await bcrypt.hash(contraseña, 10);
 
-    // Parsear fecha de nacimiento si existe
+    // Parseo de fecha
     let parsedFecha = undefined;
     if (fecha_nacimiento) {
-      const [dd, mm, yyyy] = fecha_nacimiento.split("/");
-      parsedFecha = new Date(`${yyyy}-${mm}-${dd}`);
+      parsedFecha = new Date(fecha_nacimiento); // espera formato "YYYY-MM-DD"
     }
 
-    // Crear el usuario general
+    // Crear usuario base
     const nuevoUsuario = await prisma.usuario.create({
       data: {
         tipo_usuario,
-        nombre_usuario,
+        nombre,
+        apellido,
+        ci,
         correo_electronico,
         contraseña: contraseñaHasheada,
         numero_celular,
@@ -53,12 +60,24 @@ export const postRegister = async (req, res) => {
       },
     });
 
-    // Si es una agencia, se crea la entrada asociada
+    // Si es agencia, crea la agencia asociada
     if (tipo_usuario === "agencia" && datos_agencia) {
       await prisma.agencia.create({
         data: {
           id_usuario: nuevoUsuario.id_usuario,
-          ...datos_agencia,
+          nombre_agencia: datos_agencia.nombre_agencia,
+          tipo_sociedad: datos_agencia.tipo_sociedad,
+          NIT: datos_agencia.NIT,
+          departamento: datos_agencia.departamento,
+          ciudad: datos_agencia.ciudad,
+          direccion: datos_agencia.direccion,
+          estado: datos_agencia.estado || "activo",
+          correo_electronico_agencia: datos_agencia.correo_electronico_agencia,
+          numero_celular: datos_agencia.numero_celular,
+          nombre_representante: datos_agencia.nombre_representante,
+          apellido_representante: datos_agencia.apellido_representante,
+          ci_representante: datos_agencia.ci_representante,
+          telefono_representante: datos_agencia.telefono_representante,
         },
       });
     }
@@ -67,8 +86,8 @@ export const postRegister = async (req, res) => {
       mensaje: "Usuario registrado exitosamente",
       usuario: {
         id: nuevoUsuario.id_usuario,
-        nombre: nuevoUsuario.nombre_usuario,
-        correo: nuevoUsuario.correo_electronico,
+        nombre: nuevoUsuario.nombre,
+        apellido: nuevoUsuario.apellido,
         tipo: tipo_usuario,
       },
     });
@@ -81,6 +100,7 @@ export const postRegister = async (req, res) => {
   }
 };
 
+// Inicio de sesión
 export const postLogin = async (req, res) => {
   const { correo_electronico, contraseña } = req.body;
 
@@ -104,7 +124,8 @@ export const postLogin = async (req, res) => {
         id_usuario: usuario.id_usuario,
         correo: usuario.correo_electronico,
         tipo_usuario: usuario.tipo_usuario,
-        nombre_usuario: usuario.nombre_usuario,
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
       },
       CLAVE_SECRETA,
       { expiresIn: "1h" }
@@ -114,11 +135,15 @@ export const postLogin = async (req, res) => {
       mensaje: "Inicio de sesión exitoso",
       token,
       tipo_usuario: usuario.tipo_usuario,
-      nombre_usuario: usuario.nombre_usuario,
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
       datos_agencia: usuario.tipo_usuario === "agencia" ? usuario.agencia : null,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensaje: "Error al iniciar sesión", error: error.message });
+    res.status(500).json({
+      mensaje: "Error al iniciar sesión",
+      error: error.message,
+    });
   }
 };
