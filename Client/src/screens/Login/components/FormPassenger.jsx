@@ -1,178 +1,246 @@
-import React from "react";
-import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
+import React, { useContext } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
+import { useForm, FormProvider, Controller } from "react-hook-form";
 import { GlobalStyles } from "../../../components/Style/GlobalStyles";
 import { InputLabel } from "../../../components/Input/InputLabel";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
-import { useForm, FormProvider, Controller } from "react-hook-form";
 import { AuthContext } from "../../../context/AuthContext";
-import { useContext } from "react";
-import { accountValidationRules } from "./validation";
+import { useNavigation } from "@react-navigation/native";
 
 export const FormPassenger = () => {
   const { register, isLoading } = useContext(AuthContext);
-  const methods = useForm();
+  const navigation = useNavigation();
+
+  const methods = useForm({ mode: "onChange" });
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isValid },
     watch,
   } = methods;
-  const onSubmit = (data) => {
+
+  const passwordValue = watch("password");
+
+  const onSubmit = async (data) => {
     const formattedData = {
-      ...data,
-      birthdate: data.birthdate.split("/").reverse().join("-"), // Convertir DD/MM/YYYY a YYYY-MM-DD
-      cellphone: `+591${data.cellphone}`, // Agregar código de país
+      tipo_usuario: "cliente",
+      nombre: data.name,
+      apellido: data.lastName,
+      ci: data.ci,
+      correo_electronico: data.email,
+      contraseña: data.password,
+      numero_celular: parseInt(data.cellphone),
+      fecha_nacimiento: data.birthdate, // YA en formato YYYY-MM-DD
     };
-    register(formattedData);
+
+    try {
+      await register(formattedData);
+      Alert.alert("Registro exitoso", "Tu cuenta ha sido creada correctamente.", [
+        {
+          text: "OK",
+          onPress: () => navigation.goBack(),
+        },
+      ]);
+    } catch (error) {
+      Alert.alert("Error", error.message || "No se pudo registrar tu cuenta.");
+    }
   };
 
   return (
     <View style={GlobalStyles.formCard}>
-      <View>
-        <Text style={styles.textTitle}>Registro de Pasajero</Text>
-        <Text style={styles.subtitle}>
-          Tus datos se mantendrán confidenciales y serán utilizados únicamente
-          para la emisión de pasajes y gestión de tu cuenta.
-        </Text>
-        <FormProvider {...methods}>
-          <Controller
-            control={control}
-            name="name"
-            rules={accountValidationRules.name}
-            render={({ field: { onChange, value } }) => (
-              <InputLabel
-                label="Nombre(s) *"
-                placeholder="Ingrese su(s) nombre(s)"
-                value={value}
-                onChange={onChange}
-                error={errors}
-                name="name"
-                keyboardType="default"
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="lastName"
-            rules={accountValidationRules.lastName}
-            render={({ field: { onChange, value } }) => (
-              <InputLabel
-                label="Apellido(s) *"
-                placeholder="Ingrese su(s) apellido(s)"
-                value={value}
-                onChange={onChange}
-                error={errors}
-                name="lastName"
-                keyboardType="default"
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="ci"
-            rules={accountValidationRules.ci}
-            render={({ field: { onChange, value } }) => (
-              <InputLabel
-                label="Cédula de Identidad (C.I.) *"
-                placeholder="Ej: 12345678"
-                value={value}
-                onChange={onChange}
-                error={errors}
-                name={"ci"}
-                keyboardType="numeric"
-                maxLength={8}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="birthdate"
-            rules={accountValidationRules.birthdate}
-            render={({ field: { onChange, value } }) => (
-              <InputLabel
-                label="Fecha de Nacimiento *"
-                placeholder="DD/MM/AAAA"
-                value={value}
-                onChange={onChange}
-                error={errors}
-                name={"birthdate"}
-                keyboardType="numeric"
-                maxLength={10}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="cellphone"
-            rules={accountValidationRules.cellphone}
-            render={({ field: { onChange, value } }) => (
-              <InputLabel
-                label="Celular (+591) *"
-                placeholder="Ej: 71234567"
-                value={value}
-                onChange={onChange}
-                error={errors}
-                name={"cellphone"}
-                keyboardType="numeric"
-                maxLength={8}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="email"
-            rules={accountValidationRules.email}
-            render={({ field: { onChange, value } }) => (
-              <InputLabel
-                label="Correo Electrónico *"
-                placeholder="ejemplo@correo.com"
-                value={value}
-                onChange={onChange}
-                error={errors}
-                name={"email"}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="password"
-            rules={accountValidationRules.password}
-            render={({ field: { onChange, value } }) => (
-              <InputLabel
-                label="Contraseña *"
-                placeholder="Mínimo 8 caracteres"
-                value={value}
-                onChange={onChange}
-                error={errors}
-                name="password"
-                secureTextEntry={true}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="confirmPassword"
-            rules={accountValidationRules.confirmPassword(watch("password"))}
-            render={({ field: { onChange, value } }) => (
-              <InputLabel
-                label="Confirmar Contraseña *"
-                placeholder="Repita su contraseña"
-                value={value}
-                onChange={onChange}
-                error={errors}
-                name="confirmPassword"
-                secureTextEntry={true}
-              />
-            )}
-          />
-        </FormProvider>
-      </View>
+      <Text style={styles.textTitle}>Registro de Pasajero</Text>
+      <Text style={styles.subtitle}>
+        Tus datos se mantendrán confidenciales y serán utilizados únicamente
+        para la emisión de pasajes y gestión de tu cuenta.
+      </Text>
+
+      <FormProvider {...methods}>
+        <Controller
+          control={control}
+          name="name"
+          rules={{ required: "El nombre es obligatorio" }}
+          render={({ field: { onChange, value } }) => (
+            <InputLabel
+              label="Nombre(s) *"
+              placeholder="Ingrese su(s) nombre(s)"
+              value={value}
+              onChange={onChange}
+              error={errors}
+              name="name"
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="lastName"
+          rules={{ required: "El apellido es obligatorio" }}
+          render={({ field: { onChange, value } }) => (
+            <InputLabel
+              label="Apellido(s) *"
+              placeholder="Ingrese su(s) apellido(s)"
+              value={value}
+              onChange={onChange}
+              error={errors}
+              name="lastName"
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="ci"
+          rules={{
+            required: "El CI es obligatorio",
+            pattern: {
+              value: /^[0-9]{7,8}$/,
+              message: "Debe tener entre 7 y 8 dígitos",
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputLabel
+              label="Cédula de Identidad (C.I.) *"
+              placeholder="Ej: 12345678"
+              value={value}
+              onChange={onChange}
+              error={errors}
+              name="ci"
+              keyboardType="numeric"
+              maxLength={8}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="birthdate"
+          rules={{
+            required: "La fecha de nacimiento es obligatoria",
+            pattern: {
+              value: /^\d{4}-\d{2}-\d{2}$/,
+              message: "Formato válido: YYYY-MM-DD",
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputLabel
+              label="Fecha de Nacimiento *"
+              placeholder="Ej: 2001-06-20"
+              value={value}
+              onChange={onChange}
+              error={errors}
+              name="birthdate"
+              keyboardType="default"
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="cellphone"
+          rules={{
+            required: "El celular es obligatorio",
+            pattern: {
+              value: /^[0-9]{8}$/,
+              message: "Número de celular inválido",
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputLabel
+              label="Celular (+591) *"
+              placeholder="Ej: 71234567"
+              value={value}
+              onChange={onChange}
+              error={errors}
+              name="cellphone"
+              keyboardType="numeric"
+              maxLength={8}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="email"
+          rules={{
+            required: "El correo es obligatorio",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Correo inválido",
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputLabel
+              label="Correo Electrónico *"
+              placeholder="ejemplo@correo.com"
+              value={value}
+              onChange={onChange}
+              error={errors}
+              name="email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="password"
+          rules={{
+            required: "La contraseña es obligatoria",
+            minLength: {
+              value: 6,
+              message: "Mínimo 6 caracteres",
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputLabel
+              label="Contraseña *"
+              placeholder="Mínimo 6 caracteres"
+              value={value}
+              onChange={onChange}
+              error={errors}
+              name="password"
+              secureTextEntry={true}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="confirmPassword"
+          rules={{
+            required: "Confirma la contraseña",
+            validate: (value) =>
+              value === passwordValue || "Las contraseñas no coinciden",
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputLabel
+              label="Confirmar Contraseña *"
+              placeholder="Repite la contraseña"
+              value={value}
+              onChange={onChange}
+              error={errors}
+              name="confirmPassword"
+              secureTextEntry={true}
+            />
+          )}
+        />
+      </FormProvider>
+
       {isLoading ? (
         <ActivityIndicator size="large" color="#4318D1" style={styles.loader} />
       ) : (
-        <ButtonStyle text="Crear Cuenta" onClick={handleSubmit(onSubmit)} />
+        <ButtonStyle
+          text="Crear Cuenta"
+          onClick={handleSubmit(onSubmit)}
+          disabled={!isValid || isLoading}
+        />
       )}
     </View>
   );

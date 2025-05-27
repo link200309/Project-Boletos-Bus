@@ -1,11 +1,12 @@
 import { createContext, useState } from "react";
-import { registrarUsuario } from "../api/auth.api.js"; // ajusta la ruta según tu estructura
+import { registrarUsuario } from "../api/auth.api.js"; // asegúrate de que esta ruta exista
 
 export const AuthContext = createContext({
   user: null,
   login: () => {},
   logout: () => {},
   registerAgency: () => {},
+  register: () => {},
   isLoading: false,
 });
 
@@ -39,7 +40,19 @@ export function AuthProvider({ children }) {
       return response;
     } catch (error) {
       setIsLoading(false);
-      throw error; // importante: para que el componente que llama vea el error
+      throw error;
+    }
+  };
+
+  const register = async (datos) => {
+    setIsLoading(true);
+    try {
+      const response = await registrarUsuario(datos); // llamada a API
+      setIsLoading(false);
+      return response;
+    } catch (error) {
+      setIsLoading(false);
+      throw error;
     }
   };
 
@@ -50,6 +63,7 @@ export function AuthProvider({ children }) {
         login,
         logout,
         registerAgency,
+        register, // ← ahora disponible
         isLoading,
       }}
     >
