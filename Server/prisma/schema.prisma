@@ -15,16 +15,19 @@ datasource db {
 }
 
 model Usuario {
-  id_usuario         Int    @id @default(autoincrement())
-  tipo_usuario       String @db.VarChar(30)
-  nombre_usuario     String @db.VarChar(80)
-  correo_electronico String @unique @db.VarChar(80)
-  contraseña        String @db.VarChar(100)
+  id_usuario         Int      @id @default(autoincrement())
+  tipo_usuario       String   @db.VarChar(30)    // "agencia", "cliente", etc.
+  nombre             String?  @db.VarChar(50)    // ahora opcional para evitar errores de migración
+  apellido           String?  @db.VarChar(50)
+  ci                 String?  @db.VarChar(20)
+  correo_electronico String   @unique @db.VarChar(80)
+  contraseña         String   @db.VarChar(100)
   numero_celular     Int
   fecha_nacimiento   DateTime?
 
-  agencia  Agencia?
-  reservas Reserva[]
+  // Relaciones
+  agencia  Agencia?           // Una agencia (opcional)
+  reservas Reserva[]          // Varias reservas si es cliente
 }
 model Pasajero {
   id_pasajero Int      @id @default(autoincrement())
@@ -38,23 +41,27 @@ model Pasajero {
   reserva    Reserva @relation(fields: [id_reserva], references: [id_reserva])
 }
 
+
+
 model Agencia {
   id_agencia     Int    @id @default(autoincrement())
   id_usuario     Int    @unique
   nombre_agencia String @db.VarChar(80)
-  tipo_sociedad  String @db.VarChar(30)
+  tipo_sociedad  String @db.VarChar(60)
   NIT            String @db.VarChar(20)
-  departamento   String @db.VarChar(30)
+  departamento   String @db.VarChar(50)
   ciudad         String @db.VarChar(40)
   direccion      String @db.VarChar(100)
   estado         String @db.VarChar(30)
 
-  // Datos del representante legal
+  correo_electronico_agencia String @db.VarChar(80)
+  numero_celular             String @db.VarChar(15)
+
+  // Representante legal
   nombre_representante   String? @db.VarChar(50)
   apellido_representante String? @db.VarChar(50)
   ci_representante       String? @db.VarChar(20)
   telefono_representante String? @db.VarChar(15)
-
 
   usuario Usuario @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
 
@@ -62,6 +69,7 @@ model Agencia {
   choferes        Chofer[]
   configuraciones Configuracion_Pago[]
 }
+
 
 
 model Bus {

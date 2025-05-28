@@ -105,7 +105,7 @@ export const AgencyDataForm = ({ errors }) => {
         rules={accountValidationRules.city}
         render={({ field: { onChange, value } }) => (
           <InputLabel
-            label="Ciudad (domicilio legal) *"
+            label="Ciudad *"
             placeholder="Ej: La Paz"
             value={value}
             onChange={onChange}
@@ -120,7 +120,7 @@ export const AgencyDataForm = ({ errors }) => {
         rules={accountValidationRules.address}
         render={({ field: { onChange, value } }) => (
           <InputLabel
-            label="Dirección (domicilio legal) *"
+            label="Dirección *"
             placeholder="Ej: Calle Bolívar N°123, Zona Central"
             value={value}
             onChange={onChange}

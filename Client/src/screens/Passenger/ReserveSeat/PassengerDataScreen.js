@@ -1,15 +1,15 @@
-// PassengerDataScreen.jsx
-import React, { useEffect, useState } from "react";
-import { ScrollView, TouchableOpacity, Text, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { GenericContainer } from "../../../components/GenericContainer";
 import { BlobBg } from "../../../components/Background/BlobBg";
 import { InformativeTitle } from "../../../components/InformativeTitle";
 import PassengerCard from "./components/PassengerCard";
 import ContactCard from "./components/ContactCard";
+import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 
 export default function PassengerDataScreen({ navigation, route }) {
   const {
-    selectedSeats = ["A01"],
+    selectedSeats = [""],
     travelDetails = {
       route: "Cochabamba → La Paz",
       date: "Viernes 20 de mayo",
@@ -39,52 +39,40 @@ export default function PassengerDataScreen({ navigation, route }) {
     <GenericContainer>
       <BlobBg />
       <InformativeTitle
-            title={`${passengers.length} pasajeros seleccionados`}
-            description={`${travelDetails.route}\n${travelDetails.date} ${travelDetails.time}`}
+        title={`${passengers.length} pasajeros seleccionados`}
+        description={`${travelDetails.route}\n${travelDetails.date} ${travelDetails.time}`}
+      />
+
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {passengers.map((passenger, index) => (
+          <PassengerCard
+            key={index}
+            index={index}
+            passenger={passenger}
+            handlePassengerChange={handlePassengerChange}
           />
+        ))}
 
-      <ScrollView>
-        <View>
-          
-          {passengers.map((passenger, index) => (
-            <PassengerCard
-              key={index}
-              index={index}
-              passenger={passenger}
-              handlePassengerChange={handlePassengerChange}
-            />
-          ))}
+        <ContactCard contact={contact} setContact={setContact} />
 
-          <ContactCard contact={contact} setContact={setContact} />
-          <TouchableOpacity
-            style={styles.continueButton}
-            onPress={() => navigation.navigate("TripSummary")}
-          >
-            <Text style={styles.continueButtonText}>Continuar</Text>
-          </TouchableOpacity>
-        </View>
+        <ButtonStyle
+          text="Continuar"
+          onClick={() =>
+            navigation.navigate("TripSummary", {
+              passengers,
+              contact,
+            })
+          }
+        />
       </ScrollView>
     </GenericContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  continueButton: {
-    backgroundColor: "#4B2EC2",
-    padding: 15,
-    borderRadius: 8,
-    marginVertical: 20,
-    width: "95%",
-    alignSelf: "center",
+  scrollContent: {
+    paddingBottom: 30,
+    paddingTop: 10,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  continueButtonText: {
-    color: "#FFF",
-    fontSize: 18,
-    fontWeight: "bold",
   },
 });
