@@ -1,14 +1,12 @@
-// screens/Agency/AddBusses/BusFormScreen.js
 import React from "react";
 import { GenericContainer } from "../../../components/GenericContainer";
 import BusFormWrapper from "./components/BusFormWrapper";
 import { ScrollView } from "react-native-gesture-handler";
 
 export default function BusFormScreen({ route, navigation }) {
-  const { mode = "register", initialData = {},} = route.params || {};
+  const { mode = "register", initialData = {} } = route.params || {};
 
   const handleSave = () => {
-    if (onSave) onSave(); // recargar lista
     navigation.goBack(); // volver
   };
 

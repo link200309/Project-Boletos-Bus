@@ -28,7 +28,7 @@ const BusCard = ({ bus, onEdit, onDelete }) => {
       </View>
 
       <View style={styles.buttonRow}>
-        <ButtonStyle text="Editar" onClick={() => onEdit(bus)} width={120} />
+        <ButtonStyle text="Editar" onClick={() => onEdit(bus)} width={120} backgroundColorcolor="#000" />
         <ButtonStyle text="Eliminar" variant={2} onClick={() => onDelete(bus.id_bus)} width={120} />
       </View>
     </View>

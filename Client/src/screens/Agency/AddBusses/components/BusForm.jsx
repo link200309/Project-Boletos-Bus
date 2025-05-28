@@ -30,8 +30,8 @@ const BusForm = ({ formData, onChange, onSubmit, buttonText }) => {
           { label: "Semi cama", value: "Semi cama" },
           { label: "Cama", value: "Cama" },
         ]}
-        value={formData.tipo}
-        onChange={handleChange("tipo")}
+        value={formData.tipo_bus}
+        onChange={handleChange("tipo_bus")}
       />
 
       <InputLabel

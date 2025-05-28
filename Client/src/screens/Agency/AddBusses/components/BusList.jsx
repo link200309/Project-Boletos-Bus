@@ -5,8 +5,12 @@ import { getBuses, deleteBus } from "../../../../api/bus.api";
 
 const BusList = ({ buses, onEdit, onDeleteFinished }) => {
   const handleDelete = async (id) => {
-    await deleteBus(id);
-    onDeleteFinished(); // refresca desde pantalla padre
+    try {
+      await deleteBus(id);
+      onDeleteFinished(); // recarga desde pantalla padre
+    } catch (error) {
+      console.error("Error al eliminar bus:", error);
+    }
   };
 
   return (
