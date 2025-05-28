@@ -26,6 +26,17 @@ model Usuario {
   agencia  Agencia?
   reservas Reserva[]
 }
+model Pasajero {
+  id_pasajero Int      @id @default(autoincrement())
+  nombre      String   @db.VarChar(50)
+  apellido    String   @db.VarChar(50)
+  ci          String   @db.VarChar(20)
+  nacimiento  DateTime
+  asiento     String   @db.VarChar(10)
+
+  id_reserva Int
+  reserva    Reserva @relation(fields: [id_reserva], references: [id_reserva])
+}
 
 model Agencia {
   id_agencia     Int    @id @default(autoincrement())
@@ -154,14 +165,3 @@ model Reserva {
   pasajeros Pasajero[]
 }
 
-model Pasajero {
-  id_pasajero Int      @id @default(autoincrement())
-  nombre      String   @db.VarChar(50)
-  apellido    String   @db.VarChar(50)
-  ci          String   @db.VarChar(20)
-  nacimiento  DateTime
-  asiento     String   @db.VarChar(10)
-
-  id_reserva Int
-  reserva    Reserva @relation(fields: [id_reserva], references: [id_reserva])
-}
