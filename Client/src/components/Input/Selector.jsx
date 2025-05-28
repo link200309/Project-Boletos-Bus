@@ -19,7 +19,7 @@ export const Selector = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{`${label}`}</Text>
+      <Text style={styles.label}>{label}</Text>
       <View style={styles.dropdownContainer}>
         <RNPickerSelect
           placeholder={placeholderConst}
@@ -51,24 +51,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   dropdownContainer: {
-    flexDirection: "row",
-    alignItems: "center",
     width: "100%",
     borderWidth: 1,
     borderColor: "#E6E8FF",
     borderRadius: 15,
     backgroundColor: "#F3F4F9",
-  },
-  icon: {
-    marginVertical: 10,
-    marginLeft: 15,
-    zIndex: 10,
+    height: 45,
+    justifyContent: "center",
+    paddingHorizontal: 10,
   },
   dropdown: {
-    height: 52,
-    color: "#000",
     fontSize: 14,
-    width: 310,
+    color: "#000",
+    paddingVertical: 10,
   },
   errorText: {
     color: "red",

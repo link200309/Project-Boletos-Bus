@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 
 export default function PriceSummaryContainer({
   ticketPrice,
@@ -22,9 +23,7 @@ export default function PriceSummaryContainer({
         </View>
       </View>
 
-      <TouchableOpacity style={styles.confirmButton} onPress={onConfirm}>
-        <Text style={styles.buttonText}>Confirmar reserva</Text>
-      </TouchableOpacity>
+      <ButtonStyle text="Confirmar reserva" onClick={onConfirm} />
     </View>
   );
 }
@@ -62,16 +61,5 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "#000000",
-  },
-  confirmButton: {
-    backgroundColor: "#4B2EC2",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "bold",
   },
 });

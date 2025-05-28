@@ -1,3 +1,4 @@
+import React from "react";
 import { View, StyleSheet, Image, ScrollView } from "react-native";
 import { GenericContainer } from "../../components/GenericContainer";
 import { FormPassenger } from "./components/FormPassenger";
@@ -10,6 +11,7 @@ export default function RegisterScreen({ navigation, route }) {
   return (
     <GenericContainer style={styles.container}>
       <BackIcon style={styles.btnBack} onPress={() => navigation.goBack()} />
+
       <ScrollView>
           <View style={styles.containerLogo}>
             <Image
@@ -21,6 +23,7 @@ export default function RegisterScreen({ navigation, route }) {
               style={styles.logoName}
             />
           </View>
+
           {userType === "Pasajero" ? <FormPassenger /> : <FormAgency />}
       </ScrollView>
     </GenericContainer>

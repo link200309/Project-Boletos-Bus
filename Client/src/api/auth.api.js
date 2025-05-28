@@ -3,12 +3,12 @@ const BASE_URL = "http://192.168.1.7:4000"; // Cambiar a IP local si estás en A
 export const registrarUsuario = async (datos) => {
   const payload = { ...datos };
 
-  // Validación/ajuste opcional de fecha_nacimiento
+  // Asegurar que la fecha sea string tipo "YYYY-MM-DD"
   if (payload.fecha_nacimiento instanceof Date) {
-    const dd = String(payload.fecha_nacimiento.getDate()).padStart(2, '0');
-    const mm = String(payload.fecha_nacimiento.getMonth() + 1).padStart(2, '0'); // +1 porque enero = 0
     const yyyy = payload.fecha_nacimiento.getFullYear();
-    payload.fecha_nacimiento = `${dd}/${mm}/${yyyy}`;
+    const mm = String(payload.fecha_nacimiento.getMonth() + 1).padStart(2, "0");
+    const dd = String(payload.fecha_nacimiento.getDate()).padStart(2, "0");
+    payload.fecha_nacimiento = `${yyyy}-${mm}-${dd}`;
   }
 
   const res = await fetch(`${BASE_URL}/register`, {
@@ -20,6 +20,10 @@ export const registrarUsuario = async (datos) => {
   });
 
   const json = await res.json();
-  if (!res.ok) throw new Error(json.mensaje || "Error al registrar usuario");
+
+  if (!res.ok) {
+    throw new Error(json.mensaje || "Error al registrar usuario");
+  }
+
   return json;
 };

@@ -1,15 +1,25 @@
 import React, { useContext } from "react";
-import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import { useForm, FormProvider } from "react-hook-form";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { GlobalStyles } from "../../../components/Style/GlobalStyles";
 import { AgencyDataForm } from "./AgencyDataForm";
 import { AccountForm } from "./AccountForm";
 import { LegalRepresentativeForm } from "./LegalRepresentativeForm";
+import { AccountAdminForm } from "./AccountAdminForm";
 import { AuthContext } from "../../../context/AuthContext";
+import { useNavigation } from "@react-navigation/native"; // ✅ Importar el hook
 
 export const FormAgency = () => {
+  const navigation = useNavigation(); // ✅ Usar el hook correctamente
   const { registerAgency, isLoading } = useContext(AuthContext);
+
   const methods = useForm({
     mode: "onChange",
     defaultValues: {
@@ -28,9 +38,7 @@ export const FormAgency = () => {
       representativeName: "",
       representativeLastName: "",
       representativeCI: "",
-      representativecellPhone: "",
-      representativeEmail: "",
-      representativeAddress: "",
+      representativePhone: "",
 
       adminName: "",
       adminLastName: "",
@@ -39,6 +47,7 @@ export const FormAgency = () => {
       adminEmail: "",
       adminPassword: "",
       confirmAdminPassword: "",
+      adminBirthdate: "",
     },
   });
 
@@ -47,35 +56,44 @@ export const FormAgency = () => {
     formState: { errors, isValid },
   } = methods;
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const formattedData = {
-      agency: {
-        name: data.agencyName,
-        type: data.companyType,
-        nit: data.nit,
-        department: data.department,
-        city: data.city,
-        address: data.address,
-        cellphone: data.cellphone,
-        email: data.agencyEmail,
-      },
-      legalRepresentative: {
-        name: data.representativeName,
-        lastName: data.representativeLastName,
-        ci: data.representativeCI,
-        phone: data.representativePhone,
-      },
-      adminAccount: {
-        name: data.name,
-        lastName: data.lastName,
-        ci: data.ci,
-        cellphone: data.cellphone,
-        birthdate: data.birthdate,
-        email: data.adminEmail,
+      tipo_usuario: "agencia",
+      nombre: data.adminName,
+      apellido: data.adminLastName,
+      ci: data.adminCI,
+      correo_electronico: data.adminEmail,
+      contraseña: data.adminPassword,
+      numero_celular: parseInt(data.admincellPhone),
+      fecha_nacimiento: data.adminBirthdate,
+      datos_agencia: {
+        nombre_agencia: data.agencyName,
+        tipo_sociedad: data.companyType,
+        NIT: data.nit,
+        departamento: data.department,
+        ciudad: data.city,
+        direccion: data.address,
+        estado: "activo",
+        correo_electronico_agencia: data.agencyEmail,
+        numero_celular: data.cellphone,
+        nombre_representante: data.representativeName,
+        apellido_representante: data.representativeLastName,
+        ci_representante: data.representativeCI,
+        telefono_representante: data.representativePhone,
       },
     };
 
-    registerAgency(formattedData);
+    try {
+      await registerAgency(formattedData);
+      Alert.alert("Registro exitoso", "La agencia fue registrada correctamente.", [
+        {
+          text: "OK",
+          onPress: () => navigation.goBack(), // ← ✅ Volver a la pantalla anterior
+        },
+      ]);
+    } catch (error) {
+      Alert.alert("Error", error.message || "No se pudo registrar la agencia.");
+    }
   };
 
   return (
@@ -85,19 +103,17 @@ export const FormAgency = () => {
         Tus datos se mantendrán confidenciales y serán utilizados únicamente
         para el contrato de servicio entre BusRat y tu Agencia de Viajes.
       </Text>
+
       <FormProvider {...methods}>
         <AgencyDataForm errors={errors} />
         <LegalRepresentativeForm errors={errors} />
-        <AccountForm errors={errors} />
+        <AccountAdminForm errors={errors} />
+
         {isLoading ? (
-          <ActivityIndicator
-            size="large"
-            color="#4318D1"
-            style={styles.loader}
-          />
+          <ActivityIndicator size="large" color="#4318D1" style={styles.loader} />
         ) : (
           <ButtonStyle
-            text="Solicitar Servicio"
+            text="Crear Cuenta"
             onClick={handleSubmit(onSubmit)}
             disabled={!isValid || isLoading}
           />

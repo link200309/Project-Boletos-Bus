@@ -1,5 +1,4 @@
-//React
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -8,19 +7,17 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useForm, FormProvider, Controller } from "react-hook-form";
-//Components
 import { InputLabel } from "../../../components/Input/InputLabel";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { ButtonText } from "../../../components/Button/ButtonText";
 import { GlobalStyles } from "../../../components/Style/GlobalStyles";
-//Context
 import { AuthContext } from "../../../context/AuthContext";
-import { useContext } from "react";
 import { accountValidationRules } from "./validation";
 
 export const FormLogin = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState("Pasajero");
   const { login, isLoading } = useContext(AuthContext);
+
   const methods = useForm();
   const {
     handleSubmit,
@@ -28,12 +25,30 @@ export const FormLogin = ({ navigation }) => {
     formState: { errors },
   } = methods;
 
-  const renderForm = () => {
-    const onSubmit = (data) => {
-      login({ email: data.email, password: data.password });
-    };
+  const onSubmit = (data) => {
+    login({ email: data.email, password: data.password, rol: activeTab });
+  };
 
-    return (
+  return (
+    <View style={[GlobalStyles.formCard, styles.container]}>
+      {/* Tabs para cambiar entre Pasajero y Agencia */}
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === "Pasajero" && styles.activeTab]}
+          onPress={() => setActiveTab("Pasajero")}
+        >
+          <Text style={styles.tabText}>Pasajero</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.tab, activeTab === "Agencia" && styles.activeTab]}
+          onPress={() => setActiveTab("Agencia")}
+        >
+          <Text style={styles.tabText}>Agencia</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Formulario */}
       <FormProvider {...methods}>
         <Controller
           control={control}
@@ -83,35 +98,17 @@ export const FormLogin = ({ navigation }) => {
         <View style={styles.registerMessage}>
           <Text style={styles.textRegisterMessage}>¿No tienes cuenta?</Text>
           <ButtonText
-            text="Regístrate"
-            onClick={() =>
-              navigation.navigate("Register", { userType: activeTab })
+            text={
+              activeTab === "Pasajero"
+                ? "Regístrate como pasajero"
+                : "Registra tu agencia"
             }
+            onClick={() => {
+              navigation.navigate("Register", { userType: activeTab });
+            }}
           />
         </View>
       </FormProvider>
-    );
-  };
-
-  return (
-    <View style={[GlobalStyles.formCard, styles.container]}>
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === "Pasajero" && styles.activeTab]}
-          onPress={() => setActiveTab("Pasajero")}
-        >
-          <Text style={styles.tabText}>Pasajero</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.tab, activeTab === "Agencia" && styles.activeTab]}
-          onPress={() => setActiveTab("Agencia")}
-        >
-          <Text style={styles.tabText}>Agencia</Text>
-        </TouchableOpacity>
-      </View>
-
-      {renderForm()}
     </View>
   );
 };
