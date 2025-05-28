@@ -8,7 +8,6 @@ import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 
 export const TripSearchForm = ({ navigation }) => {
   const methods = useForm();
-
   const onSubmit = (data) => {
     navigation.navigate("AvailabilityDates", { formData: data });
   };
