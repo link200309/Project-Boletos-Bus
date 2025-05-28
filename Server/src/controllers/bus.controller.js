@@ -7,6 +7,7 @@ export const getBuses = async (req, res) => {
 };
 
 export const createBus = async (req, res) => {
+  console.log("Datos recibidos:", req.body);
   const data = req.body;
   try {
     const nuevoBus = await prisma.bus.create({ data });

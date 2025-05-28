@@ -1,3 +1,4 @@
+// BusForm.jsx (corregido)
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { InputLabel } from "../../../../components/Input/InputLabel";
@@ -29,8 +30,8 @@ const BusForm = ({ formData, onChange, onSubmit, buttonText }) => {
           { label: "Semi cama", value: "Semi cama" },
           { label: "Cama", value: "Cama" },
         ]}
-        value={formData.tipo}
-        onChange={handleChange("tipo")}
+        value={formData.tipo_bus}
+        onChange={handleChange("tipo_bus")}
       />
 
       <InputLabel
@@ -51,11 +52,17 @@ const BusForm = ({ formData, onChange, onSubmit, buttonText }) => {
       <InputLabel
         label="Año"
         placeholder="yyyy"
-        value={formData.anio}
-        onChange={handleChange("anio")}
+        value={formData.año_modelo}
+        onChange={handleChange("año_modelo")}
         keyboardType="numeric"
       />
 
+      <InputLabel
+        label="Estado"
+        placeholder="Ej: Operativo"
+        value={formData.estado}
+        onChange={handleChange("estado")}
+      />
       <ButtonStyle text={buttonText} onClick={onSubmit} />
     </View>
   );

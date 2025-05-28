@@ -1,40 +1,22 @@
+// components/BusList.jsx
 import React from "react";
 import BusCard from "./BusCard";
+import { getBuses, deleteBus } from "../../../../api/bus.api";
 
-const sampleBuses = [
-  {
-    id: 1,
-    placa: "123 XYZ",
-    marca: "Volvo",
-    tipo: "semi cama",
-    asientos: 30,
-    modelo: "9800",
-    anio: "2025",
-  },
-  {
-    id: 2,
-    placa: "123 XYZ",
-    marca: "Volvo",
-    tipo: "semi cama",
-    asientos: 30,
-    modelo: "9800",
-    anio: "2025",
-  },
-];
-
-const BusList = ({ onEdit }) => {
-  const handleEdit = (bus) => {
-    onEdit(bus); // delega a la pantalla padre
-  };
-
-  const handleDelete = (id) => {
-    console.log("Eliminar bus:", id);
+const BusList = ({ buses, onEdit, onDeleteFinished }) => {
+  const handleDelete = async (id) => {
+    try {
+      await deleteBus(id);
+      onDeleteFinished(); // recarga desde pantalla padre
+    } catch (error) {
+      console.error("Error al eliminar bus:", error);
+    }
   };
 
   return (
     <>
-      {sampleBuses.map((bus) => (
-        <BusCard key={bus.id} bus={bus} onEdit={handleEdit} onDelete={handleDelete} />
+      {buses.map((bus) => (
+        <BusCard key={bus.id_bus} bus={bus} onEdit={onEdit} onDelete={handleDelete} />
       ))}
     </>
   );
