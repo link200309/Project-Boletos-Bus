@@ -4,23 +4,15 @@ import { FlatList } from "react-native";
 import { AvailableSchedules } from "./AvailableSchedules";
 
 export const ListAvailableSchedules = ({ travels, navigation }) => {
-  const handleBusPress = (selectedTravel) => {
-    navigation.navigate("AvailabilitySeat", {
-      travels: [selectedTravel],
-      busId: selectedTravel.bus.id_bus,
-      travelId: selectedTravel.id_viaje,
-    });
-  };
-
   return (
     <FlatList
       data={travels}
       keyExtractor={(travel) => travel.id_viaje}
-      renderItem={(item, index) => {
+      renderItem={({ item }) => {
         return (
           <AvailableSchedules
             travel={item}
-            key={index}
+            key={item.id_viaje}
             navigation={navigation}
           />
         );

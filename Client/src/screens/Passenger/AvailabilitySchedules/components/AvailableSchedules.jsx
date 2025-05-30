@@ -5,12 +5,10 @@ import { formatTime, formatDate } from "../utils";
 
 export const AvailableSchedules = ({ travel, navigation }) => {
   const travelData = travel.item || travel;
-
   const handleBusPress = (selectedTravel) => {
     navigation.navigate("AvailabilitySeat", {
       travels: [selectedTravel],
       busId: selectedTravel.bus.id_bus,
-      travelId: selectedTravel.id_viaje,
     });
   };
 

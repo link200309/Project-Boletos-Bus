@@ -63,10 +63,6 @@ export const getBusSeats = async (req, res) => {
           asientosOcupados.length,
       },
     };
-
-    console.log(
-      `✅ Bus ${bus.placa} encontrado con ${bus.asientos.length} asientos`
-    );
     res.json(resultado);
   } catch (error) {
     console.error("Error en getBusSeats:", error);
@@ -79,16 +75,6 @@ export const getBusSeats = async (req, res) => {
     });
   }
 };
-
-// export const getAsientosPorBus = async (req, res) => {
-//   const id_bus = parseInt(req.params.id);
-//   try {
-//     const asientos = await prisma.asiento.findMany({ where: { id_bus } });
-//     res.json(asientos);
-//   } catch (err) {
-//     res.status(400).json({ mensaje: "Error al obtener asientos", error: err.message });
-//   }
-// };
 
 export const createAsiento = async (req, res) => {
   const data = req.body;

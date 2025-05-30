@@ -24,7 +24,6 @@ export default function AvailabilitySeatScreen({ navigation }) {
     try {
       setLoading(true);
       const response = await getBusSeats(busId);
-      console.log("Bus data:", response.bus);
       setBusData(response.bus);
       setAsientos(response.asientos);
     } catch (error) {
@@ -72,7 +71,7 @@ export default function AvailabilitySeatScreen({ navigation }) {
             navigation={navigation}
             asientos={asientos}
             busData={busData}
-            onSeatUpdate={loadBusSeats}
+            travels={travels}
           />
         </GenericContainer>
       </ScrollView>

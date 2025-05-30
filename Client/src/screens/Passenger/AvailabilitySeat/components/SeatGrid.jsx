@@ -48,31 +48,22 @@ export const SeatGrid = ({
     ubicacion: asiento.ubicacion || asiento.piso,
   }));
 
-  // Ordenar asientos por número
   const sortedSeats = convertedSeats.sort((a, b) => a.numero - b.numero);
-
+  
   const getOrderedLayout = () => {
     if (sortedSeats.length === 0) return [];
-
     const rows = [];
     const seatsPerRow = 4; // 2 + 2 asientos por fila
-
     for (let i = 0; i < sortedSeats.length; i += seatsPerRow) {
       const rowSeats = sortedSeats.slice(i, i + seatsPerRow);
-
-      // Crear array de 4 posiciones para cada fila
       const row = [null, null, null, null];
-
-      // Llenar las posiciones disponibles
       rowSeats.forEach((seat, index) => {
         if (index < 4) {
           row[index] = seat;
         }
       });
-
       rows.push(row);
     }
-
     return rows;
   };
 
