@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.28.61:4000"; // Asegúrate de que esta IP esté activa en tu red
+const BASE_URL = "http://192.168.0.8:4000"; // Asegúrate de que esta IP esté activa en tu red
 
 export const registrarUsuario = async (datos) => {
   const payload = { ...datos };

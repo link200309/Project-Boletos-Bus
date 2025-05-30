@@ -155,29 +155,6 @@ export const AccountAdminForm = ({ errors }) => {
           />
         )}
       />
-
-      <Controller
-        control={control}
-        name="adminBirthdate"
-        rules={{
-          required: "La fecha de nacimiento es obligatoria",
-          pattern: {
-            value: /^\d{4}-\d{2}-\d{2}$/,
-            message: "Formato válido: YYYY-MM-DD",
-          },
-        }}
-        render={({ field: { onChange, value } }) => (
-          <InputLabel
-            label="Fecha de nacimiento"
-            placeholder="Ej. 1990-05-26"
-            value={value}
-            onChange={onChange}
-            error={errors}
-            name="adminBirthdate"
-            keyboardType="default"
-          />
-        )}
-      />
     </View>
   );
 };

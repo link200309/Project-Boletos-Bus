@@ -1,11 +1,5 @@
 import React, { useContext } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  ActivityIndicator,
-  Alert,
-} from "react-native";
+import { Text, View, StyleSheet, ActivityIndicator, Alert } from "react-native";
 import { useForm, FormProvider } from "react-hook-form";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { GlobalStyles } from "../../../components/Style/GlobalStyles";
@@ -13,10 +7,10 @@ import { AgencyDataForm } from "./AgencyDataForm";
 import { LegalRepresentativeForm } from "./LegalRepresentativeForm";
 import { AccountAdminForm } from "./AccountAdminForm";
 import { AuthContext } from "../../../context/AuthContext";
-import { useNavigation } from "@react-navigation/native"; // ✅ Importar el hook
+import { useNavigation } from "@react-navigation/native";
 
 export const FormAgency = () => {
-  const navigation = useNavigation(); // ✅ Usar el hook correctamente
+  const navigation = useNavigation();
   const { registerAgency, isLoading } = useContext(AuthContext);
 
   const methods = useForm({
@@ -46,7 +40,6 @@ export const FormAgency = () => {
       adminEmail: "",
       adminPassword: "",
       confirmAdminPassword: "",
-      adminBirthdate: "",
     },
   });
 
@@ -64,7 +57,6 @@ export const FormAgency = () => {
       correo_electronico: data.adminEmail,
       contraseña: data.adminPassword,
       numero_celular: parseInt(data.admincellPhone),
-      fecha_nacimiento: data.adminBirthdate,
       datos_agencia: {
         nombre_agencia: data.agencyName,
         tipo_sociedad: data.companyType,
@@ -74,22 +66,26 @@ export const FormAgency = () => {
         direccion: data.address,
         estado: "activo",
         correo_electronico_agencia: data.agencyEmail,
-        numero_celular: data.cellphone,
+        numero_celular_agencia: parseInt(data.cellphone),
         nombre_representante: data.representativeName,
         apellido_representante: data.representativeLastName,
         ci_representante: data.representativeCI,
-        telefono_representante: data.representativePhone,
+        celular_representante: data.representativePhone,
       },
     };
 
     try {
       await registerAgency(formattedData);
-      Alert.alert("Registro exitoso", "La agencia fue registrada correctamente.", [
-        {
-          text: "OK",
-          onPress: () => navigation.goBack(), // ← ✅ Volver a la pantalla anterior
-        },
-      ]);
+      Alert.alert(
+        "Registro exitoso",
+        "La agencia fue registrada correctamente.",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(), // ← ✅ Volver a la pantalla anterior
+          },
+        ]
+      );
     } catch (error) {
       Alert.alert("Error", error.message || "No se pudo registrar la agencia.");
     }
@@ -109,7 +105,11 @@ export const FormAgency = () => {
         <AccountAdminForm errors={errors} />
 
         {isLoading ? (
-          <ActivityIndicator size="large" color="#4318D1" style={styles.loader} />
+          <ActivityIndicator
+            size="large"
+            color="#4318D1"
+            style={styles.loader}
+          />
         ) : (
           <ButtonStyle
             text="Crear Cuenta"
