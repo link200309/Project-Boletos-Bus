@@ -23,29 +23,16 @@ model Usuario {
   correo_electronico String   @unique @db.VarChar(80)
   contraseña         String   @db.VarChar(100)
   numero_celular     Int
-  fecha_nacimiento   DateTime?
 
   // Relaciones
   agencia  Agencia?           // Una agencia (opcional)
-  reservas Reserva[]          // Varias reservas si es cliente
-}
-model Pasajero {
-  id_pasajero Int      @id @default(autoincrement())
-  nombre      String   @db.VarChar(50)
-  apellido    String   @db.VarChar(50)
-  ci          String   @db.VarChar(20)
-  nacimiento  DateTime
-  asiento     String   @db.VarChar(10)
-
-  id_reserva Int
-  reserva    Reserva @relation(fields: [id_reserva], references: [id_reserva])
+  pasajero Pasajero?
 }
 
 
 
 model Agencia {
-  id_agencia     Int    @id @default(autoincrement())
-  id_usuario     Int    @unique
+  id_agencia     Int    @id
   nombre_agencia String @db.VarChar(80)
   tipo_sociedad  String @db.VarChar(60)
   NIT            String @db.VarChar(20)
@@ -55,21 +42,29 @@ model Agencia {
   estado         String @db.VarChar(30)
 
   correo_electronico_agencia String @db.VarChar(80)
-  numero_celular             String @db.VarChar(15)
+  numero_celular_agencia            Int
 
   // Representante legal
   nombre_representante   String? @db.VarChar(50)
   apellido_representante String? @db.VarChar(50)
   ci_representante       String? @db.VarChar(20)
-  telefono_representante String? @db.VarChar(15)
+  celular_representante String? @db.VarChar(15)
 
-  usuario Usuario @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+  usuario Usuario @relation(fields: [id_agencia], references: [id_usuario], onDelete: Cascade)
 
   buses           Bus[]
   choferes        Chofer[]
   configuraciones Configuracion_Pago[]
 }
 
+
+model Pasajero {
+  id_pasajero     Int    @id
+  fecha_nacimiento     DateTime
+
+  reservas Reserva[]
+  usuario Usuario @relation(fields: [id_pasajero], references: [id_usuario], onDelete: Cascade)
+}
 
 
 model Bus {
@@ -87,6 +82,7 @@ model Bus {
   asientos Asiento[]
   viajes   Viaje[]
 }
+
 
 model Asiento {
   id_asiento Int    @id @default(autoincrement())
@@ -162,14 +158,12 @@ model Chofer {
 
 model Reserva {
   id_reserva    Int      @id @default(autoincrement())
-  id_usuario    Int
+  id_pasajero    Int
   id_viaje      Int
   estado        String   @default("pendiente")
   comprobante   String?
   fecha_reserva DateTime @default(now())
 
-  usuario   Usuario    @relation(fields: [id_usuario], references: [id_usuario])
+  pasajero  Pasajero    @relation(fields: [id_pasajero], references: [id_pasajero])
   viaje     Viaje      @relation(fields: [id_viaje], references: [id_viaje])
-  pasajeros Pasajero[]
 }
-
