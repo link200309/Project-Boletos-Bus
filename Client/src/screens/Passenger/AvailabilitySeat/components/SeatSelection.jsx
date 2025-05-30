@@ -3,14 +3,14 @@ import { View, Text, StyleSheet } from "react-native";
 import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { SeatGrid } from "./SeatGrid";
+import { formatTime } from "../../AvailabilitySchedules/utils"; 
 
-export const SeatSelection = ({
-  navigation,
-  asientos,
-  busData,
-  onSeatUpdate,
-}) => {
-  const [selectedFloor, setSelectedFloor] = useState("Superior");
+
+export const SeatSelection = ({ navigation }) => {
+  const onSubmit = (data) => {
+    navigation.navigate("AvailabilitySeat", { formData: data });
+  };
+  const [selectedFloor, setSelectedFloor] = useState("superior");
   const [selectedSeats, setSelectedSeats] = useState([]);
 
   const getAsientosByFloor = (floor) => {
@@ -112,11 +112,9 @@ export const SeatSelection = ({
       )}
 
       <SeatGrid
-        selectedFloor={hasTwoFloors ? selectedFloor : null}
+        selectedFloor={selectedFloor}
         selectedSeats={selectedSeats}
         onSeatSelect={handleSeatSelection}
-        asientos={hasTwoFloors ? getAsientosByFloor(selectedFloor) : asientos}
-        busData={busData}
       />
 
       <View style={styles.footer}>
@@ -139,11 +137,25 @@ export const SeatSelection = ({
             </Text>
           )}
         </View>
-        <ButtonStyle
+       <ButtonStyle
           text={"Continuar"}
-          onClick={onSubmit}
-          disabled={selectedSeats.length === 0}
+          onClick={() =>
+            navigation.navigate("PassengerData", {
+              selectedSeats,
+              travelDetails: {
+                route: `${travel.ruta.origen} → ${travel.ruta.destino}`,
+                date: new Date(travel.fecha_salida).toLocaleDateString("es-ES"),
+                time: `${travel.hora_salida_programada.slice(0, 5)} → ${
+                  formatTime(travel.hora_salida_programada, parseFloat(travel.ruta.tiempo_estimado))
+                }`,
+                price: parseFloat(travel.costo),
+                tipoBus: travel.bus.tipo_bus,
+                agencia: travel.bus.agencia.nombre_agencia,
+              },
+            })
+          }
         />
+
       </View>
     </View>
   );

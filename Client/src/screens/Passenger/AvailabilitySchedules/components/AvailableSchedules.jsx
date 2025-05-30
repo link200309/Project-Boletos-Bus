@@ -5,6 +5,13 @@ import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { formatTime, formatDate } from "../utils";
 
 export const AvailableSchedules = ({ travel, navigation, onClick }) => {
+  const handleBusPress = (selectedTravel) => {
+    navigation.navigate("AvailabilitySeat", {
+      travels: [selectedTravel],
+      busId: selectedTravel.bus.id_bus,
+      travelId: selectedTravel.id_viaje,
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.containerContent}>
@@ -43,7 +50,12 @@ export const AvailableSchedules = ({ travel, navigation, onClick }) => {
           <ChairIcon />
           <Text style={styles.text}>{travel.item.bus.tipo_bus}</Text>
         </View>
-        <ButtonStyle width="115" text={"Reservar"} onClick={onClick} />
+        <ButtonStyle
+          width="115"
+          text={"Reservar"}
+          onClick={() => handleBusPress(item)}
+          // onClick={() => navigation.navigate("AvailabilitySeat", travel.item)}
+        />
       </View>
     </View>
   );

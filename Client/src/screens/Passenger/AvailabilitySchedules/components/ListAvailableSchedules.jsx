@@ -22,7 +22,6 @@ export const ListAvailableSchedules = ({ travels, navigation }) => {
             travel={item}
             key={index}
             navigation={navigation}
-            onClick={() => handleBusPress(item)}
           />
         );
       }}

@@ -10,11 +10,7 @@ import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 export default function PassengerDataScreen({ navigation, route }) {
   const {
     selectedSeats = [""],
-    travelDetails = {
-      route: "Cochabamba → La Paz",
-      date: "Viernes 20 de mayo",
-      time: "07:30 → 13:00",
-    },
+    travelDetails = {}
   } = route.params || {};
 
   const [passengers, setPassengers] = useState(
@@ -61,6 +57,7 @@ export default function PassengerDataScreen({ navigation, route }) {
             navigation.navigate("TripSummary", {
               passengers,
               contact,
+              travelDetails
             })
           }
         />
