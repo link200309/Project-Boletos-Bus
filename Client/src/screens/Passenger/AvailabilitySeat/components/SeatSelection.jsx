@@ -76,6 +76,8 @@ export const SeatSelection = ({ navigation }) => {
         </View>
         <ButtonStyle
           text={"Continuar"}
+          onClick={() => navigation.navigate("PassengerData")}
+
         />
       </View>
     </View>

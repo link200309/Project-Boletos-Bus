@@ -49,7 +49,7 @@ export const AvailableSchedules = ({ travel, navigation }) => {
         <ButtonStyle
           width="115"
           text={"Reservar"}
-          onClick={() => navigation.navigate("PassengerData")}
+          onClick={() => navigation.navigate("AvailabilitySeat")}
         />
       </View>
     </View>
