@@ -3,8 +3,11 @@ import { View, Text, StyleSheet } from "react-native";
 import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { SeatGrid } from "./SeatGrid";
+import { formatTime } from "../../AvailabilitySchedules/utils"; 
 
-export const SeatSelection = ({ navigation }) => {
+
+export const SeatSelection = ({ navigation, travel }) => {
+  console.log(travel)
   const onSubmit = (data) => {
     navigation.navigate("AvailabilitySeat", { formData: data });
   };
@@ -62,10 +65,18 @@ export const SeatSelection = ({ navigation }) => {
       </View>
 
       <SeatGrid
-        selectedFloor={selectedFloor}
-        selectedSeats={selectedSeats}
-        onSeatSelect={handleSeatSelection}
-      />
+          selectedFloor={selectedFloor}
+          selectedSeats={selectedSeats}
+          onSeatSelect={handleSeatSelection}
+          seats={travel.bus.asientos_disponibles.map((asiento) => ({
+            id: asiento.numero,
+            status: asiento.estado === "Disponible"
+              ? "available"
+              : asiento.estado === "Ocupado"
+              ? "occupied"
+              : "unavailable",
+          }))}
+        />
 
       <View style={styles.footer}>
         <View>
@@ -74,11 +85,25 @@ export const SeatSelection = ({ navigation }) => {
             {selectedSeats.length} asiento(s)
           </Text>
         </View>
-        <ButtonStyle
+       <ButtonStyle
           text={"Continuar"}
-          onClick={() => navigation.navigate("PassengerData")}
-
+          onClick={() =>
+            navigation.navigate("PassengerData", {
+              selectedSeats,
+              travelDetails: {
+                route: `${travel.ruta.origen} → ${travel.ruta.destino}`,
+                date: new Date(travel.fecha_salida).toLocaleDateString("es-ES"),
+                time: `${travel.hora_salida_programada.slice(0, 5)} → ${
+                  formatTime(travel.hora_salida_programada, parseFloat(travel.ruta.tiempo_estimado))
+                }`,
+                price: parseFloat(travel.costo),
+                tipoBus: travel.bus.tipo_bus,
+                agencia: travel.bus.agencia.nombre_agencia,
+              },
+            })
+          }
         />
+
       </View>
     </View>
   );
