@@ -18,5 +18,10 @@ export const getTravels = async (origen, destino, asientos) => {
       asientos,
     },
   });
-  return res;
+  return res.data;
+};
+
+export const getTravelsByAgency = async (id) => {
+  const res = await travelApi.get(`/travel/${id}/get`);
+  return res.data;
 };

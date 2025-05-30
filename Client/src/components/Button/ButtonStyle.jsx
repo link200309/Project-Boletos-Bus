@@ -9,6 +9,7 @@ export const ButtonStyle = ({
   height = 50,
   sizeText = 18,
   style,
+  styleText,
 }) => {
   const buttonStyle = [
     styles.button,
@@ -21,6 +22,7 @@ export const ButtonStyle = ({
     styles.text,
     variant === 1 ? styles.textVariant1 : styles.textVariant2,
     { fontSize: sizeText },
+    styleText,
   ];
 
   return (

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { AvailableDates } from "./AvailableDates";
 
 //utils
-import { formatDate } from "../utils";
+import { formatDate } from "../../../../utils/dateTime.util";
 
 export const ListAvailableDates = ({ travels, navigation }) => {
   const [travelsFiltered, setTravelsFiltered] = useState([]);
