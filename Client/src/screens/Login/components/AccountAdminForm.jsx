@@ -118,14 +118,14 @@ export const AccountAdminForm = ({ errors }) => {
         rules={{
           required: "La contraseña es obligatoria",
           minLength: {
-            value: 6,
-            message: "Mínimo 6 caracteres",
+            value: 8,
+            message: "Mínimo 8 caracteres",
           },
         }}
         render={({ field: { onChange, value } }) => (
           <InputLabel
             label="Contraseña"
-            placeholder="Mínimo 6 caracteres"
+            placeholder="Mínimo 8 caracteres"
             value={value}
             onChange={onChange}
             error={errors}
@@ -152,29 +152,6 @@ export const AccountAdminForm = ({ errors }) => {
             error={errors}
             name="confirmAdminPassword"
             secureTextEntry={true}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="adminBirthdate"
-        rules={{
-          required: "La fecha de nacimiento es obligatoria",
-          pattern: {
-            value: /^\d{4}-\d{2}-\d{2}$/,
-            message: "Formato válido: YYYY-MM-DD",
-          },
-        }}
-        render={({ field: { onChange, value } }) => (
-          <InputLabel
-            label="Fecha de nacimiento"
-            placeholder="Ej. 1990-05-26"
-            value={value}
-            onChange={onChange}
-            error={errors}
-            name="adminBirthdate"
-            keyboardType="default"
           />
         )}
       />

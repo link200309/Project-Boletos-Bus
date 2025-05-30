@@ -26,7 +26,7 @@ export const FormLogin = ({ navigation }) => {
   } = methods;
 
   const onSubmit = (data) => {
-    login({ email: data.email, password: data.password, rol: activeTab });
+    login({ email: data.email, password: data.password });
   };
 
   return (

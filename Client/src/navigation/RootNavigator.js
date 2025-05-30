@@ -7,13 +7,15 @@ import { AuthContext } from "../context/AuthContext";
 const RootNavigator = () => {
   const { user } = useContext(AuthContext);
 
-  if (!user || !user.rol) {
+  console.log("Los datos", user);
+
+  if (!user) {
     return <AuthNavigator />;
   }
 
-  return user.rol == "Pasajero" ? (
+  return user.usuario.tipo_usuario == "cliente" ? (
     <TabPassengerNavigator />
-  ) : user.rol == "Agencia" ? (
+  ) : user.usuario.tipo_usuario == "agencia" ? (
     <TabAgencyNavigator />
   ) : (
     <AuthNavigator />
