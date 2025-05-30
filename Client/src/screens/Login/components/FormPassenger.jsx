@@ -1,11 +1,5 @@
 import React, { useContext } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  ActivityIndicator,
-  Alert,
-} from "react-native";
+import { Text, View, StyleSheet, ActivityIndicator, Alert } from "react-native";
 import { useForm, FormProvider, Controller } from "react-hook-form";
 import { GlobalStyles } from "../../../components/Style/GlobalStyles";
 import { InputLabel } from "../../../components/Input/InputLabel";
@@ -41,12 +35,16 @@ export const FormPassenger = () => {
 
     try {
       await register(formattedData);
-      Alert.alert("Registro exitoso", "Tu cuenta ha sido creada correctamente.", [
-        {
-          text: "OK",
-          onPress: () => navigation.goBack(),
-        },
-      ]);
+      Alert.alert(
+        "Registro exitoso",
+        "Tu cuenta ha sido creada correctamente.",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(),
+          },
+        ]
+      );
     } catch (error) {
       Alert.alert("Error", error.message || "No se pudo registrar tu cuenta.");
     }
@@ -194,14 +192,14 @@ export const FormPassenger = () => {
           rules={{
             required: "La contraseña es obligatoria",
             minLength: {
-              value: 6,
-              message: "Mínimo 6 caracteres",
+              value: 8,
+              message: "Mínimo 8 caracteres",
             },
           }}
           render={({ field: { onChange, value } }) => (
             <InputLabel
               label="Contraseña *"
-              placeholder="Mínimo 6 caracteres"
+              placeholder="Mínimo 8 caracteres"
               value={value}
               onChange={onChange}
               error={errors}

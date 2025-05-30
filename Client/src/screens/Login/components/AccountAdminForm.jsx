@@ -118,14 +118,14 @@ export const AccountAdminForm = ({ errors }) => {
         rules={{
           required: "La contraseña es obligatoria",
           minLength: {
-            value: 6,
-            message: "Mínimo 6 caracteres",
+            value: 8,
+            message: "Mínimo 8 caracteres",
           },
         }}
         render={({ field: { onChange, value } }) => (
           <InputLabel
             label="Contraseña"
-            placeholder="Mínimo 6 caracteres"
+            placeholder="Mínimo 8 caracteres"
             value={value}
             onChange={onChange}
             error={errors}
