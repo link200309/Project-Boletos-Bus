@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ScrollView, Alert } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { getBusSeats } from "../../../api/seat.api";
@@ -11,14 +11,14 @@ import { SeatSelection } from "./components/SeatSelection";
 
 export default function AvailabilitySeatScreen({ navigation }) {
   const route = useRoute();
-  const { travels, busId } = route.params;
+  const { travels, busId } = route.params || {};
   const [busData, setBusData] = useState(null);
   const [asientos, setAsientos] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("Bus ID:", busId);
-    console.log("Travels:", travels);
+    console.log("Bus ID asientos:", busId);
+    console.log("Travels asientos:", travels);
     loadBusSeats();
   }, []);
 
@@ -26,6 +26,7 @@ export default function AvailabilitySeatScreen({ navigation }) {
     try {
       setLoading(true);
       const response = await getBusSeats(busId);
+      console.log("Response asientos:", response);
       setBusData(response.data.bus);
       setAsientos(response.data.asientos);
     } catch (error) {

@@ -7,8 +7,6 @@ import { AuthContext } from "../context/AuthContext";
 const RootNavigator = () => {
   const { user } = useContext(AuthContext);
 
-  console.log("Los datos", user);
-
   if (!user) {
     return <AuthNavigator />;
   }

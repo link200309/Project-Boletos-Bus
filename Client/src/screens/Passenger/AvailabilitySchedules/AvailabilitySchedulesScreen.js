@@ -1,4 +1,3 @@
-//react
 import { useRoute } from "@react-navigation/native";
 //components
 import { InformativeTitle } from "../../../components/InformativeTitle";

@@ -1,5 +1,4 @@
-//react
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 //components
 import { InformativeTitle } from "../../../components/InformativeTitle";
 import { GenericContainer } from "../../../components/GenericContainer";
@@ -20,7 +19,6 @@ export default function AvailabilityDatesScreen({ navigation }) {
           formData.asientos
         );
         setTravels(response.data);
-        console.log("Travels:", response.data);
       } catch (error) {
         console.error("Error fetching travels:", error);
       }

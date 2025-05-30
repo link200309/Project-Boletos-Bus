@@ -11,7 +11,7 @@ export default function TripSummaryScreen({ navigation, route }) {
   const { passengers = [], contact = {} } = route.params || {};
 
   const handleConfirm = () => {
-    console.log("Reserva confirmada");
+    alert("Reserva confirmada");
   };
 
   return (

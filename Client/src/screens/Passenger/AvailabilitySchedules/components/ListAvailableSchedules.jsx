@@ -6,9 +6,9 @@ import { AvailableSchedules } from "./AvailableSchedules";
 export const ListAvailableSchedules = ({ travels, navigation }) => {
   const handleBusPress = (selectedTravel) => {
     navigation.navigate("AvailabilitySeat", {
-      travels: [selectedTravel], // El viaje seleccionado
-      busId: selectedTravel.bus.id_bus, // ⭐ Pasar el ID del bus
-      travelId: selectedTravel.id_viaje, // ⭐ También el ID del viaje por si acaso
+      travels: [selectedTravel],
+      busId: selectedTravel.bus.id_bus,
+      travelId: selectedTravel.id_viaje,
     });
   };
 
@@ -16,13 +16,13 @@ export const ListAvailableSchedules = ({ travels, navigation }) => {
     <FlatList
       data={travels}
       keyExtractor={(travel) => travel.id_viaje}
-      renderItem={(travel, index) => {
+      renderItem={(item, index) => {
         return (
           <AvailableSchedules
-            travel={travel}
+            travel={item}
             key={index}
             navigation={navigation}
-            onClick={() => handleBusPress(travel.item)}
+            onClick={() => handleBusPress(item)}
           />
         );
       }}

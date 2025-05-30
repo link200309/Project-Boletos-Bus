@@ -5,8 +5,6 @@ import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { formatTime, formatDate } from "../utils";
 
 export const AvailableSchedules = ({ travel, navigation, onClick }) => {
-  console.log(travel.item);
-
   return (
     <View style={styles.container}>
       <View style={styles.containerContent}>
@@ -45,11 +43,7 @@ export const AvailableSchedules = ({ travel, navigation, onClick }) => {
           <ChairIcon />
           <Text style={styles.text}>{travel.item.bus.tipo_bus}</Text>
         </View>
-        <ButtonStyle
-          width="115"
-          text={"Reservar"}
-          onClick={onClick}
-        />
+        <ButtonStyle width="115" text={"Reservar"} onClick={onClick} />
       </View>
     </View>
   );
