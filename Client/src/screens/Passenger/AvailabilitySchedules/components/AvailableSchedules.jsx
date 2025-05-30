@@ -4,7 +4,7 @@ import { BusIcon, Location, ChairIcon } from "../../../../components/Icons";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { formatTime, formatDate } from "../utils";
 
-export const AvailableSchedules = ({ travel, navigation }) => {
+export const AvailableSchedules = ({ travel, navigation, onClick }) => {
   console.log(travel.item);
 
   return (
@@ -23,7 +23,6 @@ export const AvailableSchedules = ({ travel, navigation }) => {
         <View style={styles.lineContainer}>
           <View style={styles.circle} />
           <View style={styles.line} />
-          {/* <Text style={styles.duration}>5h 30min</Text> */}
         </View>
         <Text>
           {formatTime(
@@ -49,7 +48,7 @@ export const AvailableSchedules = ({ travel, navigation }) => {
         <ButtonStyle
           width="115"
           text={"Reservar"}
-          onClick={() => navigation.navigate("AvailabilitySeat")}
+          onClick={onClick}
         />
       </View>
     </View>

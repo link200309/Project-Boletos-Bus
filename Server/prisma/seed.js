@@ -124,7 +124,7 @@ async function main() {
   });
 
   // Crear viajes
-  const fechas = ["2025-05-10", "2025-05-11", "2025-05-12", "2025-05-13"];
+  const fechas = ["2025-07-10", "2025-07-11", "2025-07-12", "2025-07-13"];
   for (let i = 0; i < fechas.length; i++) {
     await prisma.viaje.create({
       data: {

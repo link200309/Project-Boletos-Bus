@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.1.7:4000"; // Cambiar a IP local si estás en Android físico/emulador
+const BASE_URL = "http://192.168.1.5:4000"; // Cambiar a IP local si estás en Android físico/emulador
 
 export const registrarUsuario = async (datos) => {
   const payload = { ...datos };

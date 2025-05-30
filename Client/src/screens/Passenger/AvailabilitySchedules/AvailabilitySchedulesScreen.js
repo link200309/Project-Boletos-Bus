@@ -1,6 +1,5 @@
 //react
 import { useRoute } from "@react-navigation/native";
-
 //components
 import { InformativeTitle } from "../../../components/InformativeTitle";
 import { GenericContainer } from "../../../components/GenericContainer";
@@ -22,3 +21,4 @@ export default AvailabilitySchedulesScreen = ({ navigation }) => {
     </GenericContainer>
   );
 };
+

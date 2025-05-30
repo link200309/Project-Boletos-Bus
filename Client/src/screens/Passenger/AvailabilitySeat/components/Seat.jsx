@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 
-export const Seat = ({ id, status, isSelected, onPress }) => {
+export const Seat = ({ id, numero, status, isSelected, onPress }) => {
   const handleSeatPress = () => {
     if (status === "available") {
       onPress(id);
@@ -51,7 +51,9 @@ export const Seat = ({ id, status, isSelected, onPress }) => {
         status === "occupied" || status === "unavailable" || status === "tv"
       }
     >
-      <Text style={getSeatTextStyle()}>{status === "tv" ? "TV" : id}</Text>
+      <Text style={getSeatTextStyle()}>
+        {status === "tv" ? "TV" : numero || id}
+      </Text>
     </TouchableOpacity>
   );
 };

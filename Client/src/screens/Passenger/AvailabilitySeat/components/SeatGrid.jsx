@@ -2,83 +2,104 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Seat } from "./Seat";
 
-export const SeatGrid = ({ selectedFloor, selectedSeats, onSeatSelect }) => {
-  const upperFloorSeats = [
-    { id: "01", status: "available" },
-    { id: "02", status: "available" },
-    { id: "TV1", status: "tv" },
-    { id: "03", status: "available" },
-    { id: "04", status: "available" },
-    { id: "05", status: "available" },
-    { id: "06", status: "available" },
-    { id: "08", status: "available" },
-    { id: "09", status: "available" },
-    { id: "TV2", status: "tv" },
-    { id: "10", status: "occupied" },
-    { id: "11", status: "available" },
-    { id: "12", status: "occupied" },
-    { id: "13", status: "occupied" },
-    { id: "14", status: "available" },
-    { id: "15", status: "unavailable" },
-    { id: "16", status: "occupied" },
-    { id: "17", status: "available" },
-    { id: "18", status: "available" },
-    { id: "19", status: "unavailable" },
-  ];
+export const SeatGrid = ({
+  selectedFloor,
+  selectedSeats,
+  onSeatSelect,
+  asientos,
+  busData,
+}) => {
+  const getStatusFromAPI = (estado) => {
+    switch (estado) {
+      case "Disponible":
+        return "available";
+      case "Ocupado":
+        return "occupied";
+      case "No disponible":
+      case "Mantenimiento":
+        return "unavailable";
+      default:
+        return "available";
+    }
+  };
 
-  const lowerFloorSeats = [
-    { id: "01", status: "available" },
-    { id: "02", status: "available" },
-    { id: "03", status: "occupied" },
-    { id: "04", status: "available" },
-    { id: "05", status: "unavailable" },
-    { id: "06", status: "available" },
-    { id: "07", status: "available" },
-    { id: "08", status: "occupied" },
-  ];
+  const convertedSeats = asientos.map((asiento) => ({
+    id: asiento.id_asiento,
+    status: getStatusFromAPI(asiento.estado),
+    numero: asiento.numero_asiento || asiento.numero,
+    fila: asiento.fila,
+    columna: asiento.columna,
+    ubicacion: asiento.ubicacion || asiento.piso,
+  }));
 
-  const currentSeats =
-    selectedFloor === "superior" ? upperFloorSeats : lowerFloorSeats;
-  const tvSeats = currentSeats.filter((seat) => seat.status === "tv");
-  const normalSeats = currentSeats.filter((seat) => seat.status !== "tv");
+  const organizeSeats = (seats) => {
+    if (!seats || seats.length === 0) return [];
 
-  const groupedRows = [];
-  let i = 0;
-  let j = 0;
-  while (i < normalSeats.length || j < tvSeats.length) {
-    const row = [];
-    for (let col = 0; col < 4; col++) {
-      if (col === 2) {
-        if (j < tvSeats.length) {
-          row.push({ ...tvSeats[j], col });
-          j++;
+    const maxRow = Math.max(...seats.map((s) => s.fila || 1));
+    const maxCol = Math.max(...seats.map((s) => s.columna || 1));
+
+    const rows = [];
+
+    for (let row = 1; row <= maxRow; row++) {
+      const seatRow = [];
+      for (let col = 1; col <= maxCol; col++) {
+        const seat = seats.find(
+          (s) => (s.fila || 1) === row && (s.columna || 1) === col
+        );
+        seatRow.push(seat || null);
+      }
+      rows.push(seatRow);
+    }
+
+    return rows;
+  };
+
+  const getDefaultLayout = () => {
+    const defaultSeats = [];
+    const seatsPerRow = 4;
+    const numRows = Math.ceil(convertedSeats.length / seatsPerRow);
+
+    for (let row = 0; row < numRows; row++) {
+      const seatRow = [];
+      for (let col = 0; col < seatsPerRow; col++) {
+        const seatIndex = row * seatsPerRow + col;
+        if (seatIndex < convertedSeats.length) {
+          seatRow.push(convertedSeats[seatIndex]);
         } else {
-          row.push(null);
-        }
-      } else {
-        if (i < normalSeats.length) {
-          row.push({ ...normalSeats[i], col });
-          i++;
-        } else {
-          row.push(null);
+          seatRow.push(null);
         }
       }
+      defaultSeats.push(seatRow);
     }
-    groupedRows.push(row);
+
+    return defaultSeats;
+  };
+
+  const seatLayout =
+    convertedSeats.length > 0 && convertedSeats[0].fila
+      ? organizeSeats(convertedSeats)
+      : getDefaultLayout();
+
+  if (!asientos || asientos.length === 0) {
+    return (
+      <View style={styles.seatMap}>
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyText}>No hay asientos disponibles</Text>
+        </View>
+      </View>
+    );
   }
 
   return (
     <View style={styles.seatMap}>
-      {groupedRows.map((row, rowIndex) => (
+      {seatLayout.map((row, rowIndex) => (
         <View key={rowIndex} style={styles.row}>
           {row.map((seat, colIndex) =>
             seat ? (
-              <View
-                key={seat.id}
-                style={[styles.seatWrapper, colIndex === 2 && styles.tvColumn]}
-              >
+              <View key={seat.id} style={styles.seatWrapper}>
                 <Seat
                   id={seat.id}
+                  numero={seat.numero}
                   status={seat.status}
                   isSelected={selectedSeats.includes(seat.id)}
                   onPress={onSeatSelect}
@@ -87,7 +108,7 @@ export const SeatGrid = ({ selectedFloor, selectedSeats, onSeatSelect }) => {
             ) : (
               <View
                 key={`empty-${rowIndex}-${colIndex}`}
-                style={[styles.seatWrapper, colIndex === 2 && styles.tvColumn]}
+                style={styles.seatWrapper}
               />
             )
           )}

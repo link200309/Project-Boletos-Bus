@@ -1,24 +1,69 @@
-import React from "react";
-import { ScrollView } from "react-native";
-
+import React, { useState, useEffect } from "react";
+import { ScrollView, Alert } from "react-native";
+import { useRoute } from "@react-navigation/native";
+import { getBusSeats } from "../../../api/seat.api";
+import { formatTime } from "../AvailabilitySchedules/utils";
 //Components
 import { GenericContainer } from "../../../components/GenericContainer";
 import { InformativeTitle } from "../../../components/InformativeTitle";
 import { BlobBg } from "../../../components/Background/BlobBg";
 import { SeatSelection } from "./components/SeatSelection";
 
-export default function AvailabilitySeatScreen({navigation}) {
+export default function AvailabilitySeatScreen({ navigation }) {
+  const route = useRoute();
+  const { travels, busId } = route.params;
+  const [busData, setBusData] = useState(null);
+  const [asientos, setAsientos] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadBusSeats();
+  }, []);
+
+  const loadBusSeats = async () => {
+    try {
+      setLoading(true);
+      const response = await getBusSeats(busId);
+      setBusData(response.data.bus);
+      setAsientos(response.data.asientos);
+    } catch (error) {
+      console.error("Error cargando asientos:", error);
+      Alert.alert("Error", "No se pudieron cargar los asientos del bus");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <GenericContainer>
+        <InformativeTitle title="Cargando asientos..." />
+      </GenericContainer>
+    );
+  }
+
   return (
     <>
       <BlobBg />
       <ScrollView>
         <GenericContainer>
           <InformativeTitle
-            title="El Dorado"
-            cifra="Bs. 2"
-            description="17:00 - 18:00"
+            title={`${travels[0].bus.agencia.nombre_agencia}`}
+            cifra={`${travels[0].costo} Bs.`}
+            description={`${travels[0].hora_salida_programada.slice(
+              0,
+              5
+            )} — ${formatTime(
+              travels[0].hora_salida_programada,
+              travels[0].ruta.tiempo_estimado
+            )}`}
           />
-          <SeatSelection navigation={navigation}/>
+          <SeatSelection
+            navigation={navigation}
+            asientos={asientos}
+            busData={busData}
+            onSeatUpdate={loadBusSeats}
+          />
         </GenericContainer>
       </ScrollView>
     </>
