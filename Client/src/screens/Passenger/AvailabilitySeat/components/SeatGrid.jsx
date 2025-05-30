@@ -1,96 +1,150 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Seat } from "./Seat";
 
-export const SeatGrid = ({ selectedFloor, selectedSeats, onSeatSelect }) => {
-  const upperFloorSeats = [
-    { id: "01", status: "available" },
-    { id: "02", status: "available" },
-    { id: "TV1", status: "tv" },
-    { id: "03", status: "available" },
-    { id: "04", status: "available" },
-    { id: "05", status: "available" },
-    { id: "06", status: "available" },
-    { id: "08", status: "available" },
-    { id: "09", status: "available" },
-    { id: "TV2", status: "tv" },
-    { id: "10", status: "occupied" },
-    { id: "11", status: "available" },
-    { id: "12", status: "occupied" },
-    { id: "13", status: "occupied" },
-    { id: "14", status: "available" },
-    { id: "15", status: "unavailable" },
-    { id: "16", status: "occupied" },
-    { id: "17", status: "available" },
-    { id: "18", status: "available" },
-    { id: "19", status: "unavailable" },
-  ];
-
-  const lowerFloorSeats = [
-    { id: "01", status: "available" },
-    { id: "02", status: "available" },
-    { id: "03", status: "occupied" },
-    { id: "04", status: "available" },
-    { id: "05", status: "unavailable" },
-    { id: "06", status: "available" },
-    { id: "07", status: "available" },
-    { id: "08", status: "occupied" },
-  ];
-
-  const currentSeats =
-    selectedFloor === "superior" ? upperFloorSeats : lowerFloorSeats;
-  const tvSeats = currentSeats.filter((seat) => seat.status === "tv");
-  const normalSeats = currentSeats.filter((seat) => seat.status !== "tv");
-
-  const groupedRows = [];
-  let i = 0;
-  let j = 0;
-  while (i < normalSeats.length || j < tvSeats.length) {
-    const row = [];
-    for (let col = 0; col < 4; col++) {
-      if (col === 2) {
-        if (j < tvSeats.length) {
-          row.push({ ...tvSeats[j], col });
-          j++;
-        } else {
-          row.push(null);
-        }
-      } else {
-        if (i < normalSeats.length) {
-          row.push({ ...normalSeats[i], col });
-          i++;
-        } else {
-          row.push(null);
-        }
-      }
+export const SeatGrid = ({
+  selectedFloor,
+  selectedSeats,
+  onSeatSelect,
+  asientos,
+}) => {
+  const getStatusFromAPI = (estado) => {
+    switch (estado) {
+      case "Disponible":
+        return "available";
+      case "Ocupado":
+        return "occupied";
+      case "No disponible":
+      case "Mantenimiento":
+        return "unavailable";
+      default:
+        return "available";
     }
-    groupedRows.push(row);
+  };
+
+  const getSeatsForFloor = () => {
+    if (!asientos || asientos.length === 0) return [];
+    const hasMultipleFloors = asientos.some(
+      (asiento) =>
+        asiento.ubicacion === "Inferior" || asiento.piso === "Inferior"
+    );
+    if (!hasMultipleFloors) {
+      return asientos;
+    }
+    return asientos.filter((asiento) => {
+      const seatFloor = asiento.ubicacion || asiento.piso || "Superior";
+      return seatFloor.toLowerCase() === selectedFloor.toLowerCase();
+    });
+  };
+
+  const floorSeats = getSeatsForFloor();
+
+  const convertedSeats = floorSeats.map((asiento) => ({
+    id: asiento.id_asiento,
+    status: getStatusFromAPI(asiento.estado),
+    numero: parseInt(asiento.numero_asiento || asiento.numero || 0),
+    fila: asiento.fila,
+    columna: asiento.columna,
+    ubicacion: asiento.ubicacion || asiento.piso,
+  }));
+
+  // Ordenar asientos por número
+  const sortedSeats = convertedSeats.sort((a, b) => a.numero - b.numero);
+
+  const getOrderedLayout = () => {
+    if (sortedSeats.length === 0) return [];
+
+    const rows = [];
+    const seatsPerRow = 4; // 2 + 2 asientos por fila
+
+    for (let i = 0; i < sortedSeats.length; i += seatsPerRow) {
+      const rowSeats = sortedSeats.slice(i, i + seatsPerRow);
+
+      // Crear array de 4 posiciones para cada fila
+      const row = [null, null, null, null];
+
+      // Llenar las posiciones disponibles
+      rowSeats.forEach((seat, index) => {
+        if (index < 4) {
+          row[index] = seat;
+        }
+      });
+
+      rows.push(row);
+    }
+
+    return rows;
+  };
+
+  const seatLayout = getOrderedLayout();
+
+  if (!asientos || asientos.length === 0) {
+    return (
+      <View style={styles.seatMap}>
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyText}>No hay asientos disponibles</Text>
+        </View>
+      </View>
+    );
+  }
+
+  if (floorSeats.length === 0) {
+    return (
+      <View style={styles.seatMap}>
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyText}>
+            No hay asientos en el {selectedFloor.toLowerCase()} piso
+          </Text>
+        </View>
+      </View>
+    );
   }
 
   return (
     <View style={styles.seatMap}>
-      {groupedRows.map((row, rowIndex) => (
+      {seatLayout.map((row, rowIndex) => (
         <View key={rowIndex} style={styles.row}>
-          {row.map((seat, colIndex) =>
-            seat ? (
-              <View
-                key={seat.id}
-                style={[styles.seatWrapper, colIndex === 2 && styles.tvColumn]}
-              >
-                <Seat
-                  id={seat.id}
-                  status={seat.status}
-                  isSelected={selectedSeats.includes(seat.id)}
-                  onPress={onSeatSelect}
+          <View style={styles.seatGroup}>
+            {row.slice(0, 2).map((seat, colIndex) =>
+              seat ? (
+                <View key={seat.id} style={styles.seatWrapper}>
+                  <Seat
+                    id={seat.id}
+                    numero={seat.numero}
+                    status={seat.status}
+                    isSelected={selectedSeats.includes(seat.id)}
+                    onPress={onSeatSelect}
+                  />
+                </View>
+              ) : (
+                <View
+                  key={`empty-${rowIndex}-${colIndex}`}
+                  style={styles.seatWrapper}
                 />
-              </View>
-            ) : (
-              <View
-                key={`empty-${rowIndex}-${colIndex}`}
-                style={[styles.seatWrapper, colIndex === 2 && styles.tvColumn]}
-              />
-            )
-          )}
+              )
+            )}
+          </View>
+          <View style={styles.aisle} />
+          <View style={styles.seatGroup}>
+            {row.slice(2, 4).map((seat, colIndex) =>
+              seat ? (
+                <View key={seat.id} style={styles.seatWrapper}>
+                  <Seat
+                    id={seat.id}
+                    numero={seat.numero}
+                    status={seat.status}
+                    isSelected={selectedSeats.includes(seat.id)}
+                    onPress={onSeatSelect}
+                  />
+                </View>
+              ) : (
+                <View
+                  key={`empty-${rowIndex}-${colIndex + 2}`}
+                  style={styles.seatWrapper}
+                />
+              )
+            )}
+          </View>
         </View>
       ))}
     </View>
@@ -101,17 +155,43 @@ const styles = StyleSheet.create({
   seatMap: {
     backgroundColor: "#F3F4F6",
     borderRadius: 12,
-    padding: 16,
+    padding: 20,
+    marginHorizontal: 16,
+  },
+  floorTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1A1A1A",
+    textAlign: "center",
+    marginBottom: 12,
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  seatGroup: {
+    flexDirection: "row",
+    flex: 1,
+    justifyContent: "space-around",
   },
   seatWrapper: {
-    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
+    minWidth: 40,
   },
-  tvColumn: {
-    flex: 1.5,
+  aisle: {
+    width: 60,
+  },
+  emptyState: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 40,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#6B7280",
+    textAlign: "center",
   },
 });
