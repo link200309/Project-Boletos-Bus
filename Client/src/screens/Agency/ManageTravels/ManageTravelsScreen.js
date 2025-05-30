@@ -26,7 +26,7 @@ export default function ManageTravelsScreen({ navigation }) {
   }, []);
 
   const addTravel = () => {
-    console.log("Viaje agregado");
+    navigation.navigate("AddTravels");
   };
 
   return (
