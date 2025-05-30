@@ -3,9 +3,11 @@ import { View, Text, StyleSheet } from "react-native";
 import { BusIcon, Location, ChairIcon } from "../../../../components/Icons";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { formatTime, formatDate } from "../utils";
+import { Seat } from "../../AvailabilitySeat/components/Seat";
 
 export const AvailableSchedules = ({ travel, navigation }) => {
-  console.log(travel.item);
+  //console.log(travel.item);
+  console.log("aqui",travel.item.ruta,"\n")
 
   return (
     <View style={styles.container}>
@@ -49,7 +51,7 @@ export const AvailableSchedules = ({ travel, navigation }) => {
         <ButtonStyle
           width="115"
           text={"Reservar"}
-          onClick={() => navigation.navigate("AvailabilitySeat")}
+          onClick={() => navigation.navigate("AvailabilitySeat", travel.item)}
         />
       </View>
     </View>
