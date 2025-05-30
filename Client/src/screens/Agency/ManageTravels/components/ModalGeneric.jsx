@@ -7,7 +7,7 @@ import {
   Modal,
   FlatList,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 
 export const ModalGeneric = ({
   title,
@@ -38,9 +38,7 @@ export const ModalGeneric = ({
             renderItem={renderItem}
             keyExtractor={(item) => item.id.toString()}
           />
-          <TouchableOpacity style={styles.cancelButton} onPress={setShowModal}>
-            <Text style={styles.cancelButtonText}>Cancelar</Text>
-          </TouchableOpacity>
+          <ButtonStyle onClick={setShowModal} text={"Cancelar"} />
         </View>
       </View>
     </Modal>

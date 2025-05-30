@@ -7,7 +7,6 @@ import { AuthContext } from "../context/AuthContext";
 const RootNavigator = () => {
   const { user } = useContext(AuthContext);
 
-  return <TabAgencyNavigator />;
   if (!user) {
     return <AuthNavigator />;
   }

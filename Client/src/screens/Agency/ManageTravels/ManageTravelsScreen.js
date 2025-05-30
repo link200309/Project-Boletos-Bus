@@ -8,16 +8,17 @@ import { ListTravels } from "./components/ListTravels";
 import { AuthContext } from "../../../context/AuthContext";
 
 import { getTravelsByAgency } from "../../../api/travel.api";
-import { travels } from "./data";
 
 export default function ManageTravelsScreen({ navigation }) {
   const { user } = useContext(AuthContext);
+  const [travels, setTravel] = useState({});
 
   useEffect(() => {
     async function fetchTravels() {
       try {
-        const res = await getTravelsByAgency(3);
-        // console.log(JSON.stringify(res, null, 2));
+        const res = await getTravelsByAgency(user.datos_agencia.id_agencia);
+        setTravel(res);
+        console.log(res);
       } catch (error) {
         console.error("Error fetching travels:", error);
       }

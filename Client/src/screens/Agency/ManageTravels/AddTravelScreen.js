@@ -100,32 +100,4 @@ const AddTravelScreen = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  containerForm: {
-    borderRadius: 20,
-    backgroundColor: "white",
-    shadowColor: "#000",
-    marginTop: 20,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  submitButton: {
-    backgroundColor: "#007bff",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 20,
-  },
-  submitButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});
-
 export default AddTravelScreen;
