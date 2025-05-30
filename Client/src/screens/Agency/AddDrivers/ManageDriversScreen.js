@@ -1,64 +1,63 @@
-// screens/Agency/AddBusses/ManageBussesScreen.js
 import React, { useEffect, useState } from "react";
 import { ScrollView, TouchableOpacity, StyleSheet } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { GenericContainer } from "../../../components/GenericContainer";
 import { InformativeTitle } from "../../../components/InformativeTitle";
-import BusList from "./components/BusList";
-import { getBuses } from "../../../api/bus.api";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import DriverList from "./components/DriverList";
+import { getDrivers } from "../../../api/driver.api";
 
-export default function ManageBussesScreen({ navigation }) {
-  const [buses, setBuses] = useState([]);
+export default function ManageDriversScreen({ navigation }) {
+  const [drivers, setDrivers] = useState([]);
   const isFocused = useIsFocused();
 
-  const loadBuses = async () => {
+  const loadDrivers = async () => {
     try {
-      const res = await getBuses();
-      setBuses(res.data);
+      console.log("[ManageDrivers] Loading drivers...");
+      const res = await getDrivers();
+      console.log("[ManageDrivers] Drivers loaded:", res.data.length);
+      setDrivers(res.data);
     } catch (error) {
-      console.error("Error al cargar buses:", error);
+      console.error("[ManageDrivers] Error loading drivers:", error);
     }
   };
 
   useEffect(() => {
-    if (isFocused) {
-      loadBuses();
-    }
+    if (isFocused) loadDrivers();
   }, [isFocused]);
 
   const handleAddClick = () => {
-    navigation.navigate("BusForm", { mode: "register" });
+    navigation.navigate("DriverForm", { mode: "register" });
   };
 
-  const handleEditClick = (bus) => {
-    navigation.navigate("BusForm", {
+  const handleEditClick = (driver) => {
+    navigation.navigate("DriverForm", {
       mode: "edit",
-      initialData: bus,
+      initialData: driver,
     });
   };
 
-  const handleGoToDrivers = () => {
-    navigation.navigate("Choferes"); 
+  const handleBackToBuses = () => {
+    navigation.navigate("Buses");
   };
 
   return (
     <GenericContainer>
       <InformativeTitle
-        title="Gestionar Buses"
-        description={`Buses totales: ${buses.length}`}
+        title="Gestionar Choferes"
+        description={`Total drivers: ${drivers.length}`}
         btnText="+ Agregar"
         onClick={handleAddClick}
       />
       <ScrollView style={{ width: "100%" }}>
-        <BusList
-          buses={buses}
+        <DriverList
+          drivers={drivers}
           onEdit={handleEditClick}
-          onDeleteFinished={loadBuses}
+          onDeleteFinished={loadDrivers}
         />
       </ScrollView>
-      <TouchableOpacity style={styles.fab} onPress={handleGoToDrivers}>
-        <Ionicons name="chevron-forward" size={28} color="#fff" />
+      <TouchableOpacity style={styles.fab} onPress={handleBackToBuses}>
+        <Ionicons name="chevron-back" size={28} color="#fff" />
       </TouchableOpacity>
     </GenericContainer>
   );
