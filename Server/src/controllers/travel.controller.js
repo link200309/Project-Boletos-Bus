@@ -13,7 +13,6 @@ class TravelController {
     }
 
     const cantidadMinima = parseInt(asientos) || 1;
-
     try {
       const viajes = await prisma.viaje.findMany({
         where: {
@@ -64,6 +63,31 @@ class TravelController {
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: error.message });
+    }
+  }
+
+  static async getTravelsByAgency(req, res) {
+    const id = parseInt(req.params.id);
+    try {
+      let viajes = await prisma.viaje.findMany({
+        where: {
+          bus: {
+            id_agencia: id,
+          },
+        },
+        include: {
+          bus: true,
+          chofer: true,
+          ruta: true,
+          reserva: true,
+          pago: true,
+        },
+      });
+      res.json(viajes);
+    } catch (err) {
+      res
+        .status(500)
+        .json({ mensaje: "Error al obtener viajes", error: err.message });
     }
   }
 }

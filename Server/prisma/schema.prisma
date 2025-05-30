@@ -92,6 +92,7 @@ model Asiento {
 
   id_bus Int
   bus    Bus @relation(fields: [id_bus], references: [id_bus], onDelete: Cascade)
+  reservas Reserva[]
 }
 
 model Viaje {
@@ -113,7 +114,7 @@ model Viaje {
   id_pago Int
   pago    Configuracion_Pago @relation(fields: [id_pago], references: [id_pago])
 
-  reservas Reserva[]
+  reserva Reserva[]
 }
 
 model Ruta {
@@ -158,12 +159,15 @@ model Chofer {
 
 model Reserva {
   id_reserva    Int      @id @default(autoincrement())
-  id_pasajero    Int
+  id_pasajero   Int
   id_viaje      Int
+  id_asiento    Int
   estado        String   @default("pendiente")
   comprobante   String?
   fecha_reserva DateTime @default(now())
 
   pasajero  Pasajero    @relation(fields: [id_pasajero], references: [id_pasajero])
   viaje     Viaje      @relation(fields: [id_viaje], references: [id_viaje])
+  asiento   Asiento     @relation(fields: [id_asiento], references: [id_asiento])
+
 }
