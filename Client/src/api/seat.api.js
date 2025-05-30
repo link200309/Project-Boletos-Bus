@@ -14,3 +14,4 @@ export const getBusSeats = async (busId) => {
     throw error;
   }
 };
+
