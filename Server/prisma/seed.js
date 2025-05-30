@@ -1,4 +1,5 @@
 import { PrismaClient } from "../src/generated/prisma/index.js";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -14,14 +15,16 @@ async function main() {
   await prisma.agencia.deleteMany();
   await prisma.usuario.deleteMany();
 
+  const contraseñaHasheada = await bcrypt.hash("12345678", 10);
+
   const usuarioAgencia = await prisma.usuario.create({
     data: {
       tipo_usuario: "agencia",
       nombre: "Juan Carlos",
       apellido: "Mendoza",
       ci: "1234567LP",
-      correo_electronico: "agencia@transcopacabana.bo",
-      contraseña: "segura123",
+      correo_electronico: "agencia@gmail.com",
+      contraseña: contraseñaHasheada,
       numero_celular: 71234567,
     },
   });
