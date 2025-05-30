@@ -8,6 +8,7 @@ export const ListTravels = ({ travels, navigation }) => {
     <FlatList
       data={travels}
       keyExtractor={(travel) => travel.id}
+      style={styles.containerTravesl}
       renderItem={(travel) => {
         return <Travels travelInfo={travel} navigation={navigation} />;
       }}
@@ -16,7 +17,7 @@ export const ListTravels = ({ travels, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  containerDates: {
+  containerTravesl: {
     marginTop: 15,
   },
 });

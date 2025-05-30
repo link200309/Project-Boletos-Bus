@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { registrarUsuario } from "../api/auth.api.js"; // asegúrate de que esta ruta exista
+import { registerUser, loginUser } from "../api/auth.api.js";
 
 export const AuthContext = createContext({
   user: null,
@@ -14,16 +14,27 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const login = async ({ email, password, rol }) => {
+  const login = async ({ email, password }) => {
     setIsLoading(true);
     try {
-      setTimeout(() => {
-        const fakeUser = { id: 1, name: "Juan", email, rol };
-        setUser(fakeUser);
-        setIsLoading(false);
-      }, 1000);
+      const user = await loginUser({
+        correo_electronico: email,
+        contraseña: password,
+      });
+      setUser(user.data);
     } catch (error) {
-      console.error("Login error:", error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        alert(`Error de login: ${error.response.data.message}`);
+      } else {
+        alert(
+          "Error de login: credenciales incorrectas o problema del servidor."
+        );
+      }
+    } finally {
       setIsLoading(false);
     }
   };
@@ -35,7 +46,7 @@ export function AuthProvider({ children }) {
   const registerAgency = async (datos) => {
     setIsLoading(true);
     try {
-      const response = await registrarUsuario(datos);
+      const response = await registerUser(datos);
       setIsLoading(false);
       return response;
     } catch (error) {
@@ -47,7 +58,7 @@ export function AuthProvider({ children }) {
   const register = async (datos) => {
     setIsLoading(true);
     try {
-      const response = await registrarUsuario(datos); // llamada a API
+      const response = await registerUser(datos);
       setIsLoading(false);
       return response;
     } catch (error) {
@@ -63,7 +74,7 @@ export function AuthProvider({ children }) {
         login,
         logout,
         registerAgency,
-        register, // ← ahora disponible
+        register,
         isLoading,
       }}
     >

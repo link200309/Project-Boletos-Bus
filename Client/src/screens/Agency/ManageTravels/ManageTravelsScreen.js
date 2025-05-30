@@ -1,9 +1,19 @@
+//React
+import { useEffect, useState, useContext } from "react";
+
 //Components
 import { GenericContainer } from "../../../components/GenericContainer";
 import { InformativeTitle } from "../../../components/InformativeTitle";
 import { ListTravels } from "./components/ListTravels";
+import { AuthContext } from "../../../context/AuthContext";
 
 export default function ManageTravelsScreen({ navigation }) {
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    console.log(user);
+  }, []);
+
   const travels = [
     {
       id: "001",
