@@ -52,7 +52,7 @@ export const postRegister = async (req, res) => {
     if (existente) {
       return res
         .status(400)
-        .json({ mensaje: "Este correo ya está registrado" });
+        .json({ mensaje: "Este correo ya está registrado papeeto" });
     }
 
     const contraseñaHasheada = await bcrypt.hash(contraseña, 10);
@@ -155,7 +155,7 @@ export const postRegister = async (req, res) => {
 
 // Inicio de sesión
 export const postLogin = async (req, res) => {
-  const { correo_electronico, contraseña } = req.body;
+  const { correo_electronico, contraseña } = req.body.data;
 
   try {
     if (!correo_electronico || !contraseña) {
