@@ -52,7 +52,7 @@ export const postRegister = async (req, res) => {
     if (existente) {
       return res
         .status(400)
-        .json({ mensaje: "Este correo ya está registrado papeeto" });
+        .json({ mensaje: "Este correo ya está registrado" });
     }
 
     const contraseñaHasheada = await bcrypt.hash(contraseña, 10);
@@ -183,7 +183,6 @@ export const postLogin = async (req, res) => {
     if (!contraseñaValida) {
       return res.status(401).json({ mensaje: "Credenciales inválidas" });
     }
-
     const token = jwt.sign(
       {
         id_usuario: usuario.id_usuario,

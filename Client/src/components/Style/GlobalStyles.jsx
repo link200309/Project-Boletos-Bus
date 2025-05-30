@@ -3,9 +3,10 @@ import { StyleSheet } from "react-native";
 export const GlobalStyles = StyleSheet.create({
   formCard: {
     backgroundColor: "#FAFAFA",
-    width: "100%",
     borderRadius: 20,
-    padding: 30,
+    minWidth: "100%",
+    padding: 20,
+    paddingBottom: 10,
     shadowColor: "grey",
     shadowOffset: {
       width: 0,

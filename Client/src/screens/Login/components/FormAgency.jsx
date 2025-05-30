@@ -4,6 +4,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { GlobalStyles } from "../../../components/Style/GlobalStyles";
 import { AgencyDataForm } from "./AgencyDataForm";
+import { AccountForm } from "./AccountForm";
 import { LegalRepresentativeForm } from "./LegalRepresentativeForm";
 import { AccountAdminForm } from "./AccountAdminForm";
 import { AuthContext } from "../../../context/AuthContext";
