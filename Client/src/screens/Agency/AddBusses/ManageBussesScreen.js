@@ -58,7 +58,7 @@ export default function ManageBussesScreen({ navigation }) {
         />
       </ScrollView>
       <TouchableOpacity style={styles.fab} onPress={handleGoToDrivers}>
-        <Ionicons name="chevron-forward" size={28} color="#fff" />
+        <Ionicons name="person" size={28} color="#fff" />
       </TouchableOpacity>
     </GenericContainer>
   );

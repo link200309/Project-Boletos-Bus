@@ -45,7 +45,7 @@ export default function ManageDriversScreen({ navigation }) {
     <GenericContainer>
       <InformativeTitle
         title="Gestionar Choferes"
-        description={`Total drivers: ${drivers.length}`}
+        description={`Numero de choferes: ${drivers.length}`}
         btnText="+ Agregar"
         onClick={handleAddClick}
       />
@@ -57,7 +57,7 @@ export default function ManageDriversScreen({ navigation }) {
         />
       </ScrollView>
       <TouchableOpacity style={styles.fab} onPress={handleBackToBuses}>
-        <Ionicons name="chevron-back" size={28} color="#fff" />
+        <Ionicons name="bus" size={28} color="#fff" />
       </TouchableOpacity>
     </GenericContainer>
   );
