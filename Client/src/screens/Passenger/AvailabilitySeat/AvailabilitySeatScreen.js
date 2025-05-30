@@ -17,6 +17,8 @@ export default function AvailabilitySeatScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("Bus ID:", busId);
+    console.log("Travels:", travels);
     loadBusSeats();
   }, []);
 

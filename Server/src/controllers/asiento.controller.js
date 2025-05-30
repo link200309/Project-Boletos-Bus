@@ -3,37 +3,64 @@ const prisma = new PrismaClient();
 
 export const getBusSeats = async (req, res) => {
   const busId = parseInt(req.params.id);
+  if (isNaN(busId) || busId <= 0) {
+    return res.status(400).json({
+      mensaje: "ID de bus inválido",
+    });
+  }
   try {
     const bus = await prisma.bus.findUnique({
       where: { id_bus: busId },
       include: {
         asientos: {
-          orderBy: [
-            { ubicacion: "asc" },
-            { numero: "asc" },
-          ],
+          orderBy: [{ ubicacion: "asc" }, { numero: "asc" }],
         },
-        agencia: true,
+        agencia: {
+          select: {
+            id_agencia: true,
+            nombre: true,
+          },
+        },
       },
     });
     if (!bus) {
-      return res.status(404).json({ mensaje: "Bus no encontrado" });
+      return res.status(404).json({
+        mensaje: "Bus no encontrado",
+      });
     }
-    res.json({ 
-      bus: bus,
+    const asientosDisponibles = bus.asientos.filter(
+      (asiento) => asiento.estado?.toLowerCase() === "disponible"
+    );
+
+    const asientosOcupados = bus.asientos.filter(
+      (asiento) => asiento.estado?.toLowerCase() === "ocupado"
+    );
+
+    res.json({
+      bus: {
+        ...bus,
+        asientos: undefined,
+      },
       asientos: bus.asientos,
-      total_asientos: bus.asientos.length,
-      asientos_disponibles: bus.asientos.filter(
-        (a) => a.estado === "Disponible"
-      ).length,
-      asientos_ocupados: bus.asientos.filter((a) => a.estado === "Ocupado")
-        .length,
+      estadisticas: {
+        total_asientos: bus.asientos.length,
+        asientos_disponibles: asientosDisponibles.length,
+        asientos_ocupados: asientosOcupados.length,
+        asientos_fuera_servicio:
+          bus.asientos.length -
+          asientosDisponibles.length -
+          asientosOcupados.length,
+      },
     });
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ mensaje: "Error al obtener asientos", error: error.message });
+    console.error("Error en getBusSeats:", error);
+    res.status(500).json({
+      mensaje: "Error al obtener asientos del bus",
+      error:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Error interno del servidor",
+    });
   }
 };
 
