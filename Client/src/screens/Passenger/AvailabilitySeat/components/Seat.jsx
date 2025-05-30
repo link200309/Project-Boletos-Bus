@@ -43,13 +43,39 @@ export const Seat = ({ id, numero, status, isSelected, onPress }) => {
     return styles.availableText;
   };
 
+  // Determine if seat should be disabled
+  const isDisabled =
+    status === "occupied" || status === "unavailable" || status === "tv";
+
+  // Get accessibility label for screen readers
+  const getAccessibilityLabel = () => {
+    const seatNumber = numero || id;
+    switch (status) {
+      case "available":
+        return `Asiento ${seatNumber}, disponible`;
+      case "occupied":
+        return `Asiento ${seatNumber}, ocupado`;
+      case "unavailable":
+        return `Asiento ${seatNumber}, no disponible`;
+      case "tv":
+        return "Televisión";
+      default:
+        return `Asiento ${seatNumber}`;
+    }
+  };
+
   return (
     <TouchableOpacity
       style={[styles.seat, getSeatStyle()]}
       onPress={handleSeatPress}
-      disabled={
-        status === "occupied" || status === "unavailable" || status === "tv"
-      }
+      disabled={isDisabled}
+      activeOpacity={isDisabled ? 1 : 0.7}
+      accessibilityLabel={getAccessibilityLabel()}
+      accessibilityRole="button"
+      accessibilityState={{
+        disabled: isDisabled,
+        selected: isSelected,
+      }}
     >
       <Text style={getSeatTextStyle()}>
         {status === "tv" ? "TV" : numero || id}
@@ -57,7 +83,6 @@ export const Seat = ({ id, numero, status, isSelected, onPress }) => {
     </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
   seat: {
     width: 40,

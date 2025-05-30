@@ -1,10 +1,11 @@
-//react
 import { View, Text, StyleSheet } from "react-native";
 import { BusIcon, Location, ChairIcon } from "../../../../components/Icons";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { formatTime, formatDate } from "../utils";
 
-export const AvailableSchedules = ({ travel, navigation, onClick }) => {
+export const AvailableSchedules = ({ travel, navigation }) => {
+  const travelData = travel.item || travel;
+
   const handleBusPress = (selectedTravel) => {
     navigation.navigate("AvailabilitySeat", {
       travels: [selectedTravel],
@@ -12,27 +13,26 @@ export const AvailableSchedules = ({ travel, navigation, onClick }) => {
       travelId: selectedTravel.id_viaje,
     });
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerContent}>
         <Text style={styles.text}>
-          {formatDate(travel.item.fecha_salida).formatedDate}
+          {formatDate(travelData.fecha_salida).formatedDate}
         </Text>
-        <Text style={styles.text}>
-          {travel.item.bus.agencia.nombre_agencia}
-        </Text>
+        <Text style={styles.text}>{travelData.bus.agencia.nombre_agencia}</Text>
       </View>
       <View style={{ ...styles.bodySchedule, ...styles.containerContent }}>
         <BusIcon />
-        <Text>{travel.item.hora_salida_programada.slice(0, 5)}</Text>
+        <Text>{travelData.hora_salida_programada.slice(0, 5)}</Text>
         <View style={styles.lineContainer}>
           <View style={styles.circle} />
           <View style={styles.line} />
         </View>
         <Text>
           {formatTime(
-            travel.item.hora_salida_programada,
-            travel.item.ruta.tiempo_estimado
+            travelData.hora_salida_programada,
+            travelData.ruta.tiempo_estimado
           )}
         </Text>
         <Location />
@@ -41,20 +41,18 @@ export const AvailableSchedules = ({ travel, navigation, onClick }) => {
       <View style={styles.containerContent}>
         <View>
           <Text style={[styles.text, { fontSize: 25 }]}>
-            Bs.{travel.item.costo}
+            Bs.{travelData.costo}
           </Text>
-
           <Text style={styles.text}>Por asiento</Text>
         </View>
         <View style={{ alignItems: "center" }}>
           <ChairIcon />
-          <Text style={styles.text}>{travel.item.bus.tipo_bus}</Text>
+          <Text style={styles.text}>{travelData.bus.tipo_bus}</Text>
         </View>
         <ButtonStyle
           width="115"
           text={"Reservar"}
-          onClick={() => handleBusPress(item)}
-          // onClick={() => navigation.navigate("AvailabilitySeat", travel.item)}
+          onClick={() => handleBusPress(travelData)}
         />
       </View>
     </View>

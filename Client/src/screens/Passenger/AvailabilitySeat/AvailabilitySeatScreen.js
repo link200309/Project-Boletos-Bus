@@ -17,8 +17,6 @@ export default function AvailabilitySeatScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("Bus ID asientos:", busId);
-    console.log("Travels asientos:", travels);
     loadBusSeats();
   }, []);
 
@@ -26,11 +24,11 @@ export default function AvailabilitySeatScreen({ navigation }) {
     try {
       setLoading(true);
       const response = await getBusSeats(busId);
-      console.log("Response asientos:", response);
-      setBusData(response.data.bus);
-      setAsientos(response.data.asientos);
+      console.log("Bus data:", response.bus);
+      setBusData(response.bus);
+      setAsientos(response.asientos);
     } catch (error) {
-      console.error("Error cargando asientos:", error);
+      console.error("❌ Error completo:", error);
       Alert.alert("Error", "No se pudieron cargar los asientos del bus");
     } finally {
       setLoading(false);
@@ -41,6 +39,14 @@ export default function AvailabilitySeatScreen({ navigation }) {
     return (
       <GenericContainer>
         <InformativeTitle title="Cargando asientos..." />
+      </GenericContainer>
+    );
+  }
+
+  if (!busData || !asientos.length) {
+    return (
+      <GenericContainer>
+        <InformativeTitle title="No se encontraron asientos" />
       </GenericContainer>
     );
   }
@@ -61,6 +67,7 @@ export default function AvailabilitySeatScreen({ navigation }) {
               travels[0].ruta.tiempo_estimado
             )}`}
           />
+
           <SeatSelection
             navigation={navigation}
             asientos={asientos}

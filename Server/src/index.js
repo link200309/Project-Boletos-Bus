@@ -27,7 +27,6 @@ app.use(authRoutes);
 
 app.use("/choferes", choferRoutes);
 app.use("/bus", busRoutes);
-app.use("/", asientoRoutes);
 app.use("/asiento", asientoRoutes);
 app.use("/viajes", viajeRoutes);
 app.use("/reserva", reservaRoutes);

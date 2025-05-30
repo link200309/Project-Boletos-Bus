@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Seat } from "./Seat";
 
 export const SeatGrid = ({
@@ -7,7 +7,6 @@ export const SeatGrid = ({
   selectedSeats,
   onSeatSelect,
   asientos,
-  busData,
 }) => {
   const getStatusFromAPI = (estado) => {
     switch (estado) {
@@ -23,62 +22,61 @@ export const SeatGrid = ({
     }
   };
 
-  const convertedSeats = asientos.map((asiento) => ({
+  const getSeatsForFloor = () => {
+    if (!asientos || asientos.length === 0) return [];
+    const hasMultipleFloors = asientos.some(
+      (asiento) =>
+        asiento.ubicacion === "Inferior" || asiento.piso === "Inferior"
+    );
+    if (!hasMultipleFloors) {
+      return asientos;
+    }
+    return asientos.filter((asiento) => {
+      const seatFloor = asiento.ubicacion || asiento.piso || "Superior";
+      return seatFloor.toLowerCase() === selectedFloor.toLowerCase();
+    });
+  };
+
+  const floorSeats = getSeatsForFloor();
+
+  const convertedSeats = floorSeats.map((asiento) => ({
     id: asiento.id_asiento,
     status: getStatusFromAPI(asiento.estado),
-    numero: asiento.numero_asiento || asiento.numero,
+    numero: parseInt(asiento.numero_asiento || asiento.numero || 0),
     fila: asiento.fila,
     columna: asiento.columna,
     ubicacion: asiento.ubicacion || asiento.piso,
   }));
 
-  const organizeSeats = (seats) => {
-    if (!seats || seats.length === 0) return [];
+  // Ordenar asientos por número
+  const sortedSeats = convertedSeats.sort((a, b) => a.numero - b.numero);
 
-    const maxRow = Math.max(...seats.map((s) => s.fila || 1));
-    const maxCol = Math.max(...seats.map((s) => s.columna || 1));
+  const getOrderedLayout = () => {
+    if (sortedSeats.length === 0) return [];
 
     const rows = [];
+    const seatsPerRow = 4; // 2 + 2 asientos por fila
 
-    for (let row = 1; row <= maxRow; row++) {
-      const seatRow = [];
-      for (let col = 1; col <= maxCol; col++) {
-        const seat = seats.find(
-          (s) => (s.fila || 1) === row && (s.columna || 1) === col
-        );
-        seatRow.push(seat || null);
-      }
-      rows.push(seatRow);
+    for (let i = 0; i < sortedSeats.length; i += seatsPerRow) {
+      const rowSeats = sortedSeats.slice(i, i + seatsPerRow);
+
+      // Crear array de 4 posiciones para cada fila
+      const row = [null, null, null, null];
+
+      // Llenar las posiciones disponibles
+      rowSeats.forEach((seat, index) => {
+        if (index < 4) {
+          row[index] = seat;
+        }
+      });
+
+      rows.push(row);
     }
 
     return rows;
   };
 
-  const getDefaultLayout = () => {
-    const defaultSeats = [];
-    const seatsPerRow = 4;
-    const numRows = Math.ceil(convertedSeats.length / seatsPerRow);
-
-    for (let row = 0; row < numRows; row++) {
-      const seatRow = [];
-      for (let col = 0; col < seatsPerRow; col++) {
-        const seatIndex = row * seatsPerRow + col;
-        if (seatIndex < convertedSeats.length) {
-          seatRow.push(convertedSeats[seatIndex]);
-        } else {
-          seatRow.push(null);
-        }
-      }
-      defaultSeats.push(seatRow);
-    }
-
-    return defaultSeats;
-  };
-
-  const seatLayout =
-    convertedSeats.length > 0 && convertedSeats[0].fila
-      ? organizeSeats(convertedSeats)
-      : getDefaultLayout();
+  const seatLayout = getOrderedLayout();
 
   if (!asientos || asientos.length === 0) {
     return (
@@ -90,28 +88,63 @@ export const SeatGrid = ({
     );
   }
 
+  if (floorSeats.length === 0) {
+    return (
+      <View style={styles.seatMap}>
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyText}>
+            No hay asientos en el {selectedFloor.toLowerCase()} piso
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.seatMap}>
       {seatLayout.map((row, rowIndex) => (
         <View key={rowIndex} style={styles.row}>
-          {row.map((seat, colIndex) =>
-            seat ? (
-              <View key={seat.id} style={styles.seatWrapper}>
-                <Seat
-                  id={seat.id}
-                  numero={seat.numero}
-                  status={seat.status}
-                  isSelected={selectedSeats.includes(seat.id)}
-                  onPress={onSeatSelect}
+          <View style={styles.seatGroup}>
+            {row.slice(0, 2).map((seat, colIndex) =>
+              seat ? (
+                <View key={seat.id} style={styles.seatWrapper}>
+                  <Seat
+                    id={seat.id}
+                    numero={seat.numero}
+                    status={seat.status}
+                    isSelected={selectedSeats.includes(seat.id)}
+                    onPress={onSeatSelect}
+                  />
+                </View>
+              ) : (
+                <View
+                  key={`empty-${rowIndex}-${colIndex}`}
+                  style={styles.seatWrapper}
                 />
-              </View>
-            ) : (
-              <View
-                key={`empty-${rowIndex}-${colIndex}`}
-                style={styles.seatWrapper}
-              />
-            )
-          )}
+              )
+            )}
+          </View>
+          <View style={styles.aisle} />
+          <View style={styles.seatGroup}>
+            {row.slice(2, 4).map((seat, colIndex) =>
+              seat ? (
+                <View key={seat.id} style={styles.seatWrapper}>
+                  <Seat
+                    id={seat.id}
+                    numero={seat.numero}
+                    status={seat.status}
+                    isSelected={selectedSeats.includes(seat.id)}
+                    onPress={onSeatSelect}
+                  />
+                </View>
+              ) : (
+                <View
+                  key={`empty-${rowIndex}-${colIndex + 2}`}
+                  style={styles.seatWrapper}
+                />
+              )
+            )}
+          </View>
         </View>
       ))}
     </View>
@@ -122,17 +155,43 @@ const styles = StyleSheet.create({
   seatMap: {
     backgroundColor: "#F3F4F6",
     borderRadius: 12,
-    padding: 16,
+    padding: 20,
+    marginHorizontal: 16,
+  },
+  floorTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1A1A1A",
+    textAlign: "center",
+    marginBottom: 12,
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  seatGroup: {
+    flexDirection: "row",
+    flex: 1,
+    justifyContent: "space-around",
   },
   seatWrapper: {
-    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
+    minWidth: 40,
   },
-  tvColumn: {
-    flex: 1.5,
+  aisle: {
+    width: 60,
+  },
+  emptyState: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 40,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#6B7280",
+    textAlign: "center",
   },
 });

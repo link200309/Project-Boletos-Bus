@@ -3,15 +3,19 @@ import { View, Text, StyleSheet } from "react-native";
 import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { SeatGrid } from "./SeatGrid";
-import { formatTime } from "../../AvailabilitySchedules/utils"; 
+import { formatTime } from "../../AvailabilitySchedules/utils";
 
-
-export const SeatSelection = ({ navigation }) => {
-  const onSubmit = (data) => {
-    navigation.navigate("AvailabilitySeat", { formData: data });
-  };
-  const [selectedFloor, setSelectedFloor] = useState("superior");
+export const SeatSelection = ({ navigation, asientos, busData, travels }) => {
+  const [selectedFloor, setSelectedFloor] = useState("Superior");
   const [selectedSeats, setSelectedSeats] = useState([]);
+
+  const travel = travels?.[0] || null;
+
+  console.log("SeatSelection - Props recibidas:", {
+    busData,
+    asientos: asientos?.length,
+    travel,
+  });
 
   const getAsientosByFloor = (floor) => {
     if (!asientos || asientos.length === 0) return [];
@@ -34,40 +38,31 @@ export const SeatSelection = ({ navigation }) => {
     }
   };
 
-  const onSubmit = () => {
-    if (selectedSeats.length === 0) {
-      alert("Por favor selecciona al menos un asiento");
-      return;
-    }
-    const selectedSeatsData = asientos.filter((asiento) =>
-      selectedSeats.includes(asiento.id_asiento)
-    );
-
-    const formData = {
-      selectedSeats: selectedSeatsData,
-      busData: busData,
-      totalSeats: selectedSeats.length,
-    };
-
-    navigation.navigate("AvailabilitySeat", { formData });
-  };
-
   const hasTwoFloors =
     busData &&
-    (busData.tipo_bus === "dos_pisos" ||
+    (busData.tipo_bus === "CAMA" ||
+      busData.tipo_bus === "dos_pisos" ||
       busData.pisos === 2 ||
       asientos.some((asiento) => asiento.ubicacion === "Inferior"));
+
+  console.log("hasTwoFloors:", hasTwoFloors);
+  console.log("busData.tipo_bus:", busData?.tipo_bus);
+
+  if (!busData || !asientos || asientos.length === 0) {
+    return (
+      <View style={GlobalStyles.formCard}>
+        <Text style={styles.title}>Cargando información del bus...</Text>
+        <Text style={styles.debugText}>
+          Debug: busData={busData ? "existe" : "no existe"}, asientos=
+          {asientos?.length || 0}
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={GlobalStyles.formCard}>
       <Text style={styles.title}>Selección de asientos</Text>
-
-      {busData && (
-        <Text style={styles.busInfo}>
-          {busData.modelo || "Bus"} - {busData.capacidad || asientos.length}{" "}
-          asientos
-        </Text>
-      )}
 
       <View style={styles.legend}>
         <View>
@@ -115,6 +110,7 @@ export const SeatSelection = ({ navigation }) => {
         selectedFloor={selectedFloor}
         selectedSeats={selectedSeats}
         onSeatSelect={handleSeatSelection}
+        asientos={asientos}
       />
 
       <View style={styles.footer}>
@@ -123,39 +119,45 @@ export const SeatSelection = ({ navigation }) => {
           <Text style={styles.selectedNumber}>
             {selectedSeats.length} asiento(s)
           </Text>
-          {selectedSeats.length > 0 && (
-            <Text style={styles.seatNumbers}>
-              Asientos:{" "}
-              {selectedSeats
-                .map((id) => {
-                  const asiento = asientos.find((a) => a.id_asiento === id);
-                  return asiento
-                    ? asiento.numero_asiento || asiento.numero
-                    : id;
-                })
-                .join(", ")}
-            </Text>
-          )}
         </View>
-       <ButtonStyle
+        <ButtonStyle
           text={"Continuar"}
-          onClick={() =>
+          onClick={() => {
+            if (!travel) {
+              alert("Error: Información de viaje no disponible");
+              return;
+            }
+
+            if (selectedSeats.length === 0) {
+              alert("Por favor selecciona al menos un asiento");
+              return;
+            }
             navigation.navigate("PassengerData", {
               selectedSeats,
               travelDetails: {
-                route: `${travel.ruta.origen} → ${travel.ruta.destino}`,
-                date: new Date(travel.fecha_salida).toLocaleDateString("es-ES"),
-                time: `${travel.hora_salida_programada.slice(0, 5)} → ${
-                  formatTime(travel.hora_salida_programada, parseFloat(travel.ruta.tiempo_estimado))
+                route: `${travel.ruta?.origen || ""} → ${
+                  travel.ruta?.destino || ""
                 }`,
-                price: parseFloat(travel.costo),
-                tipoBus: travel.bus.tipo_bus,
-                agencia: travel.bus.agencia.nombre_agencia,
+                date: travel.fecha_salida
+                  ? new Date(travel.fecha_salida).toLocaleDateString("es-ES")
+                  : "",
+                time:
+                  travel.hora_salida_programada && travel.ruta?.tiempo_estimado
+                    ? `${travel.hora_salida_programada.slice(
+                        0,
+                        5
+                      )} → ${formatTime(
+                        travel.hora_salida_programada,
+                        parseFloat(travel.ruta.tiempo_estimado)
+                      )}`
+                    : "",
+                price: travel.costo ? parseFloat(travel.costo) : 0,
+                tipoBus: travel.bus?.tipo_bus || "",
+                agencia: travel.bus?.agencia?.nombre_agencia || "",
               },
-            })
-          }
+            });
+          }}
         />
-
       </View>
     </View>
   );
@@ -203,11 +205,12 @@ const styles = StyleSheet.create({
     color: "#1A1D1F",
   },
   rowButton: {
-    width: 145,
+    width: 135,
     justifyContent: "space-between",
     flexDirection: "row",
     marginBottom: 16,
-    gap: 20,
+    gap: 40,
+    marginHorizontal: 10,
   },
   footer: {
     flexDirection: "row",

@@ -3,11 +3,14 @@ const prisma = new PrismaClient();
 
 export const getBusSeats = async (req, res) => {
   const busId = parseInt(req.params.id);
+  console.log("Bus ID recibido:", busId);
+
   if (isNaN(busId) || busId <= 0) {
     return res.status(400).json({
       mensaje: "ID de bus inválido",
     });
   }
+
   try {
     const bus = await prisma.bus.findUnique({
       where: { id_bus: busId },
@@ -18,16 +21,18 @@ export const getBusSeats = async (req, res) => {
         agencia: {
           select: {
             id_agencia: true,
-            nombre: true,
+            nombre_agencia: true,
           },
         },
       },
     });
+
     if (!bus) {
       return res.status(404).json({
         mensaje: "Bus no encontrado",
       });
     }
+
     const asientosDisponibles = bus.asientos.filter(
       (asiento) => asiento.estado?.toLowerCase() === "disponible"
     );
@@ -36,10 +41,16 @@ export const getBusSeats = async (req, res) => {
       (asiento) => asiento.estado?.toLowerCase() === "ocupado"
     );
 
-    res.json({
+    const resultado = {
       bus: {
-        ...bus,
-        asientos: undefined,
+        id_bus: bus.id_bus,
+        placa: bus.placa,
+        marca: bus.marca,
+        modelo: bus.modelo,
+        año_modelo: bus.año_modelo,
+        tipo_bus: bus.tipo_bus,
+        estado: bus.estado,
+        agencia: bus.agencia,
       },
       asientos: bus.asientos,
       estadisticas: {
@@ -51,7 +62,12 @@ export const getBusSeats = async (req, res) => {
           asientosDisponibles.length -
           asientosOcupados.length,
       },
-    });
+    };
+
+    console.log(
+      `✅ Bus ${bus.placa} encontrado con ${bus.asientos.length} asientos`
+    );
+    res.json(resultado);
   } catch (error) {
     console.error("Error en getBusSeats:", error);
     res.status(500).json({
