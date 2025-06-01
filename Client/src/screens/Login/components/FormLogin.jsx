@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
   container: {
     borderBottomEndRadius: 0,
     borderBottomStartRadius: 0,
+    paddingBottom: 60,
   },
   registerMessage: {
     flexDirection: "row",
@@ -132,8 +133,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
     marginBottom: 30,
-    borderBottomWidth: 1,
-    borderColor: "#E6E8FF",
+    borderBottom: 1,
   },
   tab: {
     flex: 1,

@@ -149,7 +149,7 @@ async function main() {
     },
   });
 
-  const fechas = ["2025-05-10", "2025-05-11", "2025-05-12", "2025-05-13"];
+  const fechas = ["2025-07-10", "2025-07-11", "2025-07-12", "2025-07-13"];
   const viajes = [];
 
   for (let i = 0; i < fechas.length; i++) {

@@ -1,6 +1,5 @@
-//Reeact
-import { View, StyleSheet, FlatList } from "react-native";
-
+import React from "react";
+import { FlatList } from "react-native";
 //Components
 import { AvailableSchedules } from "./AvailableSchedules";
 
@@ -9,10 +8,15 @@ export const ListAvailableSchedules = ({ travels, navigation }) => {
     <FlatList
       data={travels}
       keyExtractor={(travel) => travel.id_viaje}
-      renderItem={(travel, index) => {
-        return <AvailableSchedules travel={travel} key={index} navigation={navigation} />;
+      renderItem={({ item }) => {
+        return (
+          <AvailableSchedules
+            travel={item}
+            key={item.id_viaje}
+            navigation={navigation}
+          />
+        );
       }}
     />
   );
 };
-

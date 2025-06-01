@@ -6,17 +6,10 @@ import { InformativeTitle } from "../../../components/InformativeTitle";
 import PassengerCard from "./components/PassengerCard";
 import ContactCard from "./components/ContactCard";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
+import { formatDate } from "../../../utils/dateTime.util";
 
 export default function PassengerDataScreen({ navigation, route }) {
-  const {
-    selectedSeats = [""],
-    travelDetails = {
-      route: "Cochabamba → La Paz",
-      date: "Viernes 20 de mayo",
-      time: "07:30 → 13:00",
-    },
-  } = route.params || {};
-
+  const { selectedSeats, travelDetails, travels } = route.params || {};
   const [passengers, setPassengers] = useState(
     selectedSeats.map((seat) => ({
       seat,
@@ -26,9 +19,7 @@ export default function PassengerDataScreen({ navigation, route }) {
       birthDate: "",
     }))
   );
-
   const [contact, setContact] = useState({ email: "", phone: "" });
-
   const handlePassengerChange = (index, field, value) => {
     const updatedPassengers = [...passengers];
     updatedPassengers[index][field] = value;
@@ -39,8 +30,10 @@ export default function PassengerDataScreen({ navigation, route }) {
     <GenericContainer>
       <BlobBg />
       <InformativeTitle
-        title={`${passengers.length} pasajeros seleccionados`}
-        description={`${travelDetails.route}\n${travelDetails.date} ${travelDetails.time}`}
+        title={`${passengers.length} asientos seleccionados`}
+        description={`${travels[0].ruta.origen} - ${travels[0].ruta.destino}\n${
+          formatDate(travels[0].fecha_salida).formatedDate
+        }`}
       />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -61,6 +54,7 @@ export default function PassengerDataScreen({ navigation, route }) {
             navigation.navigate("TripSummary", {
               passengers,
               contact,
+              travelDetails,
             })
           }
         />

@@ -1,10 +1,8 @@
 //react
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
-
 //components
 import { AvailableDates } from "./AvailableDates";
-
 //utils
 import { formatDate } from "../../../../utils/dateTime.util";
 

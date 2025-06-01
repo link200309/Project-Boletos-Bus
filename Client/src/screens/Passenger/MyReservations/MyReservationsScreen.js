@@ -1,16 +1,10 @@
 import React, { useState } from "react";
-import {
-  View,
-  FlatList,
-  StyleSheet,
-  Modal,
-  Text,
-  TouchableOpacity,
-} from "react-native";
-
+import { View, FlatList, StyleSheet, Modal, Text } from "react-native";
 import TripCard from "./components/TripCard";
-import { GenericContainer } from "../../../components/GenericContainer";
 import { BlobBg } from "../../../components/Background/BlobBg";
+import { ButtonStyle } from "../../../components/Button/ButtonStyle";
+import { GlobalStyles } from "../../../components/Style/GlobalStyles";
+import { GenericContainer } from "../../../components/GenericContainer";
 
 const initialTrips = [
   {
@@ -46,6 +40,17 @@ const initialTrips = [
     seats: 1,
     total: 95,
   },
+  {
+    id: 4,
+    from: "Santa Cruz",
+    to: "Cochabamba",
+    date: "30 de Abril",
+    time: "11:00",
+    agency: "El Dorado",
+    type: "SEMI-CAMA",
+    seats: 1,
+    total: 95,
+  },
 ];
 
 export default function MyReservationsScreen() {
@@ -74,13 +79,11 @@ export default function MyReservationsScreen() {
       <FlatList
         data={trips}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
           <TripCard trip={item} onEdit={handleEdit} onCancel={confirmCancel} />
         )}
       />
 
-      {/* Modal de Confirmación */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -88,23 +91,29 @@ export default function MyReservationsScreen() {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+          <View style={GlobalStyles.formCard}>
+            <Text style={styles.modalTitle}>Cancelar Reserva</Text>
             <Text style={styles.modalText}>
-              ¿Seguro que desea cancelar su reservación?
+              ¿Estás seguro de que deseas cancelar tu reserva de asiento? Esta
+              acción no se puede deshacer y el asiento volverá a estar
+              disponible para otros usuarios.
             </Text>
             <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.confirmButton}
-                onPress={handleConfirmCancel}
-              >
-                <Text style={styles.confirmText}>Sí, cancelar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.cancelText}>No</Text>
-              </TouchableOpacity>
+              <ButtonStyle
+                text="Confirmar"
+                onClick={handleConfirmCancel}
+                width="47%"
+                height={40}
+                sizeText={16}
+              />
+              <ButtonStyle
+                text="Cancelar"
+                onClick={() => setModalVisible(false)}
+                variant={2}
+                width="47%"
+                height={40}
+                sizeText={16}
+              />
             </View>
           </View>
         </View>
@@ -116,10 +125,8 @@ export default function MyReservationsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  listContent: {
-    paddingVertical: 16,
-    paddingBottom: 40,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   modalOverlay: {
     flex: 1,
@@ -127,51 +134,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  modalContent: {
-    width: "80%",
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 10,
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
   },
   modalText: {
     fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 20,
     textAlign: "center",
+    marginBottom: 20,
   },
   modalButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-  },
-  confirmButton: {
-    flex: 1,
-    backgroundColor: "#4B2EC2",
-    padding: 10,
-    borderRadius: 8,
-    alignItems: "center",
-    marginRight: 8,
-  },
-  confirmText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  cancelButton: {
-    flex: 1,
-    borderColor: "#4B2EC2",
-    borderWidth: 2,
-    padding: 10,
-    borderRadius: 8,
-    alignItems: "center",
-    marginLeft: 8,
-  },
-  cancelText: {
-    color: "#4B2EC2",
-    fontWeight: "bold",
   },
 });

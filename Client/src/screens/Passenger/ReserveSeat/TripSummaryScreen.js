@@ -8,10 +8,10 @@ import TabsContainer from "./components/TabsContainer";
 import PriceSummaryContainer from "./components/PriceSummaryContainer";
 
 export default function TripSummaryScreen({ navigation, route }) {
-  const { passengers = [], contact = {} } = route.params || {};
-
+  const { passengers = [], contact = {}, travelDetails = {} } = route.params || {};
+  console.log("Trip summary", passengers, contact, travelDetails)
   const handleConfirm = () => {
-    console.log("Reserva confirmada");
+    alert("Reserva confirmada");
   };
 
   return (
@@ -23,8 +23,16 @@ export default function TripSummaryScreen({ navigation, route }) {
       />
       <ScrollView>
         <View>
-          <TabsContainer passengers={passengers} contact={contact} />
-          <PriceSummaryContainer ticketPrice={90} passengerCount={passengers.length} onConfirm={handleConfirm} />
+          <TabsContainer
+            passengers={passengers}
+            contact={contact}
+            travelDetails={travelDetails}
+          />
+          <PriceSummaryContainer
+            ticketPrice={parseFloat(travelDetails.price)}
+            passengerCount={passengers.length}
+            onConfirm={handleConfirm}
+          />
         </View>
       </ScrollView>
     </GenericContainer>

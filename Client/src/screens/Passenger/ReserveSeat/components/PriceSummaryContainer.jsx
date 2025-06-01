@@ -7,7 +7,8 @@ export default function PriceSummaryContainer({
   passengerCount,
   onConfirm,
 }) {
-  const totalPrice = ticketPrice * passengerCount;
+  const price = parseFloat(ticketPrice) || 0;
+  const totalPrice = (price * passengerCount).toFixed(2);
 
   return (
     <View style={styles.container}>
@@ -16,7 +17,7 @@ export default function PriceSummaryContainer({
           <View>
             <Text style={styles.priceLabel}>Precio por pasaje</Text>
             <Text style={styles.priceDetails}>
-              Bs. {ticketPrice} × {passengerCount}
+              Bs. {price.toFixed(2)} × {passengerCount}
             </Text>
           </View>
           <Text style={styles.totalPrice}>Bs. {totalPrice}</Text>

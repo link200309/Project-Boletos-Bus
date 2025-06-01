@@ -9,13 +9,10 @@ export default function RegisterScreen({ navigation, route }) {
   const { userType = "Pasajero" } = route.params || {};
 
   return (
-    <>
-      {/* Botón de volver */}
+    <GenericContainer style={styles.container}>
       <BackIcon style={styles.btnBack} onPress={() => navigation.goBack()} />
 
       <ScrollView>
-        <GenericContainer style={styles.container}>
-          {/* Logo */}
           <View style={styles.containerLogo}>
             <Image
               source={require("../../../assets/logo.png")}
@@ -27,11 +24,9 @@ export default function RegisterScreen({ navigation, route }) {
             />
           </View>
 
-          {/* Formulario dinámico según tipo de usuario */}
           {userType === "Pasajero" ? <FormPassenger /> : <FormAgency />}
-        </GenericContainer>
       </ScrollView>
-    </>
+    </GenericContainer>
   );
 }
 

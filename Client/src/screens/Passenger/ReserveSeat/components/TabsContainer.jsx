@@ -1,10 +1,10 @@
-// TabsContainer.jsx
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const TabsContainer = ({ passengers = [], contact = {} }) => {
+const TabsContainer = ({ passengers = [], contact = {}, travelDetails = {} }) => {
   const [activeTab, setActiveTab] = useState('detalles');
+  console.log(travelDetails);
 
   return (
     <View style={styles.container}>
@@ -13,14 +13,18 @@ const TabsContainer = ({ passengers = [], contact = {} }) => {
           style={[styles.tab, activeTab === 'detalles' && styles.activeTab]}
           onPress={() => setActiveTab('detalles')}
         >
-          <Text style={[styles.tabText, activeTab === 'detalles' && styles.activeTabText]}>Detalles</Text>
+          <Text style={[styles.tabText, activeTab === 'detalles' && styles.activeTabText]}>
+            Detalles
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.tab, activeTab === 'pasajeros' && styles.activeTab]}
           onPress={() => setActiveTab('pasajeros')}
         >
-          <Text style={[styles.tabText, activeTab === 'pasajeros' && styles.activeTabText]}>Pasajeros</Text>
+          <Text style={[styles.tabText, activeTab === 'pasajeros' && styles.activeTabText]}>
+            Pasajeros
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -32,7 +36,7 @@ const TabsContainer = ({ passengers = [], contact = {} }) => {
             </View>
             <View style={styles.textWrapper}>
               <Text style={styles.detailTitle}>Origen y destino</Text>
-              <Text style={styles.detailContent}>Cochabamba → La Paz</Text>
+              <Text style={styles.detailContent}>{travelDetails.route}</Text>
             </View>
           </View>
 
@@ -42,7 +46,9 @@ const TabsContainer = ({ passengers = [], contact = {} }) => {
             </View>
             <View style={styles.textWrapper}>
               <Text style={styles.detailTitle}>Horario de viaje</Text>
-              <Text style={styles.detailContent}>18 de Abril - 07:30 → 13:00</Text>
+              <Text style={styles.detailContent}>
+                {travelDetails.date} - {travelDetails.time}
+              </Text>
             </View>
           </View>
 
@@ -52,7 +58,7 @@ const TabsContainer = ({ passengers = [], contact = {} }) => {
             </View>
             <View style={styles.textWrapper}>
               <Text style={styles.detailTitle}>Agencia</Text>
-              <Text style={styles.detailContent}>EL DORADO</Text>
+              <Text style={styles.detailContent}>{travelDetails.agencia}</Text>
             </View>
           </View>
 
@@ -62,7 +68,7 @@ const TabsContainer = ({ passengers = [], contact = {} }) => {
             </View>
             <View style={styles.textWrapper}>
               <Text style={styles.detailTitle}>Asientos</Text>
-              <Text style={styles.detailContent}>SEMI-CAMA</Text>
+              <Text style={styles.detailContent}>{travelDetails.tipoBus}</Text>
             </View>
           </View>
 
@@ -72,7 +78,7 @@ const TabsContainer = ({ passengers = [], contact = {} }) => {
             </View>
             <View style={styles.textWrapper}>
               <Text style={styles.detailTitle}>Precio por pasaje</Text>
-              <Text style={styles.detailContent}>Bs. 90</Text>
+              <Text style={styles.detailContent}>Bs. {travelDetails.price}</Text>
             </View>
           </View>
         </View>
@@ -82,7 +88,9 @@ const TabsContainer = ({ passengers = [], contact = {} }) => {
           {passengers.map((passenger, index) => (
             <View key={index} style={styles.passengerCard}>
               <View style={styles.passengerHeader}>
-                <Text style={styles.passengerName}>{passenger.firstName} {passenger.lastName}</Text>
+                <Text style={styles.passengerName}>
+                  {passenger.firstName} {passenger.lastName}
+                </Text>
                 <Text style={styles.seatLabel}>Asiento {passenger.seat}</Text>
               </View>
               <Text style={styles.passengerDetail}>CI: {passenger.identityNumber}</Text>
@@ -94,6 +102,8 @@ const TabsContainer = ({ passengers = [], contact = {} }) => {
     </View>
   );
 };
+
+export default TabsContainer;
 
 const styles = StyleSheet.create({
   container: {
@@ -206,5 +216,3 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
 });
-
-export default TabsContainer;
