@@ -4,9 +4,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 export const GenericContainer = ({ children, style, scroll = false }) => {
   if (scroll) {
     return (
-      <ScrollView contentContainerStyle={[styles.container, style]}>
-        {children}
-      </ScrollView>
+      <ScrollView style={[styles.container, style]}>{children}</ScrollView>
     );
   }
 
@@ -17,7 +15,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     flex: 1,
-    alignItems: "center",
     padding: 20,
     paddingTop: 30,
     paddingBottom: 45,

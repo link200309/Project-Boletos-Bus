@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseURL = process.env.BASE_URL || "http://192.168.1.5:4000";
+const baseURL = process.env.BASE_URL || "http://192.168.84.144:4000";
 
 const travelApi = axios.create({
   baseURL,
@@ -21,5 +21,10 @@ export const getTravels = async (origen, destino, asientos) => {
       minDate: minDate.toISOString(),
     },
   });
-  return res;
+  return res.data;
+};
+
+export const getTravelsByAgency = async (id) => {
+  const res = await travelApi.get(`/travel/${id}/get`);
+  return res.data;
 };

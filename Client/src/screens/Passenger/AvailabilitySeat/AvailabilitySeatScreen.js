@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ScrollView, Alert } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { getBusSeats } from "../../../api/seat.api";
-import { formatTime } from "../AvailabilitySchedules/utils";
+import { formatTime } from "../../../utils/dateTime.util";
 //Components
 import { GenericContainer } from "../../../components/GenericContainer";
 import { InformativeTitle } from "../../../components/InformativeTitle";

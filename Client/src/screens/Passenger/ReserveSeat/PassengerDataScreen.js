@@ -6,7 +6,7 @@ import { InformativeTitle } from "../../../components/InformativeTitle";
 import PassengerCard from "./components/PassengerCard";
 import ContactCard from "./components/ContactCard";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
-import { formatDate } from "../AvailabilitySchedules/utils";
+import { formatDate } from "../../../utils/dateTime.util";
 
 export default function PassengerDataScreen({ navigation, route }) {
   const { selectedSeats, travelDetails, travels } = route.params || {};
