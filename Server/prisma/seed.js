@@ -1,4 +1,5 @@
 import { PrismaClient } from "../src/generated/prisma/index.js";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -14,14 +15,16 @@ async function main() {
   await prisma.agencia.deleteMany();
   await prisma.usuario.deleteMany();
 
+  const contraseñaHasheada = await bcrypt.hash("12345678", 10);
+
   const usuarioAgencia = await prisma.usuario.create({
     data: {
       tipo_usuario: "agencia",
       nombre: "Juan Carlos",
       apellido: "Mendoza",
       ci: "1234567LP",
-      correo_electronico: "agencia@transcopacabana.bo",
-      contraseña: "segura123",
+      correo_electronico: "agencia@gmail.com",
+      contraseña: contraseñaHasheada,
       numero_celular: 71234567,
     },
   });
@@ -165,12 +168,34 @@ async function main() {
     viajes.push(viaje);
   }
 
+  let asientoDisponible = await prisma.asiento.findFirst({
+    where: {
+      id_bus: bus.id_bus,
+      estado: "Disponible",
+    },
+  });
+
   await prisma.reserva.create({
     data: {
       id_pasajero: pasajero.id_pasajero,
       id_viaje: viajes[0].id_viaje,
+      id_asiento: asientoDisponible?.id_asiento ?? null,
       estado: "confirmado",
       comprobante: "COMP-001",
+    },
+  });
+
+  if (asientoDisponible) {
+    await prisma.asiento.update({
+      where: { id_asiento: asientoDisponible.id_asiento },
+      data: { estado: "Reservado" },
+    });
+  }
+
+  asientoDisponible = await prisma.asiento.findFirst({
+    where: {
+      id_bus: bus.id_bus,
+      estado: "Disponible",
     },
   });
 
@@ -178,9 +203,17 @@ async function main() {
     data: {
       id_pasajero: pasajero.id_pasajero,
       id_viaje: viajes[1].id_viaje,
+      id_asiento: asientoDisponible?.id_asiento ?? null,
       estado: "pendiente",
     },
   });
+
+  if (asientoDisponible) {
+    await prisma.asiento.update({
+      where: { id_asiento: asientoDisponible.id_asiento },
+      data: { estado: "Reservado" },
+    });
+  }
 
   console.log("Datos insertados exitosamente.");
   console.log(`Usuario agencia creado: ${usuarioAgencia.id_usuario}`);

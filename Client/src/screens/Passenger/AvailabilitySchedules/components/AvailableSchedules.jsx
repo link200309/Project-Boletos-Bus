@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import { BusIcon, Location, ChairIcon } from "../../../../components/Icons";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
-import { formatTime, formatDate } from "../utils";
+import { formatTime, formatDate } from "../../../../utils/dateTime.util";
 
 export const AvailableSchedules = ({ travel, navigation }) => {
   const travelData = travel.item || travel;

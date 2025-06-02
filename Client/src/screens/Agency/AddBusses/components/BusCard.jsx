@@ -8,23 +8,43 @@ const BusCard = ({ bus, onEdit, onDelete }) => {
       <Text style={styles.id}>Bus ID: {bus.id_bus}</Text>
 
       <View style={styles.row}>
-        <Text>Placa: {bus.placa}</Text>
-        <Text>Asientos: {bus.asientos?.length ?? 0}</Text>
+        <Text style={styles.label}>Placa:</Text>
+        <Text>{bus.placa}</Text>
       </View>
 
       <View style={styles.row}>
-        <Text>Tipo: {bus.tipo_bus}</Text>
-        <Text>Marca: {bus.marca}</Text>
+        <Text style={styles.label}>Asientos:</Text>
+        <Text>{bus.asientos?.length ?? 0}</Text>
       </View>
 
       <View style={styles.row}>
-        <Text>Año: {bus.año_modelo}</Text>
-        <Text>Modelo: {bus.modelo}</Text>
+        <Text style={styles.label}>Tipo:</Text>
+        <Text>{bus.tipo_bus}</Text>
       </View>
 
       <View style={styles.row}>
-        <Text>Estado: {bus.estado}</Text>
-        <Text>ID Agencia: {bus.id_agencia}</Text>
+        <Text style={styles.label}>Marca:</Text>
+        <Text>{bus.marca}</Text>
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Año:</Text>
+        <Text>{bus.año_modelo}</Text>
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Modelo:</Text>
+        <Text>{bus.modelo}</Text>
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Estado:</Text>
+        <Text>{bus.estado}</Text>
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>ID Agencia:</Text>
+        <Text>{bus.id_agencia}</Text>
       </View>
 
       <View style={styles.buttonRow}>
@@ -55,6 +75,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 6,
+  },
+  label: {
+    fontWeight: "bold",
+    color: "#555",
   },
   buttonRow: {
     flexDirection: "row",

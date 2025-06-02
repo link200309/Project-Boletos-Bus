@@ -7,7 +7,7 @@ export const ListTravels = ({ travels, navigation }) => {
   return (
     <FlatList
       data={travels}
-      keyExtractor={(travel) => travel.id}
+      keyExtractor={(travel) => travel.id_viaje}
       style={styles.containerTravesl}
       renderItem={(travel) => {
         return <Travels travelInfo={travel} navigation={navigation} />;
