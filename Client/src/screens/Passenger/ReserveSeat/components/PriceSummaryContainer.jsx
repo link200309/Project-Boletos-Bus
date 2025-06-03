@@ -1,14 +1,21 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
+import { useNavigation } from "@react-navigation/native";
 
 export default function PriceSummaryContainer({
   ticketPrice,
   passengerCount,
   onConfirm,
 }) {
+  const navigation = useNavigation();
   const price = parseFloat(ticketPrice) || 0;
   const totalPrice = (price * passengerCount).toFixed(2);
+
+  const handleConfirm = () => {
+    if (onConfirm) onConfirm(); // Ejecuta lógica previa si hay
+    navigation.navigate("PaymentDetails"); // Asegúrate que este nombre exista en tu navigator
+  };
 
   return (
     <View style={styles.container}>
@@ -24,7 +31,7 @@ export default function PriceSummaryContainer({
         </View>
       </View>
 
-      <ButtonStyle text="Confirmar reserva" onClick={onConfirm} />
+      <ButtonStyle text="Confirmar reserva" onClick={handleConfirm} />
     </View>
   );
 }
