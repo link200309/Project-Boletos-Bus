@@ -7,15 +7,19 @@ export default function PriceSummaryContainer({
   ticketPrice,
   passengerCount,
   onConfirm,
+  travels,
+  travelDetails,
 }) {
   const navigation = useNavigation();
   const price = parseFloat(ticketPrice) || 0;
   const totalPrice = (price * passengerCount).toFixed(2);
 
   const handleConfirm = () => {
-    if (onConfirm) onConfirm(); // Ejecuta lógica previa si hay
-    navigation.navigate("PaymentDetails"); // Asegúrate que este nombre exista en tu navigator
+    if (onConfirm) onConfirm();
+    navigation.navigate("PaymentDetails", { travels, travelDetails });
   };
+
+  console.log("aqui",travelDetails);
 
   return (
     <View style={styles.container}>
@@ -35,6 +39,7 @@ export default function PriceSummaryContainer({
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

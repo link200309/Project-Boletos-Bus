@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const TabsContainer = ({ passengers = [], contact = {}, travelDetails = {} }) => {
   const [activeTab, setActiveTab] = useState('detalles');
-  console.log(travelDetails);
+  console.log(travelDetails.price);
 
   return (
     <View style={styles.container}>
@@ -47,7 +47,7 @@ const TabsContainer = ({ passengers = [], contact = {}, travelDetails = {} }) =>
             <View style={styles.textWrapper}>
               <Text style={styles.detailTitle}>Horario de viaje</Text>
               <Text style={styles.detailContent}>
-                {travelDetails.date} - {travelDetails.time}
+                {travelDetails.horario}
               </Text>
             </View>
           </View>

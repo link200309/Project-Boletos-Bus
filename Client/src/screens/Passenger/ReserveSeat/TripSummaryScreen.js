@@ -8,8 +8,14 @@ import TabsContainer from "./components/TabsContainer";
 import PriceSummaryContainer from "./components/PriceSummaryContainer";
 
 export default function TripSummaryScreen({ navigation, route }) {
-  const { passengers = [], contact = {}, travelDetails = {} } = route.params || {};
- 
+  const {
+    passengers = [],
+    contact = {},
+    travelDetails = {},
+    travels = [],
+  } = route.params || {};
+  console.log("aqui", travels,"\n")
+  console.log("Aqui2", travelDetails)
   return (
     <GenericContainer>
       <BlobBg />
@@ -27,6 +33,16 @@ export default function TripSummaryScreen({ navigation, route }) {
           <PriceSummaryContainer
             ticketPrice={parseFloat(travelDetails.price)}
             passengerCount={passengers.length}
+            travels={travels}
+            travelDetails={travelDetails}
+            onConfirm={() => {
+              navigation.navigate("PaymentDetails", {
+                travels,
+                travelDetails,
+                passengers,
+                contact,
+              });
+            }}
           />
         </View>
       </ScrollView>

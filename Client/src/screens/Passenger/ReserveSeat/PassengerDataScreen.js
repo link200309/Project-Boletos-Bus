@@ -55,6 +55,7 @@ export default function PassengerDataScreen({ navigation, route }) {
               passengers,
               contact,
               travelDetails,
+              travels,
             })
           }
         />
