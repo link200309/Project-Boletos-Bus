@@ -1,22 +1,26 @@
-import React from "react";
+import React, { useRef } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { GenericContainer } from "../../../components/GenericContainer";
 import { BlobBg } from "../../../components/Background/BlobBg";
 import { InformativeTitle } from "../../../components/InformativeTitle";
 import PaymentSummaryCard from "./components/PaymentSummaryCard";
+import PaymentActionButtons from "./components/PaymentActionButtons";
 
-export default function PaymentDetailsScreen({ navigation, route }) {
-  // Datos simulados, reemplaza por route.params si vienen desde otra pantalla
+export default function PaymentDetailsScreen({ navigation }) {
+  const summaryRef = useRef();
+
   const summaryData = {
+    departureTime: "15:00",
+    busNumber: "BUS-58",
     count: 2,
     seatNumbers: ["18A", "19A"],
     price: 90,
     total: 180,
-    qrData: "https://ejemplo.com/pago?id=1234", // puede ser ID de reserva u otro
+    qrData: "https://ejemplo.com/pago?id=1234",
   };
 
   const handleConfirm = () => {
-    navigation.navigate("ReservaExitosaScreen"); // Asegúrate que exista este screen
+    navigation.navigate("ReservaExitosaScreen");
   };
 
   return (
@@ -27,7 +31,8 @@ export default function PaymentDetailsScreen({ navigation, route }) {
         description="Una vez realice el pago envíe su comprobante"
       />
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <PaymentSummaryCard summary={summaryData} onConfirm={handleConfirm} />
+        <PaymentSummaryCard summary={summaryData} ref={summaryRef} />
+        <PaymentActionButtons summaryRef={summaryRef} onConfirm={handleConfirm} />
       </ScrollView>
     </GenericContainer>
   );
@@ -35,9 +40,8 @@ export default function PaymentDetailsScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingTop: 10,
-    paddingBottom: 30,
+    padding: 20,
+    paddingBottom: 40,
     alignItems: "center",
-    width: "100%",
   },
 });
