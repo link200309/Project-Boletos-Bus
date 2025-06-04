@@ -19,6 +19,7 @@ export default function PassengerSettingsScreen() {
   const { user, logout } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState("");
+const [reservas, setReservas] = useState([]);
 
   const [personalInfo, setPersonalInfo] = useState({
     nombre: user?.usuario?.nombre || "",
@@ -26,6 +27,24 @@ export default function PassengerSettingsScreen() {
     correo: user?.usuario?.correo_electronico || "",
     nacimiento: user?.datos_pasajero?.fecha_nacimiento?.slice(0, 10) || "",
   });
+
+  const obtenerHistorialReservas = async () => {
+    try {
+      const response = await fetch(`https://tu-api.com/reservas/${user?.usuario?.id}`);
+      const data = await response.json();
+
+      // ✅ Verifica que data sea un array
+      if (Array.isArray(data)) {
+        setReservas(data);
+      } else {
+        console.warn("La respuesta de reservas no es un array:", data);
+        setReservas([]); // Valor seguro
+      }
+    } catch (error) {
+      console.error("Error al cargar historial de reservas:", error);
+      setReservas([]); // Valor seguro en error
+    }
+  };
 
   const [passwordForm, setPasswordForm] = useState({
     actual: "",
@@ -36,7 +55,11 @@ export default function PassengerSettingsScreen() {
   const openModal = (content) => {
     setModalContent(content);
     setModalVisible(true);
+    if (content === "historial") {
+      obtenerHistorialReservas();
+    }
   };
+
 
   const handleSavePersonalInfo = async () => {
     try {
@@ -196,7 +219,44 @@ export default function PassengerSettingsScreen() {
           </View>
         );
 
+      case "historial":
+        return (
+          <ScrollView style={{ width: "100%", maxHeight: 400 }}>
+            {reservas.length === 0 ? (
+              <Text style={{ textAlign: "center", marginVertical: 20 }}>
+                No tienes reservas registradas.
+              </Text>
+            ) : (
+              reservas.map((reserva) => (
+                <View key={reserva.id_reserva} style={styles.historialCard}>
+                  <Text style={styles.ruta}>
+                    {reserva.viaje.ruta.origen} → {reserva.viaje.ruta.destino}
+                  </Text>
 
+                  <View style={styles.historialRow}>
+                    <Icon name="calendar-outline" size={16} color="#441AD1" />
+                    <Text style={styles.historialInfo}>
+                      {new Date(reserva.viaje.fecha_salida).toLocaleDateString()} -{" "}
+                      {reserva.viaje.hora_salida_programada}
+                    </Text>
+                  </View>
+
+                  <View style={styles.historialRow}>
+                    <Icon name="bus-outline" size={16} color="#441AD1" />
+                    <Text style={styles.historialInfo}>
+                      {reserva.viaje.bus.tipo_bus} | Asiento: {reserva.asiento.numero}
+                    </Text>
+                  </View>
+
+                  <View style={styles.historialRow}>
+                    <Icon name="cash-outline" size={16} color="#441AD1" />
+                    <Text style={styles.historialInfo}>Bs. {reserva.viaje.costo}</Text>
+                  </View>
+                </View>
+              ))
+            )}
+          </ScrollView>
+        );
       default:
         return <Text style={styles.popupContent}>En desarrollo...</Text>;
     }
@@ -413,6 +473,33 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "600",
+  },
+
+  historialCard: {
+    backgroundColor: "#F5F5F5",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 10,
+  },
+  ruta: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  info: {
+    fontSize: 14,
+    color: "#555",
+  },
+
+  historialRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 6,
+  },
+  historialInfo: {
+    marginLeft: 8,
+    fontSize: 14,
+    color: "#555",
   },
 
 
