@@ -1,13 +1,19 @@
 import { Router } from "express";
-import { actualizarPerfil } from "../controllers/user.controller.js";
+import {
+  actualizarPerfil,
+  cambiarContraseña,
+} from "../controllers/user.controller.js";
 import { verificarToken } from "../middlewares/verificarToken.js";
 
 const router = Router();
 
-// Ruta protegida para actualizar perfil del usuario autenticado
+// ✅ Ruta protegida para actualizar perfil del usuario autenticado
 router.put("/perfil", verificarToken, actualizarPerfil);
 
-// Resto de tus rutas antiguas (puedes mantenerlas si las necesitas)
+// ✅ Ruta protegida para cambiar contraseña del usuario autenticado
+router.put("/cambiar-password", verificarToken, cambiarContraseña);
+
+// 🧪 Rutas de prueba o ejemplos (puedes eliminarlas si ya no las usas)
 router.get("/users", (req, res) => {
   res.send("User route john te amo");
 });

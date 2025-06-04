@@ -15,7 +15,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { GenericContainer } from "../../components/GenericContainer";
 import { ButtonStyle } from "../../components/Button/ButtonStyle";
 import { BlobBg } from "../../components/Background/BlobBg";
-import { actualizarPerfilUsuario } from "../../api/user.api";
+import { actualizarPerfilUsuario,cambiarPasswordUsuario } from "../../api/user.api";
 
 export default function PassengerSettingsScreen() {
   const { user, logout,setUser } = useContext(AuthContext);
@@ -78,10 +78,10 @@ const [errors, setErrors] = useState({});
   const handleChangePassword = async () => {
     const newErrors = {};
 
-    if (!passwordForm.actual.trim()) newErrors.actual = 'Debe ingresar su contraseña actual.';
-    if (passwordForm.nueva.length < 8) newErrors.nueva = 'La nueva contraseña debe tener al menos 8 caracteres.';
+    if (!passwordForm.actual.trim()) newErrors.actual = "Debe ingresar su contraseña actual.";
+    if (passwordForm.nueva.length < 8) newErrors.nueva = "La nueva contraseña debe tener al menos 8 caracteres.";
     if (passwordForm.nueva !== passwordForm.confirmacion)
-      newErrors.confirmacion = 'Las contraseñas no coinciden.';
+      newErrors.confirmacion = "Las contraseñas no coinciden.";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -89,10 +89,20 @@ const [errors, setErrors] = useState({});
     }
 
     try {
-      console.log("Cambiando contraseña:", passwordForm);
+      const token = user?.token;
+      const response = await cambiarPasswordUsuario(
+        {
+          actual: passwordForm.actual,
+          nueva: passwordForm.nueva,
+        },
+        token
+      );
+
+      alert(response.mensaje || "Contraseña actualizada correctamente");
+      setPasswordForm({ actual: "", nueva: "", confirmacion: "" });
       setModalVisible(false);
     } catch (error) {
-      console.error("Error al cambiar contraseña:", error);
+      alert(error.message || "Error al cambiar contraseña.");
     }
   };
 
