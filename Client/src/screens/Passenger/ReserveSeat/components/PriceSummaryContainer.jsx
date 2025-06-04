@@ -9,6 +9,7 @@ export default function PriceSummaryContainer({
   onConfirm,
   travels,
   travelDetails,
+  passengers,
 }) {
   const navigation = useNavigation();
   const price = parseFloat(ticketPrice) || 0;
@@ -16,10 +17,10 @@ export default function PriceSummaryContainer({
 
   const handleConfirm = () => {
     if (onConfirm) onConfirm();
-    navigation.navigate("PaymentDetails", { travels, travelDetails });
+    navigation.navigate("PaymentDetails", { travels, travelDetails, passengers });
   };
 
-  console.log("aqui",travelDetails);
+  console.log("TravelDetails PriceSummaryContainer",travelDetails);
 
   return (
     <View style={styles.container}>

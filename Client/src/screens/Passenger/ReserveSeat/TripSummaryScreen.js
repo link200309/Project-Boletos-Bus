@@ -14,8 +14,10 @@ export default function TripSummaryScreen({ navigation, route }) {
     travelDetails = {},
     travels = [],
   } = route.params || {};
-  console.log("aqui", travels,"\n")
-  console.log("Aqui2", travelDetails)
+  console.log("Travels TripSummary", travels,"\n")
+  console.log("TravelsDetails TS", travelDetails,"\n")
+  console.log("Passengers TS", passengers, "\n")
+  console.log("contact TS", contact, "\n")
   return (
     <GenericContainer>
       <BlobBg />
@@ -35,6 +37,7 @@ export default function TripSummaryScreen({ navigation, route }) {
             passengerCount={passengers.length}
             travels={travels}
             travelDetails={travelDetails}
+            passengers={passengers} // ✅ Esto faltaba
             onConfirm={() => {
               navigation.navigate("PaymentDetails", {
                 travels,
@@ -44,6 +47,7 @@ export default function TripSummaryScreen({ navigation, route }) {
               });
             }}
           />
+
         </View>
       </ScrollView>
     </GenericContainer>

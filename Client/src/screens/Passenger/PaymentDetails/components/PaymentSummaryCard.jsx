@@ -8,12 +8,13 @@ const PaymentSummaryCard = forwardRef(({ summary }, ref) => {
     <View style={styles.card} ref={ref} collapsable={false}>
       <Text style={styles.title}>Resumen del Pago</Text>
 
-      <SummaryRow label="Horario de viaje" value={summary.departureTime || "No disponible"} />
-      <SummaryRow label="Número de Bus" value={summary.busNumber || "No disponible"} />
+      <SummaryRow label="Horario de viaje" value={summary.horario || "No disponible"} />
+      <SummaryRow label="Número de bus" value={summary.busId || "No disponible"} />
       <SummaryRow label="Cantidad de Asientos" value={summary.count} />
       <SummaryRow label="Número de asientos" value={summary.seatNumbers.join(", ")} />
       <SummaryRow label="Precio de cada asiento" value={`Bs. ${summary.price}`} />
       <SummaryRow label="Total a pagar" value={`Bs. ${summary.total}`} />
+
 
       <QrCodeDisplay data={summary.qrData} />
     </View>
