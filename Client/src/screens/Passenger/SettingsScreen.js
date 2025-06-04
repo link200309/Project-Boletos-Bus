@@ -346,7 +346,6 @@ const [reservas, setReservas] = useState([]);
         {/* Sección: General */}
         <Text style={styles.sectionTitle}>General</Text>
         <View style={styles.sectionBox}>
-          {renderItem("share-social-outline", "Compartir la app", "compartir")}
           {renderItem("chatbox-ellipses-outline", "Enviar sugerencias", "sugerencias")}
           {renderItem("information-circle-outline", "Sobre nosotros", "nosotros")}
         </View>
