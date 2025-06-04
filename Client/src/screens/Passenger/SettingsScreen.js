@@ -258,6 +258,55 @@ const [reservas, setReservas] = useState([]);
             )}
           </ScrollView>
         );
+
+       case "nosotros":
+         return (
+           <ScrollView style={{ maxHeight: 450 }}>
+             <Text style={styles.aboutTitle}>
+               <Text style={styles.boldText}>BusRat - Proyecto Académico</Text>
+             </Text>
+
+             <Text style={styles.aboutText}>
+               <Icon name="school-outline" size={16} color="#441AD1" /> Universidad Mayor de San Simón - Facultad de Ciencias y Tecnología
+             </Text>
+
+             <Text style={styles.aboutText}>
+               <Icon name="person-outline" size={16} color="#441AD1" /> Docente: Américo Fiorilo Lozada P.Ph.D.
+             </Text>
+
+             <Text style={[styles.aboutText, { marginTop: 8 }]}>
+               <Icon name="people-outline" size={16} color="#441AD1" /> <Text style={styles.boldText}>Integrantes:</Text>
+               {"\n"}• Cáceres Telleria Jaime Cristhian
+               {"\n"}• Chavarria Zurita John Henry
+               {"\n"}• Flores García Cristian Adrian
+               {"\n"}• Sahonero Garrado Sidney Angelly
+               {"\n"}• Velasquez Ricaldez Rodrigo
+             </Text>
+
+             <Text style={[styles.aboutText, { marginTop: 10 }]}>
+               <Icon name="document-text-outline" size={16} color="#441AD1" /> <Text style={styles.boldText}>Resumen:</Text>
+               {"\n"}Este proyecto tiene como objetivo mejorar la experiencia de viaje de los usuarios del transporte interdepartamental mediante una app que permite:
+               {"\n"}• Reservar asientos en tiempo real
+               {"\n"}• Consultar horarios y disponibilidad
+               {"\n"}• Ver historial de viajes y pagar por QR
+             </Text>
+
+             <Text style={[styles.aboutText, { marginTop: 10 }]}>
+               <Icon name="layers-outline" size={16} color="#441AD1" /> <Text style={styles.boldText}>Tecnologías:</Text>
+               {"\n"}• React Native
+               {"\n"}• Node.js + Express
+               {"\n"}• PostgreSQL
+               {"\n"}• Firebase Auth
+             </Text>
+
+             <Text style={[styles.aboutText, { marginTop: 10 }]}>
+               <Icon name="checkmark-done-outline" size={16} color="#441AD1" /> <Text style={styles.boldText}>Metodología:</Text>
+               {"\n"}Desarrollo bajo metodología Scrum con entregables iterativos en sprints y control de versiones mediante GitHub.
+             </Text>
+           </ScrollView>
+         );
+
+
       default:
         return <Text style={styles.popupContent}>En desarrollo...</Text>;
     }
@@ -361,6 +410,27 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
 
+  aboutTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#441AD1",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+
+  aboutText: {
+    fontSize: 14,
+    color: "#333",
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+
+  boldText: {
+    fontWeight: "bold",
+    color: "#441AD1",
+  },
+
+
   avatar: {
     width: 60,
     height: 60,
@@ -402,6 +472,21 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     color: "#333",
   },
+
+  aboutTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#441AD1",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  aboutText: {
+    fontSize: 14,
+    color: "#333",
+    lineHeight: 20,
+    marginBottom: 10,
+  },
+
   logoutContainer: {
     alignItems: "center",
   },
