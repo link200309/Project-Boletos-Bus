@@ -15,9 +15,10 @@ import { AuthContext } from "../../context/AuthContext";
 import { GenericContainer } from "../../components/GenericContainer";
 import { ButtonStyle } from "../../components/Button/ButtonStyle";
 import { BlobBg } from "../../components/Background/BlobBg";
+import { actualizarPerfilUsuario } from "../../api/user.api";
 
 export default function PassengerSettingsScreen() {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout,setUser } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState("");
 const [reservas, setReservas] = useState([]);
@@ -34,22 +35,43 @@ const [errors, setErrors] = useState({});
   const handleSavePersonalInfo = async () => {
     const newErrors = {};
 
-    if (!personalInfo.nombre.trim()) newErrors.nombre = 'El nombre es obligatorio.';
-    if (!personalInfo.apellido.trim()) newErrors.apellido = 'El apellido es obligatorio.';
+    if (!personalInfo.nombre.trim()) newErrors.nombre = "El nombre es obligatorio.";
+    if (!personalInfo.apellido.trim()) newErrors.apellido = "El apellido es obligatorio.";
     if (!/^\d{4}-\d{2}-\d{2}$/.test(personalInfo.nacimiento)) {
-      newErrors.nacimiento = 'Formato de fecha inválido. Usa YYYY-MM-DD.';
+      newErrors.nacimiento = "Formato de fecha inválido. Usa YYYY-MM-DD.";
     }
 
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+      setErrors(newErrors); // Debes tener setErrors y mostrar los errores en el form
       return;
     }
 
     try {
-      console.log("Actualizando datos:", personalInfo);
+      const token = user?.token; // Asume que tienes el JWT en user
+      const datos = {
+        nombre: personalInfo.nombre,
+        apellido: personalInfo.apellido,
+        nacimiento: personalInfo.nacimiento,
+      };
+
+      const response = await actualizarPerfilUsuario(datos, token);
+      setUser((prev) => ({
+        ...prev,
+        usuario: {
+          ...prev.usuario,
+          nombre: response.usuario.nombre,
+          apellido: response.usuario.apellido,
+        },
+        datos_pasajero: {
+          ...prev.datos_pasajero,
+          fecha_nacimiento: response.usuario.datos_pasajero?.fecha_nacimiento,
+        },
+      }));
+
       setModalVisible(false);
     } catch (error) {
       console.error("Error al actualizar información:", error);
+      alert("Error al actualizar. Intenta nuevamente.");
     }
   };
 
