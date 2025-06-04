@@ -22,12 +22,57 @@ export default function PassengerSettingsScreen() {
   const [modalContent, setModalContent] = useState("");
 const [reservas, setReservas] = useState([]);
 
+const [errors, setErrors] = useState({});
+
   const [personalInfo, setPersonalInfo] = useState({
     nombre: user?.usuario?.nombre || "",
     apellido: user?.usuario?.apellido || "",
     correo: user?.usuario?.correo_electronico || "",
     nacimiento: user?.datos_pasajero?.fecha_nacimiento?.slice(0, 10) || "",
   });
+
+  const handleSavePersonalInfo = async () => {
+    const newErrors = {};
+
+    if (!personalInfo.nombre.trim()) newErrors.nombre = 'El nombre es obligatorio.';
+    if (!personalInfo.apellido.trim()) newErrors.apellido = 'El apellido es obligatorio.';
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(personalInfo.nacimiento)) {
+      newErrors.nacimiento = 'Formato de fecha inválido. Usa YYYY-MM-DD.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      console.log("Actualizando datos:", personalInfo);
+      setModalVisible(false);
+    } catch (error) {
+      console.error("Error al actualizar información:", error);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    const newErrors = {};
+
+    if (!passwordForm.actual.trim()) newErrors.actual = 'Debe ingresar su contraseña actual.';
+    if (passwordForm.nueva.length < 8) newErrors.nueva = 'La nueva contraseña debe tener al menos 8 caracteres.';
+    if (passwordForm.nueva !== passwordForm.confirmacion)
+      newErrors.confirmacion = 'Las contraseñas no coinciden.';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      console.log("Cambiando contraseña:", passwordForm);
+      setModalVisible(false);
+    } catch (error) {
+      console.error("Error al cambiar contraseña:", error);
+    }
+  };
 
   const obtenerHistorialReservas = async () => {
     try {
@@ -61,31 +106,6 @@ const [reservas, setReservas] = useState([]);
     }
   };
 
-
-  const handleSavePersonalInfo = async () => {
-    try {
-      console.log("Actualizando datos:", personalInfo);
-      // Aquí llamas a tu API con fetch o axios
-      setModalVisible(false);
-    } catch (error) {
-      console.error("Error al actualizar información:", error);
-    }
-  };
-
-  const handleChangePassword = async () => {
-    if (passwordForm.nueva !== passwordForm.confirmacion) {
-      alert("Las contraseñas no coinciden");
-      return;
-    }
-    try {
-      console.log("Cambiando contraseña:", passwordForm);
-      // Aquí llamas a tu API
-      setModalVisible(false);
-    } catch (error) {
-      console.error("Error al cambiar contraseña:", error);
-    }
-  };
-
   const renderItem = (iconName, text, contentKey, iconColor = "#4318D1") => (
     <TouchableOpacity
       style={styles.itemRow}
@@ -106,21 +126,26 @@ const [reservas, setReservas] = useState([]);
               <TextInput
                 style={styles.input}
                 value={personalInfo.nombre}
-                onChangeText={(text) =>
-                  setPersonalInfo({ ...personalInfo, nombre: text })
-                }
+                onChangeText={(text) => {
+                  setPersonalInfo({ ...personalInfo, nombre: text });
+                  setErrors({ ...errors, nombre: null });
+                }}
               />
+              {errors.nombre && <Text style={styles.errorText}>{errors.nombre}</Text>}
+
             </View>
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Apellido</Text>
-              <TextInput
-                style={styles.input}
-                value={personalInfo.apellido}
-                onChangeText={(text) =>
-                  setPersonalInfo({ ...personalInfo, apellido: text })
-                }
-              />
+                <TextInput
+                  style={styles.input}
+                  value={personalInfo.apellido}
+                  onChangeText={(text) => {
+                    setPersonalInfo({ ...personalInfo, apellido: text });
+                    setErrors({ ...errors, apellido: null });
+                  }}
+                />
+                {errors.apellido && <Text style={styles.errorText}>{errors.apellido}</Text>}
             </View>
 
             <View style={styles.inputGroup}>
@@ -134,13 +159,16 @@ const [reservas, setReservas] = useState([]);
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Fecha de nacimiento</Text>
-              <TextInput
-                style={styles.input}
-                value={personalInfo.nacimiento}
-                onChangeText={(text) =>
-                  setPersonalInfo({ ...personalInfo, nacimiento: text })
-                }
-              />
+                <TextInput
+                  style={styles.input}
+                  value={personalInfo.nacimiento}
+                  onChangeText={(text) => {
+                    setPersonalInfo({ ...personalInfo, nacimiento: text });
+                    setErrors({ ...errors, nacimiento: null });
+                  }}
+                  placeholder="YYYY-MM-DD"
+                />
+                {errors.nacimiento && <Text style={styles.errorText}>{errors.nacimiento}</Text>}
             </View>
 
             <Pressable
@@ -185,30 +213,34 @@ const [reservas, setReservas] = useState([]);
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Nueva contraseña</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="••••••••"
-                placeholderTextColor="#A0A0A0"
-                secureTextEntry
-                value={passwordForm.nueva}
-                onChangeText={(text) =>
-                  setPasswordForm({ ...passwordForm, nueva: text })
-                }
+                <TextInput
+                  style={styles.input}
+                  placeholder="••••••••"
+                  placeholderTextColor="#A0A0A0"
+                  secureTextEntry
+                  value={passwordForm.nueva}
+                  onChangeText={(text) => {
+                    setPasswordForm({ ...passwordForm, nueva: text });
+                    setErrors({ ...errors, nueva: null });
+                  }}
               />
+              {errors.nueva && <Text style={styles.errorText}>{errors.nueva}</Text>}
             </View>
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Confirmar nueva contraseña</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="••••••••"
-                placeholderTextColor="#A0A0A0"
-                secureTextEntry
-                value={passwordForm.confirmacion}
-                onChangeText={(text) =>
-                  setPasswordForm({ ...passwordForm, confirmacion: text })
-                }
-              />
+                <TextInput
+                  style={styles.input}
+                  placeholder="••••••••"
+                  placeholderTextColor="#A0A0A0"
+                  secureTextEntry
+                  value={passwordForm.confirmacion}
+                  onChangeText={(text) => {
+                    setPasswordForm({ ...passwordForm, confirmacion: text });
+                    setErrors({ ...errors, confirmacion: null });
+                  }}
+                />
+                {errors.confirmacion && <Text style={styles.errorText}>{errors.confirmacion}</Text>}
             </View>
 
             <Pressable
@@ -506,6 +538,13 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: -6,
+    marginBottom: 8,
+  },
+
   popupTitle: {
     fontSize: 18,
     fontWeight: "bold",
