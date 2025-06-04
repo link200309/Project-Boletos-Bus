@@ -14,6 +14,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { AuthContext } from "../../context/AuthContext";
 import { GenericContainer } from "../../components/GenericContainer";
 import { ButtonStyle } from "../../components/Button/ButtonStyle";
+import { BlobBg } from "../../components/Background/BlobBg";
 
 export default function PassengerSettingsScreen() {
   const { user, logout } = useContext(AuthContext);
@@ -264,9 +265,10 @@ const [reservas, setReservas] = useState([]);
 
   return (
     <GenericContainer>
+    <BlobBg />
       <ScrollView contentContainerStyle={styles.container}>
         {/* Avatar y nombre */}
-        <View style={styles.profileBox}>
+        <View style={styles.profileCard}>
           <Image
             source={require("./assets/avatar-default.jpg")}
             style={styles.avatar}
@@ -282,6 +284,7 @@ const [reservas, setReservas] = useState([]);
             </Text>
           </View>
         </View>
+
 
         {/* Sección: Cuenta */}
         <Text style={styles.sectionTitle}>Cuenta</Text>
@@ -347,6 +350,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
+
+  profileCard: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+    elevation: 2,
+  },
+
   avatar: {
     width: 60,
     height: 60,
@@ -362,11 +376,11 @@ const styles = StyleSheet.create({
     color: "#777",
   },
   sectionTitle: {
-    fontSize: 14,
-    color: "#999",
+    fontSize: 16,              // ⬅ un poco más grande
+    color: "#441AD1",          // ⬅ color púrpura intenso
     marginBottom: 8,
     marginTop: 9,
-    fontWeight: "600",
+    fontWeight: "700",
   },
   sectionBox: {
     backgroundColor: "#fff",
