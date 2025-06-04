@@ -16,6 +16,7 @@ import { GenericContainer } from "../../components/GenericContainer";
 import { ButtonStyle } from "../../components/Button/ButtonStyle";
 import { BlobBg } from "../../components/Background/BlobBg";
 import { actualizarPerfilUsuario,cambiarPasswordUsuario } from "../../api/user.api";
+import { obtenerHistorialReservas } from "../../api/reserva.api";
 
 export default function PassengerSettingsScreen() {
   const { user, logout,setUser } = useContext(AuthContext);
@@ -108,10 +109,14 @@ const [errors, setErrors] = useState({});
 
   const obtenerHistorialReservas = async () => {
     try {
-      const response = await fetch(`https://tu-api.com/reservas/${user?.usuario?.id}`);
-      const data = await response.json();
+      const token = user?.token;
+      if (!token) {
+        console.warn("No se encontró el token del usuario");
+        return;
+      }
 
-      // ✅ Verifica que data sea un array
+      const data = await fetchHistorialReservas(token);
+
       if (Array.isArray(data)) {
         setReservas(data);
       } else {
@@ -120,7 +125,7 @@ const [errors, setErrors] = useState({});
       }
     } catch (error) {
       console.error("Error al cargar historial de reservas:", error);
-      setReservas([]); // Valor seguro en error
+      setReservas([]); // Valor seguro en caso de error
     }
   };
 
