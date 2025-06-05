@@ -183,6 +183,7 @@ export const postLogin = async (req, res) => {
     if (!contraseñaValida) {
       return res.status(401).json({ mensaje: "Credenciales inválidas" });
     }
+
     const token = jwt.sign(
       {
         id_usuario: usuario.id_usuario,
@@ -195,7 +196,7 @@ export const postLogin = async (req, res) => {
       { expiresIn: "24h" }
     );
 
-    // Preparar respuesta según tipo de usuario
+    // Estructura base
     const respuesta = {
       mensaje: "Inicio de sesión exitoso",
       token,
@@ -205,10 +206,11 @@ export const postLogin = async (req, res) => {
         nombre: usuario.nombre,
         apellido: usuario.apellido,
         correo_electronico: usuario.correo_electronico,
+        numero_celular: usuario.numero_celular, // ✅ agregado aquí
       },
     };
 
-    // Agregar datos específicos según el tipo de usuario
+    // Si es AGENCIA, incluir datos adicionales
     if (usuario.tipo_usuario === "agencia" && usuario.agencia) {
       respuesta.datos_agencia = {
         id_agencia: usuario.agencia.id_agencia,
@@ -221,9 +223,16 @@ export const postLogin = async (req, res) => {
         estado: usuario.agencia.estado,
         correo_electronico_agencia: usuario.agencia.correo_electronico_agencia,
         numero_celular_agencia: usuario.agencia.numero_celular_agencia,
+
+        // ✅ Representante legal
+        nombre_representante: usuario.agencia.nombre_representante,
+        apellido_representante: usuario.agencia.apellido_representante,
+        ci_representante: usuario.agencia.ci_representante,
+        celular_representante: usuario.agencia.celular_representante,
       };
     }
 
+    // Si es CLIENTE, incluir datos del pasajero
     if (usuario.tipo_usuario === "cliente" && usuario.pasajero) {
       respuesta.datos_pasajero = {
         id_pasajero: usuario.pasajero.id_pasajero,
@@ -240,6 +249,8 @@ export const postLogin = async (req, res) => {
     });
   }
 };
+
+
 
 // Función auxiliar para obtener información del usuario logueado
 export const getProfile = async (req, res) => {

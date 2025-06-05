@@ -47,18 +47,20 @@ const [viajes, setViajes] = useState([]);
 
 
   const [representanteLegal, setRepresentanteLegal] = useState({
-    nombre_completo: user?.representante?.nombre || "",
-    ci: user?.representante?.ci || "",
-    correo: user?.representante?.correo || "",
-    telefono: user?.representante?.telefono || "",
+    nombre_completo: `${user?.datos_agencia?.nombre_representante || ""} ${user?.datos_agencia?.apellido_representante || ""}`,
+    ci: user?.datos_agencia?.ci_representante || "",
+    correo: user?.datos_agencia?.correo_electronico_agencia || "", // si usas este como contacto
+    telefono: user?.datos_agencia?.celular_representante || "",
   });
+
 
   const [adminCuenta, setAdminCuenta] = useState({
     nombre: user?.usuario?.nombre || "",
     apellido: user?.usuario?.apellido || "",
     correo: user?.usuario?.correo_electronico || "",
-    telefono: "", // aún no tienes número del admin directo, puedes dejarlo vacío o agregar al backend
+    telefono: user?.usuario?.numero_celular?.toString() || "", // ✅ aquí accedemos al número
   });
+
 
 
 
