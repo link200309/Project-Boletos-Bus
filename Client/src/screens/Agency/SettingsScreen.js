@@ -396,45 +396,6 @@ const handleSaveAdmin = async () => {
           </View>
         );
 
-      case "historial":
-        return (
-          <ScrollView style={{ width: "100%", maxHeight: 400 }}>
-            {reservas.length === 0 ? (
-              <Text style={{ textAlign: "center", marginVertical: 20 }}>
-                No tienes reservas registradas.
-              </Text>
-            ) : (
-              reservas.map((reserva) => (
-                <View key={reserva.id_reserva} style={styles.historialCard}>
-                  <Text style={styles.ruta}>
-                    {reserva.viaje.ruta.origen} → {reserva.viaje.ruta.destino}
-                  </Text>
-
-                  <View style={styles.historialRow}>
-                    <Icon name="calendar-outline" size={16} color="#441AD1" />
-                    <Text style={styles.historialInfo}>
-                      {new Date(reserva.viaje.fecha_salida).toLocaleDateString()} -{" "}
-                      {reserva.viaje.hora_salida_programada}
-                    </Text>
-                  </View>
-
-                  <View style={styles.historialRow}>
-                    <Icon name="bus-outline" size={16} color="#441AD1" />
-                    <Text style={styles.historialInfo}>
-                      {reserva.viaje.bus.tipo_bus} | Asiento: {reserva.asiento.numero}
-                    </Text>
-                  </View>
-
-                  <View style={styles.historialRow}>
-                    <Icon name="cash-outline" size={16} color="#441AD1" />
-                    <Text style={styles.historialInfo}>Bs. {reserva.viaje.costo}</Text>
-                  </View>
-                </View>
-              ))
-            )}
-          </ScrollView>
-        );
-
        case "nosotros":
          return (
            <ScrollView style={{ maxHeight: 450 }}>
@@ -694,6 +655,7 @@ const handleSaveAdmin = async () => {
           {renderItem("business-outline", "Datos de la agencia", "agencia")}
           {renderItem("person-outline", "Representante legal", "representante")}
           {renderItem("settings-outline", "Administrador de la cuenta", "admin")}
+          {renderItem("lock-closed-outline", "Cambiar contraseña", "password")}
           {renderItem("calendar-outline", "Historial de viajes", "viajes")}
         </View>
 
