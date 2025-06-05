@@ -26,6 +26,9 @@ const [reservas, setReservas] = useState([]);
 
 const [errors, setErrors] = useState({});
 
+const [viajes, setViajes] = useState([]);
+
+
   const [personalInfo, setPersonalInfo] = useState({
     nombre: user?.usuario?.nombre || "",
     apellido: user?.usuario?.apellido || "",
@@ -97,6 +100,88 @@ const [errors, setErrors] = useState({});
       alert("Error al actualizar. Intenta nuevamente.");
     }
   };
+
+  const obtenerHistorialViajes = async () => {
+    try {
+      const token = user?.token;
+      const res = await fetch("http://TU_API/agencia/mis-viajes", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      setViajes(data);
+    } catch (err) {
+      console.error("Error cargando viajes", err);
+      setViajes([]);
+    }
+  };
+
+
+  const handleSaveAgencyInfo = async () => {
+    try {
+      const token = user?.token;
+      const datos = {
+        nombre: agencyInfo.nombre_agencia,
+        nit: agencyInfo.nit,
+        direccion: agencyInfo.direccion,
+        telefono: agencyInfo.contacto,
+      };
+
+      // Aquí deberías llamar a tu API real, ej. actualizarDatosAgencia(datos, token)
+      console.log("Enviando datos de agencia:", datos);
+
+      alert("Datos de la agencia actualizados correctamente");
+      setModalVisible(false);
+    } catch (error) {
+      console.error("Error al guardar agencia:", error);
+      alert("Error al guardar. Intenta nuevamente.");
+    }
+  };
+
+  const handleSaveRepresentante = async () => {
+    try {
+      const token = user?.token;
+      const datos = {
+        nombre_completo: representanteLegal.nombre_completo,
+        ci: representanteLegal.ci,
+        correo: representanteLegal.correo,
+        telefono: representanteLegal.telefono,
+      };
+
+      // Aquí deberías llamar a tu API real, ej. actualizarRepresentante(datos, token)
+      console.log("Enviando datos del representante:", datos);
+
+      alert("Datos del representante legal actualizados");
+      setModalVisible(false);
+    } catch (error) {
+      console.error("Error al guardar representante:", error);
+      alert("Error al guardar. Intenta nuevamente.");
+    }
+  };
+
+const handleSaveAdmin = async () => {
+  try {
+    const token = user?.token;
+    const datos = {
+      nombre: adminCuenta.nombre,
+      apellido: adminCuenta.apellido,
+      correo: adminCuenta.correo,
+      telefono: adminCuenta.telefono,
+    };
+
+    // Aquí deberías llamar a tu API real, ej. actualizarAdmin(datos, token)
+    console.log("Enviando datos del administrador:", datos);
+
+    alert("Datos del administrador actualizados");
+    setModalVisible(false);
+  } catch (error) {
+    console.error("Error al guardar admin:", error);
+    alert("Error al guardar. Intenta nuevamente.");
+  }
+};
+
+
 
   const handleChangePassword = async () => {
     const newErrors = {};
@@ -399,32 +484,181 @@ const [errors, setErrors] = useState({});
 
       case "agencia":
         return (
-          <ScrollView style={{ width: "100%" }}>
-            {/* Campos de agencia */}
-            {/* Usa TextInput como en 'info', adaptado a agencyInfo */}
-          </ScrollView>
+          <View style={styles.formContainer}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Nombre de la agencia</Text>
+              <TextInput
+                style={styles.input}
+                value={agencyInfo.nombre_agencia}
+                onChangeText={(text) => setAgencyInfo({ ...agencyInfo, nombre_agencia: text })}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>NIT</Text>
+              <TextInput
+                style={styles.input}
+                value={agencyInfo.nit}
+                onChangeText={(text) => setAgencyInfo({ ...agencyInfo, nit: text })}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Dirección</Text>
+              <TextInput
+                style={styles.input}
+                value={agencyInfo.direccion}
+                onChangeText={(text) => setAgencyInfo({ ...agencyInfo, direccion: text })}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Teléfono o WhatsApp</Text>
+              <TextInput
+                style={styles.input}
+                value={agencyInfo.contacto}
+                onChangeText={(text) => setAgencyInfo({ ...agencyInfo, contacto: text })}
+              />
+            </View>
+
+            <Pressable style={styles.saveButton} onPress={handleSaveAgencyInfo}>
+              <Text style={styles.saveButtonText}>Guardar cambios</Text>
+            </Pressable>
+          </View>
         );
+
 
       case "representante":
         return (
-          <ScrollView style={{ width: "100%" }}>
-            {/* Campos del representante */}
-          </ScrollView>
+          <View style={styles.formContainer}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Nombre completo</Text>
+              <TextInput
+                style={styles.input}
+                value={representanteLegal.nombre_completo}
+                onChangeText={(text) => setRepresentanteLegal({ ...representanteLegal, nombre_completo: text })}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Cédula de identidad</Text>
+              <TextInput
+                style={styles.input}
+                value={representanteLegal.ci}
+                onChangeText={(text) => setRepresentanteLegal({ ...representanteLegal, ci: text })}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Correo electrónico</Text>
+              <TextInput
+                style={styles.input}
+                value={representanteLegal.correo}
+                onChangeText={(text) => setRepresentanteLegal({ ...representanteLegal, correo: text })}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Número de contacto</Text>
+              <TextInput
+                style={styles.input}
+                value={representanteLegal.telefono}
+                onChangeText={(text) => setRepresentanteLegal({ ...representanteLegal, telefono: text })}
+              />
+            </View>
+
+            <Pressable style={styles.saveButton} onPress={handleSaveRepresentante}>
+              <Text style={styles.saveButtonText}>Guardar cambios</Text>
+            </Pressable>
+          </View>
         );
+
 
       case "admin":
         return (
-          <ScrollView style={{ width: "100%" }}>
-            {/* Campos del administrador */}
-          </ScrollView>
+          <View style={styles.formContainer}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Nombre</Text>
+              <TextInput
+                style={styles.input}
+                value={adminCuenta.nombre}
+                onChangeText={(text) => setAdminCuenta({ ...adminCuenta, nombre: text })}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Apellido</Text>
+              <TextInput
+                style={styles.input}
+                value={adminCuenta.apellido}
+                onChangeText={(text) => setAdminCuenta({ ...adminCuenta, apellido: text })}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Correo electrónico</Text>
+              <TextInput
+                style={styles.input}
+                value={adminCuenta.correo}
+                onChangeText={(text) => setAdminCuenta({ ...adminCuenta, correo: text })}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Teléfono</Text>
+              <TextInput
+                style={styles.input}
+                value={adminCuenta.telefono}
+                onChangeText={(text) => setAdminCuenta({ ...adminCuenta, telefono: text })}
+              />
+            </View>
+
+            <Pressable style={styles.saveButton} onPress={handleSaveAdmin}>
+              <Text style={styles.saveButtonText}>Guardar cambios</Text>
+            </Pressable>
+          </View>
         );
+
+
 
       case "viajes":
         return (
-          <ScrollView>
-            {/* Lógica similar a historial de reservas, pero con tus viajes publicados */}
+          <ScrollView style={{ width: "100%", maxHeight: 400 }}>
+            {viajes.length === 0 ? (
+              <Text style={{ textAlign: "center", marginVertical: 20 }}>
+                No hay viajes registrados.
+              </Text>
+            ) : (
+              viajes.map((viaje) => (
+                <View key={viaje.id_viaje} style={styles.historialCard}>
+                  <Text style={styles.ruta}>
+                    {viaje.ruta}
+                  </Text>
+
+                  <View style={styles.historialRow}>
+                    <Icon name="calendar-outline" size={16} color="#441AD1" />
+                    <Text style={styles.historialInfo}>
+                      {new Date(viaje.fecha_salida).toLocaleDateString()} - {viaje.hora_programada}
+                    </Text>
+                  </View>
+
+                  <View style={styles.historialRow}>
+                    <Icon name="bus-outline" size={16} color="#441AD1" />
+                    <Text style={styles.historialInfo}>
+                      {viaje.tipo_bus} | {viaje.placa} ({viaje.marca})
+                    </Text>
+                  </View>
+
+                  <View style={styles.historialRow}>
+                    <Icon name="cash-outline" size={16} color="#441AD1" />
+                    <Text style={styles.historialInfo}>Bs. {viaje.costo}</Text>
+                  </View>
+                </View>
+              ))
+            )}
           </ScrollView>
         );
+
 
       default:
         return <Text style={styles.popupContent}>En desarrollo...</Text>;
@@ -500,7 +734,7 @@ const [errors, setErrors] = useState({});
               {modalContent === "agencia" && "Datos de la agencia"}
               {modalContent === "representante" && "Representante legal"}
               {modalContent === "admin" && "Administrador de la cuenta"}
-              {modalContent === "historial" && "Administrador sss la cuenta"}
+              {modalContent === "viajes" && "Historial de viajes"}
             </Text>
 
 
