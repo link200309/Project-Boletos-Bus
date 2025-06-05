@@ -22,6 +22,8 @@ export default function PassengerSettingsScreen() {
   const { user, logout,setUser } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState("");
+  console.log("🧾 Datos del usuario:", JSON.stringify(user, null, 2));
+
 const [reservas, setReservas] = useState([]);
 
 const [errors, setErrors] = useState({});
@@ -37,11 +39,12 @@ const [viajes, setViajes] = useState([]);
   });
 
   const [agencyInfo, setAgencyInfo] = useState({
-    nombre_agencia: user?.agencia?.nombre || "",
-    nit: user?.agencia?.nit || "",
-    direccion: user?.agencia?.direccion || "",
-    contacto: user?.agencia?.telefono || "",
+    nombre_agencia: user?.datos_agencia?.nombre_agencia || "",
+    nit: user?.datos_agencia?.NIT || "",
+    direccion: user?.datos_agencia?.direccion || "",
+    contacto: user?.datos_agencia?.numero_celular_agencia?.toString() || "",
   });
+
 
   const [representanteLegal, setRepresentanteLegal] = useState({
     nombre_completo: user?.representante?.nombre || "",
@@ -51,11 +54,12 @@ const [viajes, setViajes] = useState([]);
   });
 
   const [adminCuenta, setAdminCuenta] = useState({
-    nombre: user?.admin?.nombre || "",
-    apellido: user?.admin?.apellido || "",
-    correo: user?.admin?.correo || "",
-    telefono: user?.admin?.telefono || "",
+    nombre: user?.usuario?.nombre || "",
+    apellido: user?.usuario?.apellido || "",
+    correo: user?.usuario?.correo_electronico || "",
+    telefono: "", // aún no tienes número del admin directo, puedes dejarlo vacío o agregar al backend
   });
+
 
 
   const handleSavePersonalInfo = async () => {
