@@ -1,7 +1,7 @@
 // src/api/driver.api.js
 import axios from "axios";
 
-const API_URL = "http://192.168.84.144:4000/choferes"; // Ajusta si tu backend usa otra URL o puerto
+const API_URL = "http://10.16.59.93:4000/choferes"; // Ajusta si tu backend usa otra URL o puerto
 
 export const getDrivers = () => axios.get(API_URL);
 

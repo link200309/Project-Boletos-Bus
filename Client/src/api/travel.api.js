@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseURL = process.env.BASE_URL || "http://192.168.84.144:4000";
+const baseURL = process.env.BASE_URL || "http://10.16.59.93:4000";
 
 const travelApi = axios.create({
   baseURL,

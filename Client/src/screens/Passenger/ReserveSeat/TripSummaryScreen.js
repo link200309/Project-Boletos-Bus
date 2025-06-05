@@ -8,8 +8,12 @@ import TabsContainer from "./components/TabsContainer";
 import PriceSummaryContainer from "./components/PriceSummaryContainer";
 
 export default function TripSummaryScreen({ navigation, route }) {
-  const { passengers = [], contact = {}, travelDetails = {} } = route.params || {};
-  console.log("Trip summary", passengers, contact, travelDetails)
+  const {
+    passengers = [],
+    contact = {},
+    travelDetails = {},
+  } = route.params || {};
+  console.log("Trip summary", passengers, contact, travelDetails);
   const handleConfirm = () => {
     alert("Reserva confirmada");
   };
