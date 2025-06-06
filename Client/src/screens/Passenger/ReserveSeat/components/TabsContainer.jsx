@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import { formatTime, formatDate } from "../../../../utils/dateTime.util";
 
-const TabsContainer = ({
-  passengers = [],
-  contact = {},
-  travelDetails = {},
-}) => {
+const TabsContainer = ({ passengers = [], travelDetails = {} }) => {
   const [activeTab, setActiveTab] = useState("detalles");
-  console.log(travelDetails);
+  const dateObject = formatDate(travelDetails[0].fecha_salida);
 
   return (
     <View style={styles.container}>
@@ -50,7 +47,9 @@ const TabsContainer = ({
             </View>
             <View style={styles.textWrapper}>
               <Text style={styles.detailTitle}>Origen y destino</Text>
-              <Text style={styles.detailContent}>{travelDetails.route}</Text>
+              <Text style={styles.detailContent}>
+                {travelDetails[0].ruta.origen} - {travelDetails[0].ruta.destino}
+              </Text>
             </View>
           </View>
 
@@ -61,7 +60,13 @@ const TabsContainer = ({
             <View style={styles.textWrapper}>
               <Text style={styles.detailTitle}>Horario de viaje</Text>
               <Text style={styles.detailContent}>
-                {travelDetails.date} - {travelDetails.time}
+                {dateObject.formatedDate}
+                {"     "}
+                {travelDetails[0].hora_salida_programada.slice(0, 5)} -{" "}
+                {formatTime(
+                  travelDetails[0].hora_salida_programada,
+                  travelDetails[0].ruta.tiempo_estimado
+                )}
               </Text>
             </View>
           </View>
@@ -72,7 +77,9 @@ const TabsContainer = ({
             </View>
             <View style={styles.textWrapper}>
               <Text style={styles.detailTitle}>Agencia</Text>
-              <Text style={styles.detailContent}>{travelDetails.agencia}</Text>
+              <Text style={styles.detailContent}>
+                {travelDetails[0].bus.agencia.nombre_agencia}
+              </Text>
             </View>
           </View>
 
@@ -82,7 +89,9 @@ const TabsContainer = ({
             </View>
             <View style={styles.textWrapper}>
               <Text style={styles.detailTitle}>Asientos</Text>
-              <Text style={styles.detailContent}>{travelDetails.tipoBus}</Text>
+              <Text style={styles.detailContent}>
+                {travelDetails[0].bus.tipo_bus}
+              </Text>
             </View>
           </View>
 
@@ -93,7 +102,7 @@ const TabsContainer = ({
             <View style={styles.textWrapper}>
               <Text style={styles.detailTitle}>Precio por pasaje</Text>
               <Text style={styles.detailContent}>
-                Bs. {travelDetails.price}
+                Bs. {travelDetails[0].costo}
               </Text>
             </View>
           </View>
@@ -101,7 +110,7 @@ const TabsContainer = ({
       ) : (
         <View style={styles.passengersContainer}>
           <Text style={styles.sectionHeader}>Pasajeros</Text>
-          {passengers.map((passenger, index) => (
+          {passengers.passengers.map((passenger, index) => (
             <View key={index} style={styles.passengerCard}>
               <View style={styles.passengerHeader}>
                 <Text style={styles.passengerName}>
@@ -129,7 +138,8 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 20,
     width: 370,
-    padding: 25,
+    paddingHorizontal: 20,
+    paddingVertical: 5,
     marginTop: 20,
     backgroundColor: "#FFFFFF",
     shadowColor: "#000",
@@ -163,12 +173,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   detailsContainer: {
-    padding: 5,
+    padding: 0,
   },
   detailItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 15,
   },
   iconWrapper: {
     backgroundColor: "#F0F3FF",
@@ -188,14 +198,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   detailTitle: {
-    fontSize: 14,
-    color: "#666",
+    fontSize: 15,
+    color: "#000",
+    fontWeight: 500,
     marginBottom: 2,
   },
   detailContent: {
-    fontSize: 16,
-    color: "#000",
-    fontWeight: "500",
+    fontSize: 13,
+    color: "#666",
   },
   passengersContainer: {
     padding: 5,
@@ -209,7 +219,7 @@ const styles = StyleSheet.create({
   passengerCard: {
     backgroundColor: "#F7F8FF",
     borderRadius: 12,
-    padding: 16,
+    padding: 12,
     marginBottom: 12,
     borderWidth: 1,
     borderColor: "#E6E8FF",
@@ -221,18 +231,18 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   passengerName: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "bold",
     color: "#000",
   },
   seatLabel: {
-    fontSize: 14,
+    fontSize: 13,
     color: "#666",
     fontWeight: "500",
   },
   passengerDetail: {
-    fontSize: 14,
+    fontSize: 13,
     color: "#555",
-    marginBottom: 4,
+    marginBottom: 3,
   },
 });

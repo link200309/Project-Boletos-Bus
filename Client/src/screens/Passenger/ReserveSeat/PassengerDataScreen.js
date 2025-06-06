@@ -15,7 +15,7 @@ export default function PassengerDataScreen({ navigation, route }) {
     const isValid = await methods.trigger();
     if (!isValid) return;
     console.log("FORM DATA:", data);
-    navigation.navigate("TripSummary", { formData: data });
+    navigation.navigate("TripSummary", { formData: data, travels: travels });
   };
 
   const { selectedSeats, travelDetails, travels } = route.params || {};
