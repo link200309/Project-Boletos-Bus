@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { GenericContainer } from "../../../components/GenericContainer";
 import { BlobBg } from "../../../components/Background/BlobBg";
@@ -7,24 +7,35 @@ import PassengerCard from "./components/PassengerCard";
 import ContactCard from "./components/ContactCard";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { formatDate } from "../../../utils/dateTime.util";
+import { useForm, FormProvider } from "react-hook-form";
 
 export default function PassengerDataScreen({ navigation, route }) {
+  const methods = useForm();
+  const onSubmit = async (data) => {
+    const isValid = await methods.trigger();
+    if (!isValid) return;
+    console.log("FORM DATA:", data);
+    navigation.navigate("TripSummary", { formData: data });
+  };
+
   const { selectedSeats, travelDetails, travels } = route.params || {};
-  const [passengers, setPassengers] = useState(
-    selectedSeats.map((seat) => ({
+  useEffect(() => {
+    const defaultValues = selectedSeats.map((seat) => ({
       seat,
       firstName: "",
       lastName: "",
       identityNumber: "",
       birthDate: "",
-    }))
-  );
+    }));
+    methods.reset({ passengers: defaultValues });
+  }, []);
+
   const [contact, setContact] = useState({ email: "", phone: "" });
+  const { setValue } = methods;
   const handlePassengerChange = (index, field, value) => {
-    const updatedPassengers = [...passengers];
-    updatedPassengers[index][field] = value;
-    setPassengers(updatedPassengers);
+    setValue(`passengers.${index}.${field}`, value);
   };
+  const passengers = methods.watch("passengers") || [];
 
   return (
     <GenericContainer>
@@ -37,27 +48,23 @@ export default function PassengerDataScreen({ navigation, route }) {
       />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {passengers.map((passenger, index) => (
-          <PassengerCard
-            key={index}
-            index={index}
-            passenger={passenger}
-            handlePassengerChange={handlePassengerChange}
+        <FormProvider {...methods}>
+          {passengers.map((passenger, index) => (
+            <PassengerCard
+              key={index}
+              index={index}
+              passenger={passenger}
+              handlePassengerChange={handlePassengerChange}
+            />
+          ))}
+
+          <ContactCard contact={contact} setContact={setContact} />
+
+          <ButtonStyle
+            text="Continuar"
+            onClick={methods.handleSubmit(onSubmit)}
           />
-        ))}
-
-        <ContactCard contact={contact} setContact={setContact} />
-
-        <ButtonStyle
-          text="Continuar"
-          onClick={() =>
-            navigation.navigate("TripSummary", {
-              passengers,
-              contact,
-              travelDetails,
-            })
-          }
-        />
+        </FormProvider>
       </ScrollView>
     </GenericContainer>
   );

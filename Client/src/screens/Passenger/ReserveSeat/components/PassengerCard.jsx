@@ -10,6 +10,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScanQRIcon } from "../../../../components/Icons";
 import { QRScanner } from "./QRScanner";
+import { Controller, useFormContext } from "react-hook-form";
+import { accountValidationRules } from "../../../Login/components/validation";
 
 export const PassengerCard = ({
   index,
@@ -17,6 +19,10 @@ export const PassengerCard = ({
   handlePassengerChange,
   containerStyle,
 }) => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const [isQRScannerVisible, setQRScannerVisible] = useState(false);
   const [isScanned, setIsScanned] = useState(false);
@@ -71,32 +77,55 @@ export const PassengerCard = ({
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>
-          Nombre <Text style={styles.asterisk}>*</Text>
+          Nombre(s) <Text style={styles.asterisk}>*</Text>
         </Text>
-        <TextInput
-          placeholder="Ingresa nombre(s)"
-          value={passenger.firstName}
-          onChangeText={(text) =>
-            handlePassengerChange(index, "firstName", text)
-          }
-          style={[styles.input, isScanned && styles.inputDisabled]}
-          editable={!isScanned}
+        <Controller
+          control={control}
+          name={`passengers[${index}].firstName`}
+          rules={accountValidationRules.name}
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              label="Nombre(s) *"
+              placeholder="Ingrese nombre(s)"
+              value={value}
+              onChangeText={onChange}
+              error={errors}
+              name="name"
+              style={[styles.input, isScanned && styles.inputDisabled]}
+              editable={!isScanned}
+            />
+          )}
         />
+        {errors?.passengers?.[index]?.firstName && (
+          <Text style={styles.errorText}>
+            {errors.passengers[index].firstName.message}
+          </Text>
+        )}
       </View>
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>
-          Apellido <Text style={styles.asterisk}>*</Text>
+          Apellido(s) <Text style={styles.asterisk}>*</Text>
         </Text>
-        <TextInput
-          placeholder="Ingresa apellido(s)"
-          value={passenger.lastName}
-          onChangeText={(text) =>
-            handlePassengerChange(index, "lastName", text)
-          }
-          style={[styles.input, isScanned && styles.inputDisabled]}
-          editable={!isScanned}
+        <Controller
+          control={control}
+          name={`passengers[${index}].lastName`}
+          rules={accountValidationRules.lastName}
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              placeholder="Ingresa apellido(s)"
+              value={value}
+              onChangeText={onChange}
+              style={[styles.input, isScanned && styles.inputDisabled]}
+              editable={!isScanned}
+            />
+          )}
         />
+        {errors?.passengers?.[index]?.lastName && (
+          <Text style={styles.errorText}>
+            {errors.passengers[index].lastName.message}
+          </Text>
+        )}
       </View>
 
       <View style={styles.rowContainer}>
@@ -104,16 +133,26 @@ export const PassengerCard = ({
           <Text style={styles.label}>
             N° de Identidad <Text style={styles.asterisk}>*</Text>
           </Text>
-          <TextInput
-            placeholder="N° de Identidad"
-            value={passenger.identityNumber}
-            onChangeText={(text) =>
-              handlePassengerChange(index, "identityNumber", text)
-            }
-            keyboardType="numeric"
-            style={[styles.input, isScanned && styles.inputDisabled]}
-            editable={!isScanned}
+          <Controller
+            control={control}
+            name={`passengers[${index}].identityNumber`}
+            rules={accountValidationRules.ci}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                placeholder="N° de Identidad"
+                value={value}
+                onChangeText={onChange}
+                keyboardType="numeric"
+                style={[styles.input, isScanned && styles.inputDisabled]}
+                editable={!isScanned}
+              />
+            )}
           />
+          {errors?.passengers?.[index]?.identityNumber && (
+            <Text style={styles.errorText}>
+              {errors.passengers[index].identityNumber.message}
+            </Text>
+          )}
         </View>
 
         <View style={[styles.halfContainer, styles.inputGroup]}>
@@ -126,26 +165,38 @@ export const PassengerCard = ({
               isScanned && styles.inputDisabled,
             ]}
           >
-            <TextInput
-              value={passenger.birthDate}
-              onChangeText={(text) =>
-                handlePassengerChange(index, "birthDate", text)
-              }
-              keyboardType="numeric"
-              style={styles.dateInput}
-              editable={!isScanned}
+            <Controller
+              control={control}
+              name={`passengers[${index}].birthDate`}
+              rules={{ required: "La fecha es obligatoria" }}
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <TextInput
+                    value={value}
+                    onChangeText={onChange}
+                    keyboardType="numeric"
+                    style={styles.dateInput}
+                    editable={!isScanned}
+                  />
+                  <TouchableOpacity
+                    onPress={showDatePicker}
+                    style={styles.calendarIcon}
+                    disabled={isScanned}
+                  >
+                    <MaterialIcons
+                      name="calendar-today"
+                      size={24}
+                      color={isScanned ? "#CCCCCC" : "#000000"}
+                    />
+                  </TouchableOpacity>
+                </>
+              )}
             />
-            <TouchableOpacity
-              onPress={showDatePicker}
-              style={styles.calendarIcon}
-              disabled={isScanned}
-            >
-              <MaterialIcons
-                name="calendar-today"
-                size={24}
-                color={isScanned ? "#CCCCCC" : "#000000"}
-              />
-            </TouchableOpacity>
+            {errors?.passengers?.[index]?.birthDate && (
+              <Text style={styles.errorText}>
+                {errors.passengers[index].birthDate.message}
+              </Text>
+            )}
           </View>
         </View>
       </View>
@@ -162,7 +213,9 @@ export const PassengerCard = ({
           }}
         >
           <MaterialIcons name="refresh" size={20} color="#007AFF" />
-          <Text style={styles.resetButtonText}>Escanear otro CI o ingresar manualmente</Text>
+          <Text style={styles.resetButtonText}>
+            Escanear otro CI o ingresar manualmente
+          </Text>
         </TouchableOpacity>
       )}
 
@@ -267,6 +320,13 @@ const styles = StyleSheet.create({
   },
   calendarIcon: {
     paddingLeft: 8,
+  },
+  errorText: {
+    marginLeft: 10,
+    color: "red",
+    fontSize: 12,
+    marginTop: 4,
+
   },
 });
 

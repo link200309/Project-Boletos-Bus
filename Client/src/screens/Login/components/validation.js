@@ -17,7 +17,6 @@ export const validateAge = (birthdate) => {
   return age >= 18 || "Debes ser mayor de 18 años para registrarte";
 };
 
-// Función para validar cédula de identidad
 export const validateCI = (ci) => {
   if (!/^[0-9]{7,8}$/.test(ci)) {
     return "La cédula debe tener entre 7 y 8 dígitos";
@@ -25,7 +24,6 @@ export const validateCI = (ci) => {
   return true;
 };
 
-// Reglas de validación para el formulario
 export const accountValidationRules = {
   name: {
     required: "El nombre es obligatorio",
@@ -60,7 +58,7 @@ export const accountValidationRules = {
   },
 
   ci: {
-    required: "La cédula de identidad es obligatoria",
+    required: "El ci es obligatorio",
     validate: validateCI,
   },
 
