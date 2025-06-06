@@ -166,26 +166,46 @@ const [viajes, setViajes] = useState([]);
     }
   };
 
-const handleSaveAdmin = async () => {
+const handleSaveAdminInfo = async () => {
+  const newErrors = {};
+
+  if (!adminCuenta.nombre.trim()) newErrors.nombre = "El nombre es obligatorio.";
+  if (!adminCuenta.apellido.trim()) newErrors.apellido = "El apellido es obligatorio.";
+  if (!/^\d{8}$/.test(adminCuenta.telefono)) newErrors.telefono = "Teléfono inválido.";
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
   try {
     const token = user?.token;
     const datos = {
       nombre: adminCuenta.nombre,
       apellido: adminCuenta.apellido,
-      correo: adminCuenta.correo,
       telefono: adminCuenta.telefono,
     };
 
-    // Aquí deberías llamar a tu API real, ej. actualizarAdmin(datos, token)
-    console.log("Enviando datos del administrador:", datos);
+    const response = await actualizarPerfilUsuario(datos, token);
 
-    alert("Datos del administrador actualizados");
+    setUser((prev) => ({
+      ...prev,
+      usuario: {
+        ...prev.usuario,
+        nombre: response.usuario.nombre,
+        apellido: response.usuario.apellido,
+        numero_celular: response.usuario.numero_celular,
+      },
+    }));
+
+    alert("Datos actualizados correctamente");
     setModalVisible(false);
   } catch (error) {
-    console.error("Error al guardar admin:", error);
-    alert("Error al guardar. Intenta nuevamente.");
+    console.error("Error al actualizar administrador:", error);
+    alert("Error al guardar cambios");
   }
 };
+
 
 
 
@@ -457,7 +477,7 @@ const handleSaveAdmin = async () => {
               <TextInput
                 style={styles.input}
                 value={agencyInfo.nombre_agencia}
-                onChangeText={(text) => setAgencyInfo({ ...agencyInfo, nombre_agencia: text })}
+                editable={false}
               />
             </View>
 
@@ -466,7 +486,7 @@ const handleSaveAdmin = async () => {
               <TextInput
                 style={styles.input}
                 value={agencyInfo.nit}
-                onChangeText={(text) => setAgencyInfo({ ...agencyInfo, nit: text })}
+                editable={false}
               />
             </View>
 
@@ -475,7 +495,7 @@ const handleSaveAdmin = async () => {
               <TextInput
                 style={styles.input}
                 value={agencyInfo.direccion}
-                onChangeText={(text) => setAgencyInfo({ ...agencyInfo, direccion: text })}
+                editable={false}
               />
             </View>
 
@@ -484,13 +504,15 @@ const handleSaveAdmin = async () => {
               <TextInput
                 style={styles.input}
                 value={agencyInfo.contacto}
-                onChangeText={(text) => setAgencyInfo({ ...agencyInfo, contacto: text })}
+                editable={false}
               />
             </View>
 
-            <Pressable style={styles.saveButton} onPress={handleSaveAgencyInfo}>
-              <Text style={styles.saveButtonText}>Guardar cambios</Text>
-            </Pressable>
+            <Text style={{ marginTop: 12, color: "#666", textAlign: "center", fontSize: 13 }}>
+              Para modificar esta información, por favor envía un correo a{" "}
+              <Text style={{ fontWeight: "bold", color: "#441AD1" }}>soporte.busrat@gmail.com</Text>
+            </Text>
+
           </View>
         );
 
@@ -503,7 +525,7 @@ const handleSaveAdmin = async () => {
               <TextInput
                 style={styles.input}
                 value={representanteLegal.nombre_completo}
-                onChangeText={(text) => setRepresentanteLegal({ ...representanteLegal, nombre_completo: text })}
+                editable={false}
               />
             </View>
 
@@ -512,7 +534,7 @@ const handleSaveAdmin = async () => {
               <TextInput
                 style={styles.input}
                 value={representanteLegal.ci}
-                onChangeText={(text) => setRepresentanteLegal({ ...representanteLegal, ci: text })}
+                editable={false}
               />
             </View>
 
@@ -521,7 +543,7 @@ const handleSaveAdmin = async () => {
               <TextInput
                 style={styles.input}
                 value={representanteLegal.correo}
-                onChangeText={(text) => setRepresentanteLegal({ ...representanteLegal, correo: text })}
+                editable={false}
               />
             </View>
 
@@ -530,13 +552,15 @@ const handleSaveAdmin = async () => {
               <TextInput
                 style={styles.input}
                 value={representanteLegal.telefono}
-                onChangeText={(text) => setRepresentanteLegal({ ...representanteLegal, telefono: text })}
+                editable={false}
               />
             </View>
 
-            <Pressable style={styles.saveButton} onPress={handleSaveRepresentante}>
-              <Text style={styles.saveButtonText}>Guardar cambios</Text>
-            </Pressable>
+            <Text style={{ marginTop: 12, color: "#666", textAlign: "center", fontSize: 13 }}>
+              Para modificar esta información, por favor envía un correo a{" "}
+              <Text style={{ fontWeight: "bold", color: "#441AD1" }}>soporte.busrat@gmail.com</Text>
+            </Text>
+
           </View>
         );
 
@@ -580,7 +604,7 @@ const handleSaveAdmin = async () => {
               />
             </View>
 
-            <Pressable style={styles.saveButton} onPress={handleSaveAdmin}>
+            <Pressable style={styles.saveButton} onPress={handleSaveAdminInfo}>
               <Text style={styles.saveButtonText}>Guardar cambios</Text>
             </Pressable>
           </View>
