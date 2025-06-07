@@ -1,7 +1,8 @@
+//React
 import React, { useState } from "react";
 import { Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
 
-// Componentes reutilizables
+// Components
 import { InputDate } from "../../../../components/Input/InputDate";
 import { InputTime } from "../../../../components/Input/InputTime";
 import { InputLabel } from "../../../../components/Input/InputLabel";
@@ -54,7 +55,6 @@ export const FormAddTravel = ({
     setShowDatePicker(false);
     if (selectedDate) {
       setViaje({ ...viaje, fecha_salida: selectedDate });
-      // Limpiar error si existía
       if (errors.fecha_salida) {
         setErrors({ ...errors, fecha_salida: null });
       }
@@ -66,7 +66,6 @@ export const FormAddTravel = ({
     setShowTimePicker("");
     if (selectedTime) {
       setViaje({ ...viaje, [type]: selectedTime });
-      // Limpiar error si existía
       if (errors[type]) {
         setErrors({ ...errors, [type]: null });
       }
@@ -74,8 +73,6 @@ export const FormAddTravel = ({
   };
 
   const handleSelect = (type, item) => {
-    // Mapear correctamente los IDs
-    console.log("Holas", item);
     const idField =
       type === "chofer"
         ? "id_chofer"
@@ -96,12 +93,10 @@ export const FormAddTravel = ({
 
     setViaje({ ...viaje, [idField]: itemId });
 
-    // Limpiar error si existía
     if (errors[idField]) {
       setErrors({ ...errors, [idField]: null });
     }
 
-    // Cerrar modales
     if (type === "chofer") setShowChoferModal(false);
     if (type === "bus") setShowBusModal(false);
     if (type === "ruta") setShowRutaModal(false);
@@ -159,7 +154,6 @@ export const FormAddTravel = ({
     Alert.alert("Éxito", "Ruta creada exitosamente");
   };
 
-  // Función de validación
   const validateForm = () => {
     const newErrors = {};
 
@@ -170,14 +164,12 @@ export const FormAddTravel = ({
       newErrors.fecha_salida = "La fecha no puede ser en el pasado";
     }
 
-    // Validar costo
     if (!viaje.costo || viaje.costo.trim() === "") {
       newErrors.costo = "El costo es obligatorio";
     } else if (isNaN(parseFloat(viaje.costo)) || parseFloat(viaje.costo) <= 0) {
       newErrors.costo = "El costo debe ser un número positivo";
     }
 
-    // Validar selecciones
     if (!viaje.id_chofer) {
       newErrors.id_chofer = "Debe seleccionar un chofer";
     }
@@ -194,7 +186,6 @@ export const FormAddTravel = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  // Formatear datos para el backend
   const formatDataForBackend = () => {
     const formatTime = (date) => {
       return date.toLocaleTimeString("es-ES", {
@@ -231,11 +222,9 @@ export const FormAddTravel = ({
       const dataToSend = formatDataForBackend();
       console.log("Datos a enviar:", dataToSend);
 
-      // Llamar a la función onSubmit del componente padre
       if (onSubmit) {
         await onSubmit(dataToSend);
 
-        // Resetear formulario si todo fue exitoso
         setViaje({
           fecha_salida: new Date(),
           hora_salida_programada: new Date(),
@@ -330,7 +319,6 @@ export const FormAddTravel = ({
           }
         />
 
-        {/* Modales existentes */}
         <ModalGeneric
           title="Seleccionar Chofer"
           visible={showChoferModal}
