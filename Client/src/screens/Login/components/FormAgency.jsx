@@ -1,28 +1,124 @@
-import React from "react";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
-import { InputLabel } from "../../../components/Input/InputLabel";
-import { Selector } from "../../../components/Input/Selector";
+import React, { useContext } from "react";
+import { Text, View, StyleSheet, ActivityIndicator, Alert } from "react-native";
+import { useForm, FormProvider } from "react-hook-form";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { GlobalStyles } from "../../../components/Style/GlobalStyles";
 import { AgencyDataForm } from "./AgencyDataForm";
+import { AccountForm } from "./AccountForm";
 import { LegalRepresentativeForm } from "./LegalRepresentativeForm";
-import { AdminAccountForm } from "./AccountForm";
+import { AccountAdminForm } from "./AccountAdminForm";
+import { AuthContext } from "../../../context/AuthContext";
+import { useNavigation } from "@react-navigation/native";
 
 export const FormAgency = () => {
-  
+  const navigation = useNavigation();
+  const { registerAgency, isLoading } = useContext(AuthContext);
+
+  const methods = useForm({
+    mode: "onChange",
+    defaultValues: {
+      agencyName: "",
+      companyType: "",
+      department: "",
+      businessName: "",
+      nit: "",
+      address: "",
+      city: "",
+      cellphone: "",
+      agencyEmail: "",
+      website: "",
+      foundationYear: "",
+
+      representativeName: "",
+      representativeLastName: "",
+      representativeCI: "",
+      representativePhone: "",
+
+      adminName: "",
+      adminLastName: "",
+      adminCI: "",
+      admincellPhone: "",
+      adminEmail: "",
+      adminPassword: "",
+      confirmAdminPassword: "",
+    },
+  });
+
+  const {
+    handleSubmit,
+    formState: { errors, isValid },
+  } = methods;
+
+  const onSubmit = async (data) => {
+    const formattedData = {
+      tipo_usuario: "agencia",
+      nombre: data.adminName,
+      apellido: data.adminLastName,
+      ci: data.adminCI,
+      correo_electronico: data.adminEmail,
+      contraseña: data.adminPassword,
+      numero_celular: parseInt(data.admincellPhone),
+      datos_agencia: {
+        nombre_agencia: data.agencyName,
+        tipo_sociedad: data.companyType,
+        NIT: data.nit,
+        departamento: data.department,
+        ciudad: data.city,
+        direccion: data.address,
+        estado: "activo",
+        correo_electronico_agencia: data.agencyEmail,
+        numero_celular_agencia: parseInt(data.cellphone),
+        nombre_representante: data.representativeName,
+        apellido_representante: data.representativeLastName,
+        ci_representante: data.representativeCI,
+        celular_representante: data.representativePhone,
+      },
+    };
+
+    try {
+      await registerAgency(formattedData);
+      Alert.alert(
+        "Registro exitoso",
+        "La agencia fue registrada correctamente.",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(), // ← ✅ Volver a la pantalla anterior
+          },
+        ]
+      );
+    } catch (error) {
+      Alert.alert("Error", error.message || "No se pudo registrar la agencia.");
+    }
+  };
+
   return (
     <View style={GlobalStyles.formCard}>
       <Text style={styles.textTitle}>Registro de Agencia</Text>
       <Text style={styles.subtitle}>
-        Los datos se mantendran confidenciales, serán utilizados para el
-        contrato de servicio. BusRat con la Agencia de Viajes.
+        Tus datos se mantendrán confidenciales y serán utilizados únicamente
+        para el contrato de servicio entre BusRat y tu Agencia de Viajes.
       </Text>
 
-      <AgencyDataForm/>
-      <LegalRepresentativeForm />
+      <FormProvider {...methods}>
+        <AgencyDataForm errors={errors} />
+        <LegalRepresentativeForm errors={errors} />
+        <AccountAdminForm errors={errors} />
 
-      <AdminAccountForm />
-      <ButtonStyle text="Solicitar servicio" />
+        {isLoading ? (
+          <ActivityIndicator
+            size="large"
+            color="#4318D1"
+            style={styles.loader}
+          />
+        ) : (
+          <ButtonStyle
+            text="Crear Cuenta"
+            onClick={handleSubmit(onSubmit)}
+            disabled={!isValid || isLoading}
+          />
+        )}
+      </FormProvider>
     </View>
   );
 };
@@ -35,10 +131,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-
   subtitle: {
     fontSize: 14,
     marginBottom: 20,
     color: "#4D4D4D",
+    lineHeight: 20,
+  },
+  loader: {
+    marginVertical: 20,
   },
 });

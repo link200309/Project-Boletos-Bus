@@ -44,13 +44,11 @@ const styles = StyleSheet.create({
     width: "100%",
     borderWidth: 1,
     borderColor: "#E6E8FF",
-    borderRadius: 15,
-    backgroundColor: "#F3F4F9",
+    borderRadius: 8,
     height: 45,
     padding: 10,
-    fontSize: 14,
+    fontSize: 16,
   },
-
   errorText: {
     color: "red",
     fontSize: 12,

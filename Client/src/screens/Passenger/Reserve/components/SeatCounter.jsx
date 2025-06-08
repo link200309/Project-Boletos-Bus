@@ -7,7 +7,7 @@ export const SeatCounter = ({ name }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Número de asientos</Text>
+      <Text style={styles.label}>Cantidad de asientos</Text>
       <Controller
         control={control}
         name={name}

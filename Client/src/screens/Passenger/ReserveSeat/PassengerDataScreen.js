@@ -1,51 +1,59 @@
-// PassengerDataScreen.jsx
-import React, { useEffect, useState } from "react";
-import { ScrollView, TouchableOpacity, Text, StyleSheet, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { GenericContainer } from "../../../components/GenericContainer";
 import { BlobBg } from "../../../components/Background/BlobBg";
 import { InformativeTitle } from "../../../components/InformativeTitle";
 import PassengerCard from "./components/PassengerCard";
 import ContactCard from "./components/ContactCard";
+import { ButtonStyle } from "../../../components/Button/ButtonStyle";
+import { formatDate } from "../../../utils/dateTime.util";
+import { useForm, FormProvider } from "react-hook-form";
 
 export default function PassengerDataScreen({ navigation, route }) {
-  const {
-    selectedSeats = ["A01"],
-    travelDetails = {
-      route: "Cochabamba → La Paz",
-      date: "Viernes 20 de mayo",
-      time: "07:30 → 13:00",
-    },
-  } = route.params || {};
+  const methods = useForm();
+  const onSubmit = async (data) => {
+    const isValid = await methods.trigger();
+    if (!isValid) return;
 
-  const [passengers, setPassengers] = useState(
-    selectedSeats.map((seat) => ({
+    const passengers = methods.getValues("passengers");
+
+    navigation.navigate("TripSummary", {
+      formData: { passengers, contact },
+      travels,
+    });
+  };
+
+  const { selectedSeats, travelDetails, travels } = route.params || {};
+  useEffect(() => {
+    const defaultValues = selectedSeats.map((seat) => ({
       seat,
       firstName: "",
       lastName: "",
       identityNumber: "",
       birthDate: "",
-    }))
-  );
+    }));
+    methods.reset({ passengers: defaultValues });
+  }, [selectedSeats]);
 
   const [contact, setContact] = useState({ email: "", phone: "" });
-
+  const { setValue } = methods;
   const handlePassengerChange = (index, field, value) => {
-    const updatedPassengers = [...passengers];
-    updatedPassengers[index][field] = value;
-    setPassengers(updatedPassengers);
+    setValue(`passengers.${index}.${field}`, value);
   };
+  const passengers = methods.watch("passengers") || [];
 
   return (
     <GenericContainer>
       <BlobBg />
       <InformativeTitle
-            title={`${passengers.length} pasajeros seleccionados`}
-            description={`${travelDetails.route}\n${travelDetails.date} ${travelDetails.time}`}
-          />
+        title={`${passengers.length} asientos seleccionados`}
+        description={`${travels[0].ruta.origen} - ${travels[0].ruta.destino}\n${
+          formatDate(travels[0].fecha_salida).formatedDate
+        }`}
+      />
 
-      <ScrollView>
-        <View>
-          
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <FormProvider {...methods}>
           {passengers.map((passenger, index) => (
             <PassengerCard
               key={index}
@@ -56,35 +64,18 @@ export default function PassengerDataScreen({ navigation, route }) {
           ))}
 
           <ContactCard contact={contact} setContact={setContact} />
-          <TouchableOpacity
-            style={styles.continueButton}
-            onPress={() => navigation.navigate("TripSummary")}
-          >
-            <Text style={styles.continueButtonText}>Continuar</Text>
-          </TouchableOpacity>
-        </View>
+
+          <ButtonStyle text="Continuar" onClick={onSubmit} />
+        </FormProvider>
       </ScrollView>
     </GenericContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  continueButton: {
-    backgroundColor: "#4B2EC2",
-    padding: 15,
-    borderRadius: 8,
-    marginVertical: 20,
-    width: "95%",
-    alignSelf: "center",
+  scrollContent: {
+    paddingBottom: 30,
+    paddingTop: 10,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  continueButtonText: {
-    color: "#FFF",
-    fontSize: 18,
-    fontWeight: "bold",
   },
 });

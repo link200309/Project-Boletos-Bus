@@ -41,7 +41,6 @@ export default function LoginScreen({ navigation }) {
           resizeMode="contain"
         />
       </View>
-
       <View style={styles.formContainer}>
         <FormLogin navigation={navigation} />
       </View>
@@ -55,13 +54,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#2B0B94",
     padding: 0,
+    maxHeight: "100dvh",
   },
   logoContainer: {
-    paddingTop: 20,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    height: "50%",
+    minHeight: "50%",
   },
   logo: {
     width: 180,
@@ -72,9 +71,8 @@ const styles = StyleSheet.create({
     height: 50,
   },
   formContainer: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "flex-end",
     width: "100%",
-    height: "50%",
+    minHeight: "50%",
   },
 });

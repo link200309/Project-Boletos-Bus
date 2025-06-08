@@ -1,12 +1,23 @@
 import React, { useContext } from "react";
 import AuthNavigator from "./AuthNavigator";
-import TabNavigator from "./TabNavigator";
+import TabPassengerNavigator from "./TabPassengerNavigator";
+import TabAgencyNavigator from "./TabAgencyNavigator";
 import { AuthContext } from "../context/AuthContext";
 
 const RootNavigator = () => {
   const { user } = useContext(AuthContext);
 
-  return user ? <TabNavigator /> : <AuthNavigator />;
+  if (!user) {
+    return <AuthNavigator />;
+  }
+
+  return user.usuario.tipo_usuario == "cliente" ? (
+    <TabPassengerNavigator />
+  ) : user.usuario.tipo_usuario == "agencia" ? (
+    <TabAgencyNavigator />
+  ) : (
+    <AuthNavigator />
+  );
 };
 
 export default RootNavigator;
