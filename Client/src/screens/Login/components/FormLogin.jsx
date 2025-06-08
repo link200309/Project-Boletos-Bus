@@ -31,7 +31,6 @@ export const FormLogin = ({ navigation }) => {
 
   return (
     <View style={[GlobalStyles.formCard, styles.container]}>
-      {/* Tabs para cambiar entre Pasajero y Agencia */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[styles.tab, activeTab === "Pasajero" && styles.activeTab]}
@@ -48,7 +47,6 @@ export const FormLogin = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Formulario */}
       <FormProvider {...methods}>
         <Controller
           control={control}
