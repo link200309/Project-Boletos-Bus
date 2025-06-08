@@ -28,3 +28,8 @@ export const getTravelsByAgency = async (id) => {
   const res = await travelApi.get(`/travel/${id}/get`);
   return res.data;
 };
+
+export const addTravel = async (data) => {
+  const res = await travelApi.post("/travel/add", data);
+  return res.data;
+};

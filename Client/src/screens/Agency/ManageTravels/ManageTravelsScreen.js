@@ -18,7 +18,6 @@ export default function ManageTravelsScreen({ navigation }) {
       try {
         const res = await getTravelsByAgency(user.datos_agencia.id_agencia);
         setTravel(res);
-        console.log(res);
       } catch (error) {
         console.error("Error fetching travels:", error);
       }
@@ -27,7 +26,7 @@ export default function ManageTravelsScreen({ navigation }) {
   }, []);
 
   const addTravel = () => {
-    navigation.navigate("AddTravels");
+    navigation.navigate("AddTravels", travels);
   };
 
   return (

@@ -1,11 +1,13 @@
 //React
 import React, { useState, useEffect } from "react";
-import { StyleSheet } from "react-native";
 
 //Components
 import { InformativeTitle } from "../../../components/InformativeTitle";
 import { GenericContainer } from "../../../components/GenericContainer";
 import { FormAddTravel } from "./components/FormAddTravel";
+
+//Api
+import { getAgencyInformation } from "../../../api/agency.api";
 
 const AddTravelScreen = ({ navigation }) => {
   const [choferes, setChoferes] = useState([]);
@@ -13,88 +15,41 @@ const AddTravelScreen = ({ navigation }) => {
   const [rutas, setRutas] = useState([]);
 
   useEffect(() => {
-    setChoferes([
-      {
-        id: 1,
-        nombre: "Juan Pérez",
-        apellido: "González",
-        carnet_identidad: "12345678",
-      },
-      {
-        id: 2,
-        nombre: "María",
-        apellido: "López",
-        carnet_identidad: "87654321",
-      },
-      {
-        id: 3,
-        nombre: "Carlos",
-        apellido: "Rodríguez",
-        carnet_identidad: "11223344",
-      },
-    ]);
+    const fetchAgencyData = async () => {
+      try {
+        const id_agencia =
+          navigation.getState().routes[1].params[0].bus.id_agencia;
+        const agencyData = await getAgencyInformation(id_agencia);
+        setChoferes(agencyData.choferes || []);
+        setBuses(agencyData.buses || []);
 
-    setBuses([
-      {
-        id: 1,
-        placa: "ABC-123",
-        marca: "Mercedes",
-        modelo: "Sprinter",
-        tipo_bus: "Minibús",
-      },
-      {
-        id: 2,
-        placa: "DEF-456",
-        marca: "Volvo",
-        modelo: "B7R",
-        tipo_bus: "Bus",
-      },
-      {
-        id: 3,
-        placa: "GHI-789",
-        marca: "Scania",
-        modelo: "K320",
-        tipo_bus: "Bus",
-      },
-    ]);
-
-    setRutas([
-      {
-        id: 1,
-        origen: "Cochabamba",
-        destino: "La Paz",
-        distancia: "380 km",
-        tiempo_estimado: "6 horas",
-      },
-      {
-        id: 2,
-        origen: "Santa Cruz",
-        destino: "Cochabamba",
-        distancia: "470 km",
-        tiempo_estimado: "7 horas",
-      },
-      {
-        id: 3,
-        origen: "Sucre",
-        destino: "Potosí",
-        distancia: "160 km",
-        tiempo_estimado: "3 horas",
-      },
-    ]);
+        const travels = navigation.getState().routes[1].params;
+        travels.forEach((travel) => {
+          setRutas((prev) => {
+            if (!prev.some((c) => c.id_ruta === travel.ruta.id_ruta)) {
+              return [...prev, travel.ruta];
+            }
+            return prev;
+          });
+        });
+      } catch (error) {
+        console.error("Error fetching agency data:", error);
+      }
+    };
+    fetchAgencyData();
   }, []);
 
   return (
     <GenericContainer>
       <InformativeTitle
         title={"Crear nuevo viaje"}
-        description={"Puedes seleccoinar un chofer, bus o ruta existente"}
+        description={"Puedes seleccionar un chofer, bus o ruta existente"}
       />
 
       <FormAddTravel
         choferes={choferes}
         buses={buses}
         rutas={rutas}
-        onSubmit={(viaje) => console.log("Nuevo viaje:", viaje)}
       />
     </GenericContainer>
   );
