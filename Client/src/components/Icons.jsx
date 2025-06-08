@@ -24,9 +24,11 @@ export const SettingsIcon = (props) => (
 export const LogoIcon = (props) => (
   <FontAwesome6 name="bus" size={24} color="black" {...props} />
 );
+
 export const CalendarIcon = (props) => (
   <FontAwesome name="calendar" size={24} color="black" {...props} />
 );
+
 export const Location = (props) => (
   <MaterialCommunityIcons
     name="map-marker-outline"
@@ -35,6 +37,7 @@ export const Location = (props) => (
     {...props}
   />
 );
+
 export const ChairIcon = (props) => (
   <MaterialCommunityIcons
     name="chair-rolling"
@@ -43,9 +46,20 @@ export const ChairIcon = (props) => (
     {...props}
   />
 );
+
 export const BusIcon = (props) => (
   <FontAwesome5 name="bus-alt" size={24} color="black" {...props} />
 );
+
 export const BackIcon = (props) => (
   <Ionicons name="arrow-back" size={24} color="black" {...props} />
+);
+
+export const ScanQRIcon = (props) => (
+  <MaterialCommunityIcons
+    name="qrcode-scan"
+    size={24}
+    color="#000"
+    {...props}
+  />
 );

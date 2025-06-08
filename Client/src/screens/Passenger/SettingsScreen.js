@@ -375,7 +375,30 @@ const [errors, setErrors] = useState({});
            </ScrollView>
          );
 
+        case "sugerencias":
+                  return (
+                    <View style={{ padding: 10 }}>
+                      <Text style={{ fontSize: 16, marginBottom: 10 }}>
+                        ¿Tienes ideas, mejoras o detectaste un problema?
+                      </Text>
+                      <Text style={{ fontSize: 14, marginBottom: 20 }}>
+                        Envíanos tus sugerencias al siguiente correo:
+                      </Text>
 
+                      <Text style={{ fontSize: 16, fontWeight: "bold", color: "#441AD1", marginBottom: 20 }}>
+                        soporte.busrat@gmail.com
+                      </Text>
+
+                      <Pressable
+                        style={styles.popupCloseButton}
+                        onPress={() =>
+                          Linking.openURL("mailto:soporte.busrat@gmail.com?subject=Sugerencia BusRat")
+                        }
+                      >
+                        <Text style={styles.popupCloseText}>Enviar correo</Text>
+                      </Pressable>
+                    </View>
+                  );
       default:
         return <Text style={styles.popupContent}>En desarrollo...</Text>;
     }
@@ -445,7 +468,13 @@ const [errors, setErrors] = useState({});
             </Pressable>
 
             {/* Título */}
-            <Text style={styles.popupTitle}>Información</Text>
+            <Text style={styles.popupTitle}>
+                {modalContent === "info" && "Información personal"}
+                          {modalContent === "password" && "Cambiar contraseña"}
+                          {modalContent === "historial" && "Historial de reservas"}
+                          {modalContent === "sugerencias" && "Enviar Sugerencias"}
+                          {modalContent === "nosotros" && "Sobre Nosotros"}
+                        </Text>
 
             {/* Contenido dinámico */}
             {renderModalContent()}

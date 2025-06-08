@@ -17,6 +17,10 @@ import { ButtonStyle } from "../../components/Button/ButtonStyle";
 import { BlobBg } from "../../components/Background/BlobBg";
 import { actualizarPerfilUsuario,cambiarPasswordUsuario } from "../../api/user.api";
 import { obtenerHistorialReservas } from "../../api/reserva.api";
+import {
+  obtenerViajesActivos,
+  generarReporteAccidentePDF,
+} from "../../api/reporte.api";
 
 export default function PassengerSettingsScreen() {
   const { user, logout,setUser } = useContext(AuthContext);
@@ -29,6 +33,12 @@ const [reservas, setReservas] = useState([]);
 const [errors, setErrors] = useState({});
 
 const [viajes, setViajes] = useState([]);
+
+const [viajesActivos, setViajesActivos] = useState([]);
+const [viajeSeleccionado, setViajeSeleccionado] = useState("");
+const [motivoAccidente, setMotivoAccidente] = useState("");
+const [consecuenciasAccidente, setConsecuenciasAccidente] = useState("");
+
 
 
   const [personalInfo, setPersonalInfo] = useState({
@@ -121,6 +131,20 @@ const [viajes, setViajes] = useState([]);
       console.error("Error cargando viajes", err);
       setViajes([]);
     }
+  };
+
+  const cargarViajesActivos = async () => {
+    const token = user?.token;
+    const data = await obtenerViajesActivos(token);
+    setViajesActivos(data || []);
+  };
+
+  const handleGenerarReportePDF = () => {
+    generarReporteAccidentePDF({
+      viajeId: viajeSeleccionado,
+      motivo: motivoAccidente,
+      consecuencias: consecuenciasAccidente,
+    });
   };
 
 
@@ -651,6 +675,93 @@ const handleSaveAdminInfo = async () => {
         );
 
 
+        case "reporteAccidente":
+          return (
+            <ScrollView style={{ width: "100%", maxHeight: 400 }}>
+              {viajesActivos.length === 0 ? (
+                <Text style={{ textAlign: "center", marginVertical: 20 }}>
+                  No hay viajes activos disponibles para generar un reporte.
+                </Text>
+              ) : (
+                <View style={styles.formContainer}>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Seleccionar viaje</Text>
+                    <View style={styles.input}>
+                      <Picker
+                        selectedValue={viajeSeleccionado}
+                        onValueChange={(itemValue) => setViajeSeleccionado(itemValue)}
+                      >
+                        <Picker.Item label="Seleccione un viaje" value="" />
+                        {viajesActivos.map((v) => (
+                          <Picker.Item
+                            key={v.id_viaje}
+                            label={`${v.ruta} - ${new Date(v.fecha_salida).toLocaleDateString()}`}
+                            value={v.id_viaje}
+                          />
+                        ))}
+                      </Picker>
+                    </View>
+                  </View>
+
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Motivo del accidente</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={motivoAccidente}
+                      onChangeText={setMotivoAccidente}
+                      placeholder="Describe el motivo del accidente"
+                      multiline
+                    />
+                  </View>
+
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Consecuencias</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={consecuenciasAccidente}
+                      onChangeText={setConsecuenciasAccidente}
+                      placeholder="Ej: Retraso de 1 hora..."
+                      multiline
+                    />
+                  </View>
+
+                  <Pressable
+                    style={styles.popupCloseButton}
+                    onPress={handleGenerarReportePDF}
+                  >
+                    <Text style={styles.popupCloseText}>Generar PDF</Text>
+                  </Pressable>
+                </View>
+              )}
+            </ScrollView>
+          );
+
+
+        case "sugerencias":
+          return (
+            <View style={{ padding: 10 }}>
+              <Text style={{ fontSize: 16, marginBottom: 10 }}>
+                ¿Tienes ideas, mejoras o detectaste un problema?
+              </Text>
+              <Text style={{ fontSize: 14, marginBottom: 20 }}>
+                Envíanos tus sugerencias al siguiente correo:
+              </Text>
+
+              <Text style={{ fontSize: 16, fontWeight: "bold", color: "#441AD1", marginBottom: 20 }}>
+                soporte.busrat@gmail.com
+              </Text>
+
+              <Pressable
+                style={styles.popupCloseButton}
+                onPress={() =>
+                  Linking.openURL("mailto:soporte.busrat@gmail.com?subject=Sugerencia BusRat")
+                }
+              >
+                <Text style={styles.popupCloseText}>Enviar correo</Text>
+              </Pressable>
+            </View>
+          );
+
       default:
         return <Text style={styles.popupContent}>En desarrollo...</Text>;
     }
@@ -687,6 +798,8 @@ const handleSaveAdminInfo = async () => {
           {renderItem("settings-outline", "Administrador de la cuenta", "admin")}
           {renderItem("lock-closed-outline", "Cambiar contraseña", "password")}
           {renderItem("calendar-outline", "Historial de viajes", "viajes")}
+          {renderItem("alert-circle-outline", "Reportar accidente", "reporteAccidente")}
+
         </View>
 
         {/* Sección: General */}
@@ -727,6 +840,9 @@ const handleSaveAdminInfo = async () => {
               {modalContent === "representante" && "Representante legal"}
               {modalContent === "admin" && "Administrador de la cuenta"}
               {modalContent === "viajes" && "Historial de viajes"}
+              {modalContent === "reporteAccidente" && "Reporte de accidente"}
+              {modalContent === "sugerencias" && "Enviar Sugerencias"}
+              {modalContent === "nosotros" && "Sobre Nosotros"}
             </Text>
 
 

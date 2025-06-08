@@ -10,6 +10,8 @@ import asientoRoutes from "./routes/asiento.routes.js";
 import viajeRoutes from "./routes/viaje.routes.js";
 import reservaRoutes from "./routes/reserva.routes.js";
 import dotenv from "dotenv";
+import estadisticasRoutes from "./routes/estadisticas.routes.js";
+import reporteRoutes from "./routes/reporte.routes.js";
 import agencyRoutes from "./routes/agency.routes.js";
 
 const app = express();
@@ -30,4 +32,7 @@ app.use("/bus", busRoutes);
 app.use("/asiento", asientoRoutes);
 app.use("/viajes", viajeRoutes);
 app.use("/reserva", reservaRoutes);
+app.use("/estadistica", estadisticasRoutes);
+app.use("/reporte", reporteRoutes);
+
 app.use("/agency", agencyRoutes);

@@ -3,7 +3,6 @@ const prisma = new PrismaClient();
 
 export const getBusSeats = async (req, res) => {
   const busId = parseInt(req.params.id);
-  console.log("Bus ID recibido:", busId);
 
   if (isNaN(busId) || busId <= 0) {
     return res.status(400).json({

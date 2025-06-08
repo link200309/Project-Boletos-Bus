@@ -8,16 +8,13 @@ import TabsContainer from "./components/TabsContainer";
 import PriceSummaryContainer from "./components/PriceSummaryContainer";
 
 export default function TripSummaryScreen({ navigation, route }) {
-  const {
-    passengers = [],
-    contact = {},
-    travelDetails = {},
-    travels = [],
-  } = route.params || {};
-  console.log("Travels TripSummary", travels,"\n")
-  console.log("TravelsDetails TS", travelDetails,"\n")
-  console.log("Passengers TS", passengers, "\n")
-  console.log("contact TS", contact, "\n")
+  const { formData, travels } = route.params || {};
+  console.log("TripSummaryScreen formData", formData);
+  console.log("TripSummaryScreen travels", travels);
+  const handleConfirm = () => {
+    alert("Reserva confirmada");
+  };
+
   return (
     <GenericContainer>
       <BlobBg />
@@ -27,25 +24,14 @@ export default function TripSummaryScreen({ navigation, route }) {
       />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View>
-          <TabsContainer
-            passengers={passengers}
-            contact={contact}
-            travelDetails={travelDetails}
-          />
+          <TabsContainer passengers={formData} travelDetails={travels} />
           <PriceSummaryContainer
-            ticketPrice={parseFloat(travelDetails.price)}
-            passengerCount={passengers.length}
+            ticketPrice={travels[0].costo}
+            passengerCount={formData.passengers.length}
+            onConfirm={handleConfirm}
             travels={travels}
-            travelDetails={travelDetails}
-            passengers={passengers} // ✅ Esto faltaba
-            onConfirm={() => {
-              navigation.navigate("PaymentDetails", {
-                travels,
-                travelDetails,
-                passengers,
-                contact,
-              });
-            }}
+            travelDetails={travels[0]}
+            passengers={formData.passengers}
           />
 
         </View>

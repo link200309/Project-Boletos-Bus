@@ -6,6 +6,7 @@ import { InputLabel } from "../../../components/Input/InputLabel";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { AuthContext } from "../../../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
+import { accountValidationRules } from "../../Login/components/validation";
 
 export const FormPassenger = () => {
   const { register, isLoading } = useContext(AuthContext);
@@ -30,7 +31,7 @@ export const FormPassenger = () => {
       correo_electronico: data.email,
       contraseña: data.password,
       numero_celular: parseInt(data.cellphone),
-      fecha_nacimiento: data.birthdate, // YA en formato YYYY-MM-DD
+      fecha_nacimiento: data.birthdate,
     };
 
     try {
@@ -62,7 +63,7 @@ export const FormPassenger = () => {
         <Controller
           control={control}
           name="name"
-          rules={{ required: "El nombre es obligatorio" }}
+          rules={accountValidationRules.name}
           render={({ field: { onChange, value } }) => (
             <InputLabel
               label="Nombre(s) *"
@@ -78,7 +79,7 @@ export const FormPassenger = () => {
         <Controller
           control={control}
           name="lastName"
-          rules={{ required: "El apellido es obligatorio" }}
+          rules={accountValidationRules.lastName}
           render={({ field: { onChange, value } }) => (
             <InputLabel
               label="Apellido(s) *"
@@ -94,13 +95,7 @@ export const FormPassenger = () => {
         <Controller
           control={control}
           name="ci"
-          rules={{
-            required: "El CI es obligatorio",
-            pattern: {
-              value: /^[0-9]{7,8}$/,
-              message: "Debe tener entre 7 y 8 dígitos",
-            },
-          }}
+          rules={accountValidationRules.ci}
           render={({ field: { onChange, value } }) => (
             <InputLabel
               label="Cédula de Identidad (C.I.) *"
@@ -118,13 +113,7 @@ export const FormPassenger = () => {
         <Controller
           control={control}
           name="birthdate"
-          rules={{
-            required: "La fecha de nacimiento es obligatoria",
-            pattern: {
-              value: /^\d{4}-\d{2}-\d{2}$/,
-              message: "Formato válido: YYYY-MM-DD",
-            },
-          }}
+          rules={accountValidationRules.birthdate}
           render={({ field: { onChange, value } }) => (
             <InputLabel
               label="Fecha de Nacimiento *"
@@ -141,13 +130,7 @@ export const FormPassenger = () => {
         <Controller
           control={control}
           name="cellphone"
-          rules={{
-            required: "El celular es obligatorio",
-            pattern: {
-              value: /^[0-9]{8}$/,
-              message: "Número de celular inválido",
-            },
-          }}
+          rules={accountValidationRules.cellphone}
           render={({ field: { onChange, value } }) => (
             <InputLabel
               label="Celular (+591) *"
@@ -165,13 +148,7 @@ export const FormPassenger = () => {
         <Controller
           control={control}
           name="email"
-          rules={{
-            required: "El correo es obligatorio",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "Correo inválido",
-            },
-          }}
+          rules={accountValidationRules.email}
           render={({ field: { onChange, value } }) => (
             <InputLabel
               label="Correo Electrónico *"
@@ -189,13 +166,7 @@ export const FormPassenger = () => {
         <Controller
           control={control}
           name="password"
-          rules={{
-            required: "La contraseña es obligatoria",
-            minLength: {
-              value: 8,
-              message: "Mínimo 8 caracteres",
-            },
-          }}
+          rules={accountValidationRules.password}
           render={({ field: { onChange, value } }) => (
             <InputLabel
               label="Contraseña *"
