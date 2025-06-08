@@ -23,7 +23,7 @@ export const RutaModal = ({
           <FlatList
             data={rutas}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id_ruta}
           />
           <TouchableOpacity style={styles.createButton} onPress={onCreateRuta}>
             <Text style={styles.createButtonText}>+ Crear Nueva Ruta</Text>

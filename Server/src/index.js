@@ -10,6 +10,7 @@ import asientoRoutes from "./routes/asiento.routes.js";
 import viajeRoutes from "./routes/viaje.routes.js";
 import reservaRoutes from "./routes/reserva.routes.js";
 import dotenv from "dotenv";
+import agencyRoutes from "./routes/agency.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -21,12 +22,12 @@ console.log(`Server is running on port ${PORT}`);
 app.use(cors());
 app.use(express.json());
 app.use(userRoutes);
-app.use("/travel", travelRouter);
 app.use(busStationRoute);
 app.use(authRoutes);
-
+app.use("/travel", travelRouter);
 app.use("/choferes", choferRoutes);
 app.use("/bus", busRoutes);
 app.use("/asiento", asientoRoutes);
 app.use("/viajes", viajeRoutes);
 app.use("/reserva", reservaRoutes);
+app.use("/agency", agencyRoutes);
