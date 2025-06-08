@@ -60,11 +60,17 @@ export default function PassengerDataScreen({ navigation, route }) {
 
           <ContactCard contact={contact} setContact={setContact} />
 
-          <ButtonStyle
-            text="Continuar"
-            onClick={methods.handleSubmit(onSubmit)}
-          />
-        </FormProvider>
+        <ButtonStyle
+          text="Continuar"
+          onClick={() =>
+            navigation.navigate("TripSummary", {
+              passengers,
+              contact,
+              travelDetails,
+              travels,
+            })
+          }
+        />
       </ScrollView>
     </GenericContainer>
   );

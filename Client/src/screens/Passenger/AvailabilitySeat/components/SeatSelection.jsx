@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { SeatGrid } from "./SeatGrid";
+import { formatTime, formatDate } from "../../../../utils/dateTime.util";
 
 export const SeatSelection = ({ navigation, asientos, busData, travels }) => {
   const [selectedFloor, setSelectedFloor] = useState("Superior");
@@ -37,6 +38,20 @@ export const SeatSelection = ({ navigation, asientos, busData, travels }) => {
       </View>
     );
   }
+
+  const viaje = travels[0];
+  const departure = viaje.hora_salida_programada.slice(0, 5);
+  const arrival = formatTime(viaje.hora_salida_programada, viaje.ruta.tiempo_estimado);
+
+  const travelDetails = {
+    busData,
+    route: `${viaje.ruta.origen} - ${viaje.ruta.destino}`,
+    price: viaje.costo,
+    tipoBus: busData.tipo_bus,
+    agencia: viaje.bus.agencia?.nombre_agencia,
+    qr: viaje.pago?.ruta_codigo_qr,
+    horario: `${departure} - ${arrival}`,
+  };
 
   return (
     <View style={GlobalStyles.formCard}>
@@ -107,9 +122,7 @@ export const SeatSelection = ({ navigation, asientos, busData, travels }) => {
             }
             navigation.navigate("PassengerData", {
               selectedSeats: selectedSeats,
-              travelDetails: {
-                busData,
-              },
+              travelDetails,
               travels: travels,
             });
           }}

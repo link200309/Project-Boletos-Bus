@@ -7,7 +7,7 @@ import AvailabilitySeatScreen from "../../../screens/Passenger/AvailabilitySeat/
 import PassengerDataScreen from "../../../screens/Passenger/ReserveSeat/PassengerDataScreen";
 import TripSummaryScreen from "../../../screens/Passenger/ReserveSeat/TripSummaryScreen";
 import { commonHeaderOptions } from "../../../components/Style/HeaderLogoTitle";
-
+import PaymentDetailsScreen from "../../../screens/Passenger/PaymentDetails/PaymentDetailsScreen";
 const Stack = createStackNavigator();
 
 export default function ReserveStack() {
@@ -72,6 +72,17 @@ export default function ReserveStack() {
             fontSize: 20,
           },
         }}
+      />
+      <Stack.Screen
+      name="PaymentDetails"
+      component={PaymentDetailsScreen}
+      options={{
+        title: "Detalles de pago",
+        headerTitle: "Detalles de pago",
+        headerTitleStyle: {
+          fontSize: 20,
+        },
+      }}
       />
     </Stack.Navigator>
   );
