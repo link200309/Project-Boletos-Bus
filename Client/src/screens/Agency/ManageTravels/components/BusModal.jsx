@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 
-export const ModalGeneric = ({
+export const BusModal = ({
   title,
   visible,
   data,
@@ -22,9 +22,11 @@ export const ModalGeneric = ({
       onPress={() => handleSelect(item)}
     >
       <Text style={styles.listItemTitle}>
-        {item.nombre} {item.apellido}
+        {item.marca} {item.modelo}
       </Text>
-      <Text style={styles.listItemSubtitle}>CI: {item.carnet_identidad}</Text>
+      <Text style={styles.listItemSubtitle}>Placa: {item.placa}</Text>
+      <Text style={styles.listItemSubtitle}>Tipo: {item.tipo_bus}</Text>
+      <Text style={styles.listItemSubtitle}>Estado: {item.estado}</Text>
     </TouchableOpacity>
   );
 
@@ -36,7 +38,7 @@ export const ModalGeneric = ({
           <FlatList
             data={data}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id_bus}
           />
           <ButtonStyle onClick={setShowModal} text={"Cancelar"} />
         </View>

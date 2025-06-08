@@ -15,8 +15,10 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     flex: 1,
-    padding: 20,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
     paddingTop: 30,
-    paddingBottom: 45,
+    // paddingBottom: 45,
   },
 });
