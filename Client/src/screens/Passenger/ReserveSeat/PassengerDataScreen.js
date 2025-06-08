@@ -14,8 +14,13 @@ export default function PassengerDataScreen({ navigation, route }) {
   const onSubmit = async (data) => {
     const isValid = await methods.trigger();
     if (!isValid) return;
-    console.log("FORM DATA:", data);
-    navigation.navigate("TripSummary", { formData: data, travels: travels });
+
+    const passengers = methods.getValues("passengers");
+
+    navigation.navigate("TripSummary", {
+      formData: { passengers, contact },
+      travels,
+    });
   };
 
   const { selectedSeats, travelDetails, travels } = route.params || {};
@@ -28,7 +33,7 @@ export default function PassengerDataScreen({ navigation, route }) {
       birthDate: "",
     }));
     methods.reset({ passengers: defaultValues });
-  }, []);
+  }, [selectedSeats]);
 
   const [contact, setContact] = useState({ email: "", phone: "" });
   const { setValue } = methods;
@@ -60,17 +65,8 @@ export default function PassengerDataScreen({ navigation, route }) {
 
           <ContactCard contact={contact} setContact={setContact} />
 
-        <ButtonStyle
-          text="Continuar"
-          onClick={() =>
-            navigation.navigate("TripSummary", {
-              passengers,
-              contact,
-              travelDetails,
-              travels,
-            })
-          }
-        />
+          <ButtonStyle text="Continuar" onClick={onSubmit} />
+        </FormProvider>
       </ScrollView>
     </GenericContainer>
   );

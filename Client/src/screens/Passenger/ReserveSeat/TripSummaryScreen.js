@@ -9,6 +9,8 @@ import PriceSummaryContainer from "./components/PriceSummaryContainer";
 
 export default function TripSummaryScreen({ navigation, route }) {
   const { formData, travels } = route.params || {};
+  console.log("TripSummaryScreen formData", formData);
+  console.log("TripSummaryScreen travels", travels);
   const handleConfirm = () => {
     alert("Reserva confirmada");
   };
@@ -27,6 +29,9 @@ export default function TripSummaryScreen({ navigation, route }) {
             ticketPrice={travels[0].costo}
             passengerCount={formData.passengers.length}
             onConfirm={handleConfirm}
+            travels={travels}
+            travelDetails={travels[0]}
+            passengers={formData.passengers}
           />
 
         </View>
