@@ -9,8 +9,6 @@ import PriceSummaryContainer from "./components/PriceSummaryContainer";
 
 export default function TripSummaryScreen({ navigation, route }) {
   const { formData, travels } = route.params || {};
-  console.log("Trip summary", formData);
-  console.log("Trip summary travels", travels);
   const handleConfirm = () => {
     alert("Reserva confirmada");
   };
