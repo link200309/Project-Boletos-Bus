@@ -11,6 +11,7 @@ import viajeRoutes from "./routes/viaje.routes.js";
 import reservaRoutes from "./routes/reserva.routes.js";
 import dotenv from "dotenv";
 import estadisticasRoutes from "./routes/estadisticas.routes.js";
+import reporteRoutes from "./routes/reporte.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -32,3 +33,5 @@ app.use("/asiento", asientoRoutes);
 app.use("/viajes", viajeRoutes);
 app.use("/reserva", reservaRoutes);
 app.use("/estadistica", estadisticasRoutes);
+app.use("/reporte", reporteRoutes);
+
