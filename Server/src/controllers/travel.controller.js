@@ -105,7 +105,6 @@ class TravelController {
         id_bus,
         id_ruta,
         id_chofer,
-        id_pago,
       } = req.body;
 
       // Validaciones básicas
@@ -130,7 +129,6 @@ class TravelController {
         });
       }
 
-      // Verificar que el bus existe y está disponible
       const busExistente = await prisma.bus.findUnique({
         where: { id_bus: parseInt(id_bus) },
         include: { agencia: true },
@@ -148,7 +146,6 @@ class TravelController {
         });
       }
 
-      // Verificar que la ruta existe
       const rutaExistente = await prisma.ruta.findUnique({
         where: { id_ruta: parseInt(id_ruta) },
       });
@@ -159,7 +156,6 @@ class TravelController {
         });
       }
 
-      // Verificar que el chofer existe y está disponible
       const choferExistente = await prisma.chofer.findUnique({
         where: { id_chofer: parseInt(id_chofer) },
       });
@@ -177,21 +173,21 @@ class TravelController {
       }
 
       // Verificar que la configuración de pago existe y está activa
-      const pagoExistente = await prisma.configuracion_Pago.findUnique({
-        where: { id_pago: parseInt(id_pago) },
-      });
+      // const pagoExistente = await prisma.configuracion_Pago.findUnique({
+      //   where: { id_pago: parseInt(id_pago) },
+      // });
 
-      if (!pagoExistente) {
-        return res.status(404).json({
-          error: "La configuración de pago especificada no existe",
-        });
-      }
+      // if (!pagoExistente) {
+      //   return res.status(404).json({
+      //     error: "La configuración de pago especificada no existe",
+      //   });
+      // }
 
-      if (pagoExistente.estado !== "activo") {
-        return res.status(400).json({
-          error: "La configuración de pago no está activa",
-        });
-      }
+      // if (pagoExistente.estado !== "activo") {
+      //   return res.status(400).json({
+      //     error: "La configuración de pago no está activa",
+      //   });
+      // }
 
       // Verificar que no haya conflictos de horario para el bus
       const fechaViaje = new Date(fecha_salida);
@@ -227,7 +223,7 @@ class TravelController {
           id_bus: parseInt(id_bus),
           id_ruta: parseInt(id_ruta),
           id_chofer: parseInt(id_chofer),
-          id_pago: parseInt(id_pago),
+          id_pago: 1,
         },
         include: {
           bus: {
@@ -262,7 +258,6 @@ class TravelController {
     } catch (error) {
       console.error("Error al crear viaje:", error);
 
-      // Manejo específico de errores de Prisma
       if (error.code === "P2002") {
         return res.status(400).json({
           error: "Violación de restricción única",

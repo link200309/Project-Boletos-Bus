@@ -1,36 +1,44 @@
 import React from "react";
 import {
-  Modal,
   View,
   Text,
-  FlatList,
-  TouchableOpacity,
   StyleSheet,
+  TouchableOpacity,
+  Modal,
+  FlatList,
 } from "react-native";
+import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 
-export const RutaModal = ({
+export const DriverModal = ({
+  title,
   visible,
-  rutas,
-  renderItem,
-  onCreateRuta,
-  onCancel,
+  data,
+  setShowModal,
+  handleSelect,
 }) => {
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      style={styles.listItem}
+      onPress={() => handleSelect(item)}
+    >
+      <Text style={styles.listItemTitle}>
+        {item.nombre} {item.apellido}
+      </Text>
+      <Text style={styles.listItemSubtitle}>CI: {item.carnet_identidad}</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <Modal visible={visible} animationType="slide" transparent={true}>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Seleccionar Ruta</Text>
+          <Text style={styles.modalTitle}>{title}</Text>
           <FlatList
-            data={rutas}
+            data={data}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id_ruta}
+            keyExtractor={(item) => item.id_chofer}
           />
-          <TouchableOpacity style={styles.createButton} onPress={onCreateRuta}>
-            <Text style={styles.createButtonText}>+ Crear Nueva Ruta</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-            <Text style={styles.cancelButtonText}>Cancelar</Text>
-          </TouchableOpacity>
+          <ButtonStyle onClick={setShowModal} text={"Cancelar"} />
         </View>
       </View>
     </Modal>
@@ -57,17 +65,20 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
-  createButton: {
-    backgroundColor: "#28a745",
-    padding: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    marginVertical: 10,
+  listItem: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
   },
-  createButtonText: {
-    color: "#fff",
+  listItemTitle: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
+    color: "#333",
+  },
+  listItemSubtitle: {
+    fontSize: 14,
+    color: "#666",
+    marginTop: 4,
   },
   cancelButton: {
     backgroundColor: "#6c757d",

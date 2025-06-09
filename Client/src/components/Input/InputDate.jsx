@@ -5,10 +5,12 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 export const InputDate = ({
   label,
   onClick,
+  error,
   text,
   showDatePicker,
   handleDateChange,
   valueDateModal,
+  name,
 }) => {
   return (
     <View style={styles.inputGroup}>
@@ -21,8 +23,12 @@ export const InputDate = ({
           value={valueDateModal}
           mode="date"
           display="default"
+          placeholderText="Seleccione una fecha"
           onChange={handleDateChange}
         />
+      )}
+      {error && error[name] && (
+        <Text style={styles.errorText}>{error[name].message}</Text>
       )}
     </View>
   );
@@ -48,5 +54,11 @@ const styles = StyleSheet.create({
   dateButtonText: {
     fontSize: 16,
     color: "#333",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 10,
   },
 });
