@@ -1,6 +1,6 @@
 # BusRat 🚌
 
-Una aplicación móvil moderna para la compra de pasajes de buses de forma rápida y sencilla.
+Una aplicación móvil moderna para la compra de pasajes de buses en Bolivia de forma rápida y sencilla.
 
 ## 📋 Descripción
 
@@ -117,8 +117,7 @@ Project-Boletos-Bus/
 
 ```env
 DATABASE_URL="postgresql://usuario:contraseña@localhost:5432/busrat_db"
-API_AUTHENTICATOR_URL=tu_api_authenticator_url
-PORT=3000
+PORT=4000
 ```
 
 3. Configurar Prisma:
