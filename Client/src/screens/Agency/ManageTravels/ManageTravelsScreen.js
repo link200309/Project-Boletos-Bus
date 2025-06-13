@@ -7,6 +7,7 @@ import { InformativeTitle } from "../../../components/InformativeTitle";
 import { ListTravels } from "./components/ListTravels";
 import { AuthContext } from "../../../context/AuthContext";
 
+//Api
 import { getTravelsByAgency } from "../../../api/travel.api";
 
 export default function ManageTravelsScreen({ navigation }) {
@@ -22,8 +23,12 @@ export default function ManageTravelsScreen({ navigation }) {
         console.error("Error fetching travels:", error);
       }
     }
-    fetchTravels();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchTravels();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const addTravel = () => {
     navigation.navigate("AddTravels", travels);
@@ -37,7 +42,6 @@ export default function ManageTravelsScreen({ navigation }) {
         btnText={"+ Viaje"}
         onClick={addTravel}
       />
-
       <ListTravels travels={travels} navigation={navigation} />
     </GenericContainer>
   );

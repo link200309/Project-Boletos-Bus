@@ -4,6 +4,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import Fontisto from "@expo/vector-icons/Fontisto";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 export const HomeIcon = (props) => (
   <Entypo name="home" size={30} color="black" {...props} />
@@ -57,4 +59,10 @@ export const BackIcon = (props) => (
 
 export const ScanQRIcon = (props) => (
   <MaterialCommunityIcons name="qrcode-scan" size={20} {...props} />
+);
+export const DateIcon = (props) => (
+  <Fontisto name="date" size={24} color="black" {...props} />
+);
+export const TimeIcon = (props) => (
+  <AntDesign name="clockcircleo" size={24} color="black" {...props} />
 );

@@ -13,13 +13,17 @@ export const obtenerViajesActivos = async (token) => {
 
     return await res.json();
   } catch (error) {
-    console.error("❌ Error en obtenerViajesActivos:", error);
+    console.error(" Error en obtenerViajesActivos:", error);
     return [];
   }
 };
 
 // Generar PDF del reporte de accidente
-export const generarReporteAccidentePDF = ({ viajeId, motivo, consecuencias }) => {
+export const generarReporteAccidentePDF = ({
+  viajeId,
+  motivo,
+  consecuencias,
+}) => {
   if (!viajeId || !motivo.trim()) {
     alert("Completa todos los campos obligatorios.");
     return;

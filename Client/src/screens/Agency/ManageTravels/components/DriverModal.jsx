@@ -38,7 +38,7 @@ export const DriverModal = ({
             renderItem={renderItem}
             keyExtractor={(item) => item.id_chofer}
           />
-          <ButtonStyle onClick={setShowModal} text={"Cancelar"} />
+          <ButtonStyle onClick={setShowModal} text={"Cancelar"} variant={2} />
         </View>
       </View>
     </Modal>

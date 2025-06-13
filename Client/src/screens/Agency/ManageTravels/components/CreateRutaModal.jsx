@@ -1,13 +1,20 @@
-import React from "react";
+//React
 import {
   Modal,
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
 } from "react-native";
+import { useForm, FormProvider, Controller } from "react-hook-form";
+
+//Components
+import { InputLabel } from "../../../../components/Input/InputLabel";
+import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
+
+//Utils
+import { validator } from "./validation";
 
 export const CreateRutaModal = ({
   visible,
@@ -16,9 +23,13 @@ export const CreateRutaModal = ({
   onCreate,
   onCancel,
 }) => {
-  const handleChange = (field, value) => {
-    setNuevaRuta({ ...nuevaRuta, [field]: value });
-  };
+  const methods = useForm({ mode: "onChange" });
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = methods;
 
   return (
     <Modal visible={visible} animationType="slide" transparent={true}>
@@ -26,58 +37,116 @@ export const CreateRutaModal = ({
         <View style={styles.modalContent}>
           <ScrollView>
             <Text style={styles.modalTitle}>Crear Nueva Ruta</Text>
+            <FormProvider {...methods}>
+              <Controller
+                control={control}
+                name="Origen"
+                rules={validator.origen}
+                render={({ field: { onChange, value } }) => (
+                  <InputLabel
+                    label="Origen *"
+                    name="Origen"
+                    error={errors}
+                    value={value}
+                    onChange={onChange}
+                    placeholder="Origen *"
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name="ParadaItermedia"
+                rules={validator.paradaIntermedia}
+                render={({ field: { onChange, value } }) => (
+                  <InputLabel
+                    label={"Parada Intermedia"}
+                    placeholder="Parada Intermedia"
+                    name="ParadaItermedia"
+                    error={errors}
+                    value={value}
+                    onChange={onChange}
+                  />
+                )}
+              />
 
-            <TextInput
-              style={styles.input}
-              value={nuevaRuta.origen}
-              onChangeText={(text) => handleChange("origen", text)}
-              placeholder="Origen *"
-            />
+              <Controller
+                control={control}
+                name="Destino"
+                rules={validator.destino}
+                render={({ field: { onChange, value } }) => (
+                  <InputLabel
+                    label={"Destino *"}
+                    placeholder="Destino *"
+                    name="Destino"
+                    error={errors}
+                    value={value}
+                    onChange={onChange}
+                  />
+                )}
+              />
 
-            <TextInput
-              style={styles.input}
-              value={nuevaRuta.parada_intermedia}
-              onChangeText={(text) => handleChange("parada_intermedia", text)}
-              placeholder="Parada Intermedia"
-            />
+              <Controller
+                control={control}
+                name="Distancia"
+                rules={validator.distancia}
+                render={({ field: { onChange, value } }) => (
+                  <InputLabel
+                    label={"Distancia *"}
+                    placeholder="Distancia (ej: 380 km) *"
+                    name="Distancia"
+                    error={errors}
+                    value={value}
+                    onChange={onChange}
+                  />
+                )}
+              />
 
-            <TextInput
-              style={styles.input}
-              value={nuevaRuta.destino}
-              onChangeText={(text) => handleChange("destino", text)}
-              placeholder="Destino *"
-            />
+              <Controller
+                control={control}
+                name="TiempoEstimado"
+                rules={validator.tiempoEstimado}
+                render={({ field: { onChange, value } }) => (
+                  <InputLabel
+                    label={"Tiempo Estimado *"}
+                    placeholder="Tiempo Estimado (ej: 6 horas) *"
+                    name="TiempoEstimado"
+                    error={errors}
+                    value={value}
+                    onChange={onChange}
+                  />
+                )}
+              />
 
-            <TextInput
-              style={styles.input}
-              value={nuevaRuta.distancia}
-              onChangeText={(text) => handleChange("distancia", text)}
-              placeholder="Distancia (ej: 380 km) *"
-            />
+              <Controller
+                control={control}
+                name="DescripcionCamino"
+                rules={validator.descripcion}
+                render={({ field: { onChange, value } }) => (
+                  <InputLabel
+                    label={"Descripción del Camino *"}
+                    placeholder="Descripción del Camino"
+                    name="DescripcionCamino"
+                    error={errors}
+                    value={value}
+                    onChange={onChange}
+                  />
+                )}
+              />
 
-            <TextInput
-              style={styles.input}
-              value={nuevaRuta.tiempo_estimado}
-              onChangeText={(text) => handleChange("tiempo_estimado", text)}
-              placeholder="Tiempo Estimado (ej: 6 horas) *"
-            />
-
-            <TextInput
-              style={styles.input}
-              value={nuevaRuta.camino}
-              onChangeText={(text) => handleChange("camino", text)}
-              placeholder="Descripción del Camino"
-              multiline
-            />
-
-            <View style={styles.buttonRow}>
-              <TouchableOpacity style={styles.saveButton} onPress={onCreate}>
-                <Text style={styles.saveButtonText}>Crear Ruta</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-                <Text style={styles.cancelButtonText}>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
+              <View style={styles.buttonRow}>
+                <ButtonStyle
+                  onClick={handleSubmit((data) => onCreate(data, reset))}
+                  text={"Crear ruta"}
+                  width="48%"
+                />
+                <ButtonStyle
+                  onClick={onCancel}
+                  text={"Cancelar"}
+                  variant={2}
+                  width="48%"
+                />
+              </View>
+            </FormProvider>
           </ScrollView>
         </View>
       </View>
@@ -116,7 +185,6 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 20,
   },
   saveButton: {
     backgroundColor: "#28a745",

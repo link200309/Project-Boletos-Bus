@@ -40,7 +40,7 @@ export const BusModal = ({
             renderItem={renderItem}
             keyExtractor={(item) => item.id_bus}
           />
-          <ButtonStyle onClick={setShowModal} text={"Cancelar"} />
+          <ButtonStyle onClick={setShowModal} text={"Cancelar"} variant={2} />
         </View>
       </View>
     </Modal>
