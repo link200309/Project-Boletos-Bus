@@ -17,7 +17,7 @@ export const InputLabel = ({
       <TextInput
         placeholder={placeholder}
         style={styles.input}
-        value={value}
+        value={value?.toString() ?? ""}
         onChangeText={onChange}
         keyboardType={keyboardType}
         secureTextEntry={secureTextEntry}

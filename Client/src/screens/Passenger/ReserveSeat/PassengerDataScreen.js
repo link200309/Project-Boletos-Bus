@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { GenericContainer } from "../../../components/GenericContainer";
 import { BlobBg } from "../../../components/Background/BlobBg";
@@ -8,6 +8,7 @@ import ContactCard from "./components/ContactCard";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 import { formatDate } from "../../../utils/dateTime.util";
 import { useForm, FormProvider } from "react-hook-form";
+import { AuthContext } from "../../../context/AuthContext";
 
 export default function PassengerDataScreen({ navigation, route }) {
   const methods = useForm();
@@ -40,7 +41,30 @@ export default function PassengerDataScreen({ navigation, route }) {
   const handlePassengerChange = (index, field, value) => {
     setValue(`passengers.${index}.${field}`, value);
   };
+  const handleContactChange = (field, value) => {
+    setValue(field, value);
+  };
   const passengers = methods.watch("passengers") || [];
+  const { user } = useContext(AuthContext);
+  const formatFechaParaVista = (isoDateStr) => {
+    if (!isoDateStr) return "";
+    const date = new Date(isoDateStr);
+    const dd = String(date.getDate() + 1).padStart(2, "0");
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const yyyy = date.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+  };
+  const userAccountData = {
+    firstName: user?.usuario?.nombre || "",
+    lastName: user?.usuario?.apellido || "",
+    identityNumber: user?.usuario?.ci || "",
+    birthDate:
+      formatFechaParaVista(user?.datos_pasajero?.fecha_nacimiento) || "",
+  };
+  const contactAccountData = {
+    correo: user?.usuario?.correo_electronico || "",
+    celular: user?.usuario?.numero_celular || "",
+  };
 
   return (
     <GenericContainer>
@@ -60,10 +84,15 @@ export default function PassengerDataScreen({ navigation, route }) {
               index={index}
               passenger={passenger}
               handlePassengerChange={handlePassengerChange}
+              userAccountData={userAccountData}
             />
           ))}
 
-          <ContactCard contact={contact} setContact={setContact} />
+          <ContactCard
+            contactAccountData={contactAccountData}
+            setContact={setContact}
+            handlePassengerChange={handleContactChange}
+          />
 
           <ButtonStyle text="Continuar" onClick={onSubmit} />
         </FormProvider>
