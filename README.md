@@ -166,6 +166,7 @@ npx prisma studio
 - `expo start --web` - Inicia en navegador web
 - `expo build` - Construye la app para producción
 - `npm run test` - Ejecuta las pruebas
+- `setx /M REACT_NATIVE_PACKAGER_HOSTNAME TU-DIRECCION-IP-EN-TU-RED-WIFI` - Cambia la dirección IP donde se ejecuta Expo, en caso se requiera
 
 ## 🔒 Seguridad
 
