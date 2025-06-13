@@ -98,8 +98,8 @@ model Asiento {
 model Viaje {
   id_viaje               Int      @id @default(autoincrement())
   fecha_salida           DateTime
-  hora_salida_programada String   @db.VarChar(15)
-  hora_salida_real       String   @db.VarChar(15)
+  hora_salida_programada String   @db.VarChar(30)
+  hora_salida_real       String   @db.VarChar(30)
   costo                  Decimal  @db.Decimal(5, 2)
 
   id_bus Int

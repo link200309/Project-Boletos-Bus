@@ -175,15 +175,18 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      data["DepartureTime"] = data["DepartureTime"].toLocaleTimeString(
-        "es-ES",
-        {
-          hour: "2-digit",
-          minute: "2-digit",
-        }
-      );
       console.log("Datos a enviar:", data);
 
+      const res = await addTravel({
+        fecha_salida: data.departureDate,
+        hora_salida_programada: data.DepartureTime,
+        costo: data.Cost,
+        id_bus: data.Bus,
+        id_ruta: data.Ruta,
+        id_chofer: data.Chofer,
+      });
+
+      console.log("Respuesta del servidor:", res);
       // setViaje({
       //   fecha_salida: new Date(),
       //   hora_salida_programada: new Date(),
@@ -212,7 +215,7 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
             control={control}
             name="departureDate"
             defaultValue={viaje.fecha_salida}
-            rules={{ required: "La fecha es obligatoria" }}
+            rules={{ required: "La fecha es requerido" }}
             render={({ field: { onChange, value } }) => (
               <InputDate
                 label="Fecha de salida *"
@@ -234,7 +237,7 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
             control={control}
             name="DepartureTime"
             defaultValue={viaje.hora_salida_programada}
-            rules={{ required: "La hora de salida programada es obligatoria" }}
+            rules={{ required: "La hora de salida programada es requerido" }}
             render={({ field: { onChange, value } }) => (
               <InputTime
                 label="Hora Salida Programada *"
@@ -279,7 +282,7 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
           <Controller
             control={control}
             name="Chofer"
-            rules={{ required: "El chofer es obligatorio" }}
+            rules={{ required: "El chofer es requerido" }}
             render={({ field: { onChange, value } }) => {
               onChangeChoferRef.current = onChange;
 
@@ -303,7 +306,7 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
           <Controller
             control={control}
             name="Bus"
-            rules={{ required: "El bus es obligatorio" }}
+            rules={{ required: "El bus es requerido" }}
             render={({ field: { onChange, value } }) => {
               onChangeBusRef.current = onChange;
 
@@ -328,7 +331,7 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
           <Controller
             control={control}
             name="Ruta"
-            rules={{ required: "La ruta es obligatorio" }}
+            rules={{ required: "La ruta es requerido" }}
             render={({ field: { onChange, value } }) => {
               onChangeRutaRef.current = onChange;
 
