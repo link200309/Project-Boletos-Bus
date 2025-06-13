@@ -1,5 +1,5 @@
 //React
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { Controller, useForm, FormProvider } from "react-hook-form";
 
@@ -18,8 +18,12 @@ import { validator } from "./validation";
 
 //Api
 import { addTravel } from "../../../../api/travel.api";
+import { addRoute, getRouteAgency } from "../../../../api/route.api";
 
-export const FormAddTravel = ({ choferes, buses, rutas }) => {
+//Context
+import { AuthContext } from "../../../../context/AuthContext";
+
+export const FormAddTravel = ({ choferes, buses }) => {
   const [viaje, setViaje] = useState({
     fecha_salida: new Date(),
     hora_salida_programada: new Date(),
@@ -31,7 +35,7 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-
+  const [rutas, setRutas] = useState([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState("");
   const [showChoferModal, setShowChoferModal] = useState(false);
@@ -42,6 +46,7 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
   const onChangeChoferRef = useRef(null);
   const onChangeBusRef = useRef(null);
   const onChangeRutaRef = useRef(null);
+  const { user } = useContext(AuthContext);
 
   const methods = useForm({
     mode: "onChange",
@@ -59,6 +64,24 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
     tiempo_estimado: "",
     camino: "",
   });
+
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      if (!buses || buses.length === 0) {
+        return;
+      }
+      try {
+        const res = await getRouteAgency(user.datos_agencia.id_agencia);
+        console.log("Rutas obtenidas:", res);
+        setRutas(res);
+      } catch (error) {
+        console.error("Error fetching routes:", error);
+        Alert.alert("Error", "No se pudieron cargar las rutas");
+      }
+    };
+
+    fetchRoutes();
+  }, [buses]);
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
@@ -147,26 +170,33 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
     return list?.find((item) => item[itemIdField] === viaje[idField]);
   };
 
-  const handleCreateRuta = () => {
-    if (
-      !nuevaRuta.origen ||
-      !nuevaRuta.destino ||
-      !nuevaRuta.distancia ||
-      !nuevaRuta.tiempo_estimado
-    ) {
-      Alert.alert("Error", "Completa todos los campos obligatorios de la ruta");
-      return;
+  const handleCreateRuta = async (data) => {
+    try {
+      const res = await addRoute({
+        origen: data.Origen,
+        paradaIntermedia: data.ParadaItermedia,
+        destino: data.Destino,
+        distancia: data.Distancia,
+        tiempoEstimado: data.TiempoEstimado,
+        camino: data.DescripcionCamino,
+        id_agencia: user.datos_agencia.id_agencia,
+      });
+
+      console.log("Respuesta del servidor:", res);
+      // handleSelect("ruta", nuevaRutaConId);
+
+      Alert.alert("Éxito", "Ruta creado exitosamente");
+    } catch (error) {
+      if (error.response) {
+        const mensajeError = error.response.data.error;
+        console.error("Error:", mensajeError);
+        Alert.alert("Error", mensajeError || "Error al crear el ruta");
+      } else {
+        console.error("Error inesperado al crear ruta:", error);
+        Alert.alert("Error al crear el ruta, intente nuevamente");
+      }
     }
-    const nuevaRutaConId = { ...nuevaRuta, id_ruta: Date.now() };
-    handleSelect("ruta", nuevaRutaConId);
-    setNuevaRuta({
-      origen: "",
-      parada_intermedia: "",
-      destino: "",
-      distancia: "",
-      tiempo_estimado: "",
-      camino: "",
-    });
+
     setShowCreateRuta(false);
     setShowRutaModal(false);
     Alert.alert("Éxito", "Ruta creada exitosamente");
@@ -187,21 +217,27 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
       });
 
       console.log("Respuesta del servidor:", res);
-      // setViaje({
-      //   fecha_salida: new Date(),
-      //   hora_salida_programada: new Date(),
-      //   hora_salida_real: new Date(),
-      //   costo: "",
-      //   id_chofer: "",
-      //   id_bus: "",
-      //   id_ruta: "",
-      //   id_pago: "",
-      // });
+      setViaje({
+        fecha_salida: new Date(),
+        hora_salida_programada: new Date(),
+        hora_salida_real: new Date(),
+        costo: "",
+        id_chofer: "",
+        id_bus: "",
+        id_ruta: "",
+        id_pago: "",
+      });
 
       Alert.alert("Éxito", "Viaje creado exitosamente");
     } catch (error) {
-      console.error("Error al crear viaje:", error);
-      Alert.alert("Error", "No se pudo crear el viaje. Intenta nuevamente.");
+      if (error.response) {
+        const mensajeError = error.response.data.error;
+        console.error("Error:", mensajeError);
+        Alert.alert("Error", mensajeError || "Error al crear el viaje");
+      } else {
+        console.error("Error inesperado al crear viaje:", error);
+        Alert.alert("Error al crear el viaje, intente nuevamente");
+      }
     } finally {
       setIsLoading(false);
     }

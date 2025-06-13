@@ -46,11 +46,7 @@ const AddTravelScreen = ({ navigation }) => {
         description={"Puedes seleccionar un chofer, bus o ruta existente"}
       />
 
-      <FormAddTravel
-        choferes={choferes}
-        buses={buses}
-        rutas={rutas}
-      />
+      <FormAddTravel choferes={choferes} buses={buses} />
     </GenericContainer>
   );
 };
