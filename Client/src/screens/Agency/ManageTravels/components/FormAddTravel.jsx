@@ -23,7 +23,7 @@ import { addRoute, getRouteAgency } from "../../../../api/route.api";
 //Context
 import { AuthContext } from "../../../../context/AuthContext";
 
-export const FormAddTravel = ({ choferes, buses }) => {
+export const FormAddTravel = ({ choferes, buses, navigation }) => {
   const [viaje, setViaje] = useState({
     fecha_salida: new Date(),
     hora_salida_programada: new Date(),
@@ -65,23 +65,22 @@ export const FormAddTravel = ({ choferes, buses }) => {
     camino: "",
   });
 
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      if (!buses || buses.length === 0) {
-        return;
-      }
-      try {
-        const res = await getRouteAgency(user.datos_agencia.id_agencia);
-        console.log("Rutas obtenidas:", res);
-        setRutas(res);
-      } catch (error) {
-        console.error("Error fetching routes:", error);
-        Alert.alert("Error", "No se pudieron cargar las rutas");
-      }
-    };
+  const fetchRoutes = async () => {
+    try {
+      const res = await getRouteAgency(user.datos_agencia.id_agencia);
+      setRutas(res);
+    } catch (error) {
+      console.error("Error fetching routes:", error);
+      Alert.alert("Error", "No se pudieron cargar las rutas");
+    }
+  };
 
-    fetchRoutes();
-  }, [buses]);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchRoutes();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
@@ -170,7 +169,7 @@ export const FormAddTravel = ({ choferes, buses }) => {
     return list?.find((item) => item[itemIdField] === viaje[idField]);
   };
 
-  const handleCreateRuta = async (data) => {
+  const handleCreateRuta = async (data, reset) => {
     try {
       const res = await addRoute({
         origen: data.Origen,
@@ -181,11 +180,10 @@ export const FormAddTravel = ({ choferes, buses }) => {
         camino: data.DescripcionCamino,
         id_agencia: user.datos_agencia.id_agencia,
       });
-
-      console.log("Respuesta del servidor:", res);
-      // handleSelect("ruta", nuevaRutaConId);
-
+      handleSelect("ruta", res);
+      fetchRoutes();
       Alert.alert("Éxito", "Ruta creado exitosamente");
+      reset();
     } catch (error) {
       if (error.response) {
         const mensajeError = error.response.data.error;
