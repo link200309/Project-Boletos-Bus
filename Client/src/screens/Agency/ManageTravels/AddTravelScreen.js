@@ -49,7 +49,7 @@ const AddTravelScreen = ({ navigation }) => {
       <FormAddTravel
         choferes={choferes}
         buses={buses}
-        rutas={rutas}
+        navigation={navigation}
       />
     </GenericContainer>
   );

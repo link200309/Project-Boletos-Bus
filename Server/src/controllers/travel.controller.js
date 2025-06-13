@@ -100,14 +100,12 @@ class TravelController {
       const {
         fecha_salida,
         hora_salida_programada,
-        hora_salida_real,
         costo,
         id_bus,
         id_ruta,
         id_chofer,
       } = req.body;
 
-      // Validaciones básicas
       if (
         !fecha_salida ||
         !hora_salida_programada ||
@@ -129,6 +127,22 @@ class TravelController {
         });
       }
 
+      const choferExistente = await prisma.chofer.findUnique({
+        where: { id_chofer: parseInt(id_chofer) },
+      });
+
+      if (!choferExistente) {
+        return res.status(404).json({
+          error: "El chofer especificado no existe",
+        });
+      }
+
+      if (choferExistente.estado !== "Activo") {
+        return res.status(400).json({
+          error: "El chofer no está disponible para viajes",
+        });
+      }
+
       const busExistente = await prisma.bus.findUnique({
         where: { id_bus: parseInt(id_bus) },
         include: { agencia: true },
@@ -140,7 +154,7 @@ class TravelController {
         });
       }
 
-      if (busExistente.estado !== "disponible") {
+      if (busExistente.estado !== "Operativo") {
         return res.status(400).json({
           error: "El bus no está disponible para viajes",
         });
@@ -153,22 +167,6 @@ class TravelController {
       if (!rutaExistente) {
         return res.status(404).json({
           error: "La ruta especificada no existe",
-        });
-      }
-
-      const choferExistente = await prisma.chofer.findUnique({
-        where: { id_chofer: parseInt(id_chofer) },
-      });
-
-      if (!choferExistente) {
-        return res.status(404).json({
-          error: "El chofer especificado no existe",
-        });
-      }
-
-      if (choferExistente.estado !== "disponible") {
-        return res.status(400).json({
-          error: "El chofer no está disponible para viajes",
         });
       }
 
@@ -213,12 +211,14 @@ class TravelController {
         });
       }
 
+      const hora = new Date(hora_salida_programada);
+
       // Crear el nuevo viaje
       const nuevoViaje = await prisma.viaje.create({
         data: {
           fecha_salida: new Date(fecha_salida),
-          hora_salida_programada,
-          hora_salida_real: hora_salida_real || hora_salida_programada,
+          hora_salida_programada: hora.toTimeString().split(" ")[0],
+          hora_salida_real: hora.toTimeString().split(" ")[0],
           costo: parseFloat(costo),
           id_bus: parseInt(id_bus),
           id_ruta: parseInt(id_ruta),

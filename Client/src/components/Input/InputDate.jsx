@@ -1,6 +1,9 @@
-import React from "react";
+//React
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+
+//Components
+import { DateIcon } from "../Icons";
 
 export const InputDate = ({
   label,
@@ -17,6 +20,7 @@ export const InputDate = ({
       <Text style={styles.label}>{label}</Text>
       <TouchableOpacity style={styles.dateButton} onPress={onClick}>
         <Text style={styles.dateButtonText}>{text}</Text>
+        <DateIcon />
       </TouchableOpacity>
       {showDatePicker && (
         <DateTimePicker
@@ -25,6 +29,7 @@ export const InputDate = ({
           display="default"
           placeholderText="Seleccione una fecha"
           onChange={handleDateChange}
+          minimumDate={new Date()}
         />
       )}
       {error && error[name] && (
@@ -50,6 +55,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     backgroundColor: "#fff",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   dateButtonText: {
     fontSize: 16,

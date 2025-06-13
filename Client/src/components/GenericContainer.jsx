@@ -1,14 +1,22 @@
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { BlobBg } from "./Background/BlobBg";
 
 export const GenericContainer = ({ children, style, scroll = false }) => {
   if (scroll) {
     return (
-      <ScrollView style={[styles.container, style]}>{children}</ScrollView>
+      <ScrollView style={[styles.container, style]}>
+        {children}
+      </ScrollView>
     );
   }
 
-  return <View style={[styles.container, style]}>{children}</View>;
+  return (
+    <View style={[styles.container, style]}>
+      {children}
+      <BlobBg />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
