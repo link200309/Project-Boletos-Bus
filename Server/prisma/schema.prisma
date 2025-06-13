@@ -54,6 +54,7 @@ model Agencia {
 
   buses           Bus[]
   choferes        Chofer[]
+  rutas           Ruta[]
   configuraciones Configuracion_Pago[]
 }
 
@@ -126,6 +127,8 @@ model Ruta {
   tiempo_estimado   String @db.VarChar(20)
   camino            String @db.VarChar(50)
 
+  id_agencia Int
+  agencia    Agencia @relation(fields: [id_agencia], references: [id_agencia], onDelete: Cascade)
   viajes Viaje[]
 }
 

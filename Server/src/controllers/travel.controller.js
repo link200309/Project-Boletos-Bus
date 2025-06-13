@@ -106,9 +106,6 @@ class TravelController {
         id_chofer,
       } = req.body;
 
-      console.log("Datos recibidos para crear viaje:", req.body);
-
-      // Validaciones básicas
       if (
         !fecha_salida ||
         !hora_salida_programada ||
@@ -127,6 +124,22 @@ class TravelController {
             "id_ruta",
             "id_chofer",
           ],
+        });
+      }
+
+      const choferExistente = await prisma.chofer.findUnique({
+        where: { id_chofer: parseInt(id_chofer) },
+      });
+
+      if (!choferExistente) {
+        return res.status(404).json({
+          error: "El chofer especificado no existe",
+        });
+      }
+
+      if (choferExistente.estado !== "Activo") {
+        return res.status(400).json({
+          error: "El chofer no está disponible para viajes",
         });
       }
 
@@ -154,24 +167,6 @@ class TravelController {
       if (!rutaExistente) {
         return res.status(404).json({
           error: "La ruta especificada no existe",
-        });
-      }
-
-      const choferExistente = await prisma.chofer.findUnique({
-        where: { id_chofer: parseInt(id_chofer) },
-      });
-
-      console.log("Chofer existente:", choferExistente);
-
-      if (!choferExistente) {
-        return res.status(404).json({
-          error: "El chofer especificado no existe",
-        });
-      }
-
-      if (choferExistente.estado !== "Activo") {
-        return res.status(400).json({
-          error: "El chofer no está disponible para viajes",
         });
       }
 

@@ -97,6 +97,7 @@ async function main() {
         distancia: "380km",
         tiempo_estimado: "7",
         camino: "Asfaltado",
+        id_agencia: agencia.id_agencia,
       },
       {
         origen: "Santa Cruz",
@@ -105,6 +106,7 @@ async function main() {
         distancia: "480km",
         tiempo_estimado: "9",
         camino: "Asfaltado",
+        id_agencia: agencia.id_agencia,
       },
       {
         origen: "Sucre",
@@ -113,6 +115,7 @@ async function main() {
         distancia: "350km",
         tiempo_estimado: "6",
         camino: "Asfaltado",
+        id_agencia: agencia.id_agencia,
       },
       {
         origen: "Tarija",
@@ -121,6 +124,7 @@ async function main() {
         distancia: "410km",
         tiempo_estimado: "8",
         camino: "Asfaltado",
+        id_agencia: agencia.id_agencia,
       },
     ],
   });
