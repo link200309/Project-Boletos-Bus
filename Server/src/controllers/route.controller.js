@@ -54,7 +54,6 @@ class RouteController {
           id_agencia,
         },
       });
-
       return res.status(201).json(nuevaRuta);
     } catch (error) {
       console.error("Error al agregar ruta:", error);

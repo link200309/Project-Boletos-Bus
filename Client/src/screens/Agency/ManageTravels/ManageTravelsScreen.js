@@ -23,8 +23,12 @@ export default function ManageTravelsScreen({ navigation }) {
         console.error("Error fetching travels:", error);
       }
     }
-    fetchTravels();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchTravels();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const addTravel = () => {
     navigation.navigate("AddTravels", travels);
