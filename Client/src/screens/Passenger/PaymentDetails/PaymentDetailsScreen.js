@@ -6,6 +6,8 @@ import { BlobBg } from "../../../components/Background/BlobBg";
 import { InformativeTitle } from "../../../components/InformativeTitle";
 import PaymentSummaryCard from "./components/PaymentSummaryCard";
 import PaymentActionButtons from "./components/PaymentActionButtons";
+import { formatTime } from "../../../utils/dateTime.util";
+
 
 export default function PaymentDetailsScreen({ navigation, route }) {
   const {
@@ -15,20 +17,39 @@ export default function PaymentDetailsScreen({ navigation, route }) {
     contact = {},
   } = route?.params || {};
 
-  console.log("🧾 PaymentDetails received:", { travels, travelDetails, passengers, contact });
+  console.log("contact: ", {
+    contact,
+  });
+  console.log("pasajeros: ", {
+    passengers,
+  });
+  console.log("travels details: ", {
+    travelDetails,
+  });
+  console.log("travels: ", {
+    travels,
+  });
 
-  // Validar antes de usar
-  const seatNumbers = Array.isArray(passengers) ? passengers.map(p => p.seat) : [];
-  const price = parseFloat(travelDetails.price || 0);
+  const seatNumbers = Array.isArray(passengers)
+    ? passengers.map((p) => p.seat)
+    : [];
+  const price = parseFloat(travelDetails.costo || 0).toFixed(2);
   const total = (price * seatNumbers.length).toFixed(2);
+  const horario = `${travelDetails.hora_salida_programada.slice(
+    0,
+    5
+  )} - ${formatTime(
+    travelDetails.hora_salida_programada,
+    travelDetails.ruta.tiempo_estimado
+  )}`;
 
   const summaryData = {
-    horario: travelDetails.horario || "N/D",
+    horario: horario || "N/D",
     count: seatNumbers.length,
     seatNumbers,
     price,
     total,
-    busId: travelDetails.busData?.id_bus || "N/D",
+    busId: travelDetails.bus?.id_bus || "N/D",
     qrData: travelDetails.qr,
   };
 
@@ -51,10 +72,8 @@ export default function PaymentDetailsScreen({ navigation, route }) {
   );
 }
 
-
 const styles = StyleSheet.create({
   scrollContent: {
-    padding: 20,
     paddingBottom: 40,
     alignItems: "center",
   },

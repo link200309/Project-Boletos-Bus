@@ -15,16 +15,19 @@ import { AuthContext } from "../../context/AuthContext";
 import { GenericContainer } from "../../components/GenericContainer";
 import { ButtonStyle } from "../../components/Button/ButtonStyle";
 import { BlobBg } from "../../components/Background/BlobBg";
-import { actualizarPerfilUsuario,cambiarPasswordUsuario } from "../../api/user.api";
+import {
+  actualizarPerfilUsuario,
+  cambiarPasswordUsuario,
+} from "../../api/user.api";
 import { obtenerHistorialReservas } from "../../api/reserva.api";
 
 export default function PassengerSettingsScreen() {
-  const { user, logout,setUser } = useContext(AuthContext);
+  const { user, logout, setUser } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState("");
-const [reservas, setReservas] = useState([]);
+  const [reservas, setReservas] = useState([]);
 
-const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({});
 
   const [personalInfo, setPersonalInfo] = useState({
     nombre: user?.usuario?.nombre || "",
@@ -36,19 +39,21 @@ const [errors, setErrors] = useState({});
   const handleSavePersonalInfo = async () => {
     const newErrors = {};
 
-    if (!personalInfo.nombre.trim()) newErrors.nombre = "El nombre es obligatorio.";
-    if (!personalInfo.apellido.trim()) newErrors.apellido = "El apellido es obligatorio.";
+    if (!personalInfo.nombre.trim())
+      newErrors.nombre = "El nombre es obligatorio.";
+    if (!personalInfo.apellido.trim())
+      newErrors.apellido = "El apellido es obligatorio.";
     if (!/^\d{4}-\d{2}-\d{2}$/.test(personalInfo.nacimiento)) {
       newErrors.nacimiento = "Formato de fecha inválido. Usa YYYY-MM-DD.";
     }
 
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors); // Debes tener setErrors y mostrar los errores en el form
+      setErrors(newErrors);
       return;
     }
 
     try {
-      const token = user?.token; // Asume que tienes el JWT en user
+      const token = user?.token;
       const datos = {
         nombre: personalInfo.nombre,
         apellido: personalInfo.apellido,
@@ -79,8 +84,10 @@ const [errors, setErrors] = useState({});
   const handleChangePassword = async () => {
     const newErrors = {};
 
-    if (!passwordForm.actual.trim()) newErrors.actual = "Debe ingresar su contraseña actual.";
-    if (passwordForm.nueva.length < 8) newErrors.nueva = "La nueva contraseña debe tener al menos 8 caracteres.";
+    if (!passwordForm.actual.trim())
+      newErrors.actual = "Debe ingresar su contraseña actual.";
+    if (passwordForm.nueva.length < 8)
+      newErrors.nueva = "La nueva contraseña debe tener al menos 8 caracteres.";
     if (passwordForm.nueva !== passwordForm.confirmacion)
       newErrors.confirmacion = "Las contraseñas no coinciden.";
 
@@ -98,7 +105,6 @@ const [errors, setErrors] = useState({});
         },
         token
       );
-
       alert(response.mensaje || "Contraseña actualizada correctamente");
       setPasswordForm({ actual: "", nueva: "", confirmacion: "" });
       setModalVisible(false);
@@ -114,18 +120,16 @@ const [errors, setErrors] = useState({});
         console.warn("No se encontró el token del usuario");
         return;
       }
-
       const data = await fetchHistorialReservas(token);
-
       if (Array.isArray(data)) {
         setReservas(data);
       } else {
         console.warn("La respuesta de reservas no es un array:", data);
-        setReservas([]); // Valor seguro
+        setReservas([]);
       }
     } catch (error) {
       console.error("Error al cargar historial de reservas:", error);
-      setReservas([]); // Valor seguro en caso de error
+      setReservas([]);
     }
   };
 
@@ -168,21 +172,24 @@ const [errors, setErrors] = useState({});
                   setErrors({ ...errors, nombre: null });
                 }}
               />
-              {errors.nombre && <Text style={styles.errorText}>{errors.nombre}</Text>}
-
+              {errors.nombre && (
+                <Text style={styles.errorText}>{errors.nombre}</Text>
+              )}
             </View>
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Apellido</Text>
-                <TextInput
-                  style={styles.input}
-                  value={personalInfo.apellido}
-                  onChangeText={(text) => {
-                    setPersonalInfo({ ...personalInfo, apellido: text });
-                    setErrors({ ...errors, apellido: null });
-                  }}
-                />
-                {errors.apellido && <Text style={styles.errorText}>{errors.apellido}</Text>}
+              <TextInput
+                style={styles.input}
+                value={personalInfo.apellido}
+                onChangeText={(text) => {
+                  setPersonalInfo({ ...personalInfo, apellido: text });
+                  setErrors({ ...errors, apellido: null });
+                }}
+              />
+              {errors.apellido && (
+                <Text style={styles.errorText}>{errors.apellido}</Text>
+              )}
             </View>
 
             <View style={styles.inputGroup}>
@@ -196,16 +203,18 @@ const [errors, setErrors] = useState({});
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Fecha de nacimiento</Text>
-                <TextInput
-                  style={styles.input}
-                  value={personalInfo.nacimiento}
-                  onChangeText={(text) => {
-                    setPersonalInfo({ ...personalInfo, nacimiento: text });
-                    setErrors({ ...errors, nacimiento: null });
-                  }}
-                  placeholder="YYYY-MM-DD"
-                />
-                {errors.nacimiento && <Text style={styles.errorText}>{errors.nacimiento}</Text>}
+              <TextInput
+                style={styles.input}
+                value={personalInfo.nacimiento}
+                onChangeText={(text) => {
+                  setPersonalInfo({ ...personalInfo, nacimiento: text });
+                  setErrors({ ...errors, nacimiento: null });
+                }}
+                placeholder="YYYY-MM-DD"
+              />
+              {errors.nacimiento && (
+                <Text style={styles.errorText}>{errors.nacimiento}</Text>
+              )}
             </View>
 
             <Pressable
@@ -226,10 +235,8 @@ const [errors, setErrors] = useState({});
                   : "Aceptar"}
               </Text>
             </Pressable>
-
           </View>
         );
-
 
       case "password":
         return (
@@ -250,34 +257,38 @@ const [errors, setErrors] = useState({});
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Nueva contraseña</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="••••••••"
-                  placeholderTextColor="#A0A0A0"
-                  secureTextEntry
-                  value={passwordForm.nueva}
-                  onChangeText={(text) => {
-                    setPasswordForm({ ...passwordForm, nueva: text });
-                    setErrors({ ...errors, nueva: null });
-                  }}
+              <TextInput
+                style={styles.input}
+                placeholder="••••••••"
+                placeholderTextColor="#A0A0A0"
+                secureTextEntry
+                value={passwordForm.nueva}
+                onChangeText={(text) => {
+                  setPasswordForm({ ...passwordForm, nueva: text });
+                  setErrors({ ...errors, nueva: null });
+                }}
               />
-              {errors.nueva && <Text style={styles.errorText}>{errors.nueva}</Text>}
+              {errors.nueva && (
+                <Text style={styles.errorText}>{errors.nueva}</Text>
+              )}
             </View>
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Confirmar nueva contraseña</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="••••••••"
-                  placeholderTextColor="#A0A0A0"
-                  secureTextEntry
-                  value={passwordForm.confirmacion}
-                  onChangeText={(text) => {
-                    setPasswordForm({ ...passwordForm, confirmacion: text });
-                    setErrors({ ...errors, confirmacion: null });
-                  }}
-                />
-                {errors.confirmacion && <Text style={styles.errorText}>{errors.confirmacion}</Text>}
+              <TextInput
+                style={styles.input}
+                placeholder="••••••••"
+                placeholderTextColor="#A0A0A0"
+                secureTextEntry
+                value={passwordForm.confirmacion}
+                onChangeText={(text) => {
+                  setPasswordForm({ ...passwordForm, confirmacion: text });
+                  setErrors({ ...errors, confirmacion: null });
+                }}
+              />
+              {errors.confirmacion && (
+                <Text style={styles.errorText}>{errors.confirmacion}</Text>
+              )}
             </View>
 
             <Pressable
@@ -306,21 +317,26 @@ const [errors, setErrors] = useState({});
                   <View style={styles.historialRow}>
                     <Icon name="calendar-outline" size={16} color="#441AD1" />
                     <Text style={styles.historialInfo}>
-                      {new Date(reserva.viaje.fecha_salida).toLocaleDateString()} -{" "}
-                      {reserva.viaje.hora_salida_programada}
+                      {new Date(
+                        reserva.viaje.fecha_salida
+                      ).toLocaleDateString()}{" "}
+                      - {reserva.viaje.hora_salida_programada}
                     </Text>
                   </View>
 
                   <View style={styles.historialRow}>
                     <Icon name="bus-outline" size={16} color="#441AD1" />
                     <Text style={styles.historialInfo}>
-                      {reserva.viaje.bus.tipo_bus} | Asiento: {reserva.asiento.numero}
+                      {reserva.viaje.bus.tipo_bus} | Asiento:{" "}
+                      {reserva.asiento.numero}
                     </Text>
                   </View>
 
                   <View style={styles.historialRow}>
                     <Icon name="cash-outline" size={16} color="#441AD1" />
-                    <Text style={styles.historialInfo}>Bs. {reserva.viaje.costo}</Text>
+                    <Text style={styles.historialInfo}>
+                      Bs. {reserva.viaje.costo}
+                    </Text>
                   </View>
                 </View>
               ))
@@ -328,77 +344,94 @@ const [errors, setErrors] = useState({});
           </ScrollView>
         );
 
-       case "nosotros":
-         return (
-           <ScrollView style={{ maxHeight: 450 }}>
-             <Text style={styles.aboutTitle}>
-               <Text style={styles.boldText}>BusRat - Proyecto Académico</Text>
-             </Text>
+      case "nosotros":
+        return (
+          <ScrollView style={{ maxHeight: 450 }}>
+            <Text style={styles.aboutTitle}>
+              <Text style={styles.boldText}>BusRat - Proyecto Académico</Text>
+            </Text>
 
-             <Text style={styles.aboutText}>
-               <Icon name="school-outline" size={16} color="#441AD1" /> Universidad Mayor de San Simón - Facultad de Ciencias y Tecnología
-             </Text>
+            <Text style={styles.aboutText}>
+              <Icon name="school-outline" size={16} color="#441AD1" />{" "}
+              Universidad Mayor de San Simón - Facultad de Ciencias y Tecnología
+            </Text>
 
-             <Text style={styles.aboutText}>
-               <Icon name="person-outline" size={16} color="#441AD1" /> Docente: Américo Fiorilo Lozada P.Ph.D.
-             </Text>
+            <Text style={styles.aboutText}>
+              <Icon name="person-outline" size={16} color="#441AD1" /> Docente:
+              Américo Fiorilo Lozada P.Ph.D.
+            </Text>
 
-             <Text style={[styles.aboutText, { marginTop: 8 }]}>
-               <Icon name="people-outline" size={16} color="#441AD1" /> <Text style={styles.boldText}>Integrantes:</Text>
-               {"\n"}• Cáceres Telleria Jaime Cristhian
-               {"\n"}• Chavarria Zurita John Henry
-               {"\n"}• Flores García Cristian Adrian
-               {"\n"}• Sahonero Garrado Sidney Angelly
-               {"\n"}• Velasquez Ricaldez Rodrigo
-             </Text>
+            <Text style={[styles.aboutText, { marginTop: 8 }]}>
+              <Icon name="people-outline" size={16} color="#441AD1" />{" "}
+              <Text style={styles.boldText}>Integrantes:</Text>
+              {"\n"}• Cáceres Telleria Jaime Cristhian
+              {"\n"}• Chavarria Zurita John Henry
+              {"\n"}• Sahonero Garrado Sidney Angelly
+              {"\n"}• Velasquez Ricaldez Rodrigo
+            </Text>
 
-             <Text style={[styles.aboutText, { marginTop: 10 }]}>
-               <Icon name="document-text-outline" size={16} color="#441AD1" /> <Text style={styles.boldText}>Resumen:</Text>
-               {"\n"}Este proyecto tiene como objetivo mejorar la experiencia de viaje de los usuarios del transporte interdepartamental mediante una app que permite:
-               {"\n"}• Reservar asientos en tiempo real
-               {"\n"}• Consultar horarios y disponibilidad
-               {"\n"}• Ver historial de viajes y pagar por QR
-             </Text>
+            <Text style={[styles.aboutText, { marginTop: 10 }]}>
+              <Icon name="document-text-outline" size={16} color="#441AD1" />{" "}
+              <Text style={styles.boldText}>Resumen:</Text>
+              {"\n"}Este proyecto tiene como objetivo mejorar la experiencia de
+              viaje de los usuarios del transporte interdepartamental mediante
+              una app que permite:
+              {"\n"}• Reservar asientos en tiempo real
+              {"\n"}• Consultar horarios y disponibilidad
+              {"\n"}• Ver historial de viajes y pagar por QR
+            </Text>
 
-             <Text style={[styles.aboutText, { marginTop: 10 }]}>
-               <Icon name="layers-outline" size={16} color="#441AD1" /> <Text style={styles.boldText}>Tecnologías:</Text>
-               {"\n"}• React Native
-               {"\n"}• Node.js + Express
-               {"\n"}• PostgreSQL
-               {"\n"}• Firebase Auth
-             </Text>
+            <Text style={[styles.aboutText, { marginTop: 10 }]}>
+              <Icon name="layers-outline" size={16} color="#441AD1" />{" "}
+              <Text style={styles.boldText}>Tecnologías:</Text>
+              {"\n"}• React Native
+              {"\n"}• Node.js + Express
+              {"\n"}• PostgreSQL
+              {"\n"}• Firebase Auth
+            </Text>
 
-             <Text style={[styles.aboutText, { marginTop: 10 }]}>
-               <Icon name="checkmark-done-outline" size={16} color="#441AD1" /> <Text style={styles.boldText}>Metodología:</Text>
-               {"\n"}Desarrollo bajo metodología Scrum con entregables iterativos en sprints y control de versiones mediante GitHub.
-             </Text>
-           </ScrollView>
-         );
+            <Text style={[styles.aboutText, { marginTop: 10 }]}>
+              <Icon name="checkmark-done-outline" size={16} color="#441AD1" />{" "}
+              <Text style={styles.boldText}>Metodología:</Text>
+              {"\n"}Desarrollo bajo metodología Scrum con entregables iterativos
+              en sprints y control de versiones mediante GitHub.
+            </Text>
+          </ScrollView>
+        );
 
-        case "sugerencias":
-                  return (
-                    <View style={{ padding: 10 }}>
-                      <Text style={{ fontSize: 16, marginBottom: 10 }}>
-                        ¿Tienes ideas, mejoras o detectaste un problema?
-                      </Text>
-                      <Text style={{ fontSize: 14, marginBottom: 20 }}>
-                        Envíanos tus sugerencias al siguiente correo:
-                      </Text>
+      case "sugerencias":
+        return (
+          <View style={{ padding: 10 }}>
+            <Text style={{ fontSize: 16, marginBottom: 10 }}>
+              ¿Tienes ideas, mejoras o detectaste un problema?
+            </Text>
+            <Text style={{ fontSize: 14, marginBottom: 20 }}>
+              Envíanos tus sugerencias al siguiente correo:
+            </Text>
 
-                      <Text style={{ fontSize: 16, fontWeight: "bold", color: "#441AD1", marginBottom: 20 }}>
-                        soporte.busrat@gmail.com
-                      </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "#441AD1",
+                marginBottom: 20,
+              }}
+            >
+              soporte.busrat@gmail.com
+            </Text>
 
-                      <Pressable
-                        style={styles.popupCloseButton}
-                        onPress={() =>
-                          Linking.openURL("mailto:soporte.busrat@gmail.com?subject=Sugerencia BusRat")
-                        }
-                      >
-                        <Text style={styles.popupCloseText}>Enviar correo</Text>
-                      </Pressable>
-                    </View>
-                  );
+            <Pressable
+              style={styles.popupCloseButton}
+              onPress={() =>
+                Linking.openURL(
+                  "mailto:soporte.busrat@gmail.com?subject=Sugerencia BusRat"
+                )
+              }
+            >
+              <Text style={styles.popupCloseText}>Enviar correo</Text>
+            </Pressable>
+          </View>
+        );
       default:
         return <Text style={styles.popupContent}>En desarrollo...</Text>;
     }
@@ -406,7 +439,7 @@ const [errors, setErrors] = useState({});
 
   return (
     <GenericContainer>
-    <BlobBg />
+      <BlobBg />
       <ScrollView contentContainerStyle={styles.container}>
         {/* Avatar y nombre */}
         <View style={styles.profileCard}>
@@ -426,20 +459,27 @@ const [errors, setErrors] = useState({});
           </View>
         </View>
 
-
         {/* Sección: Cuenta */}
         <Text style={styles.sectionTitle}>Cuenta</Text>
         <View style={styles.sectionBox}>
           {renderItem("person-outline", "Información personal", "info")}
           {renderItem("lock-closed-outline", "Cambiar contraseña", "password")}
-          {renderItem("calendar-outline", "Historial de reservas", "historial")}
+          {renderItem("calendar-outline", "Historial de viajes", "historial")}
         </View>
 
         {/* Sección: General */}
         <Text style={styles.sectionTitle}>General</Text>
         <View style={styles.sectionBox}>
-          {renderItem("chatbox-ellipses-outline", "Enviar sugerencias", "sugerencias")}
-          {renderItem("information-circle-outline", "Sobre nosotros", "nosotros")}
+          {renderItem(
+            "chatbox-ellipses-outline",
+            "Enviar sugerencias",
+            "sugerencias"
+          )}
+          {renderItem(
+            "information-circle-outline",
+            "Sobre nosotros",
+            "nosotros"
+          )}
         </View>
 
         {/* Botón cerrar sesión */}
@@ -463,25 +503,27 @@ const [errors, setErrors] = useState({});
         <View style={styles.modalOverlay}>
           <View style={styles.popupBox}>
             {/* Icono Cerrar */}
-            <Pressable style={styles.closeIcon} onPress={() => setModalVisible(false)}>
+            <Pressable
+              style={styles.closeIcon}
+              onPress={() => setModalVisible(false)}
+            >
               <Icon name="close" size={24} color="#555" />
             </Pressable>
 
             {/* Título */}
             <Text style={styles.popupTitle}>
-                {modalContent === "info" && "Información personal"}
-                          {modalContent === "password" && "Cambiar contraseña"}
-                          {modalContent === "historial" && "Historial de reservas"}
-                          {modalContent === "sugerencias" && "Enviar Sugerencias"}
-                          {modalContent === "nosotros" && "Sobre Nosotros"}
-                        </Text>
+              {modalContent === "info" && "Información personal"}
+              {modalContent === "password" && "Cambiar contraseña"}
+              {modalContent === "historial" && "Historial de reservas"}
+              {modalContent === "sugerencias" && "Enviar Sugerencias"}
+              {modalContent === "nosotros" && "Sobre Nosotros"}
+            </Text>
 
             {/* Contenido dinámico */}
             {renderModalContent()}
           </View>
         </View>
       </Modal>
-
     </GenericContainer>
   );
 }
@@ -496,7 +538,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
-
   profileCard: {
     backgroundColor: "#fff",
     borderRadius: 12,
@@ -506,7 +547,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     elevation: 2,
   },
-
   aboutTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -514,20 +554,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "center",
   },
-
   aboutText: {
     fontSize: 14,
     color: "#333",
     lineHeight: 20,
     marginBottom: 8,
   },
-
   boldText: {
     fontWeight: "bold",
     color: "#441AD1",
   },
-
-
   avatar: {
     width: 60,
     height: 60,
@@ -543,8 +579,8 @@ const styles = StyleSheet.create({
     color: "#777",
   },
   sectionTitle: {
-    fontSize: 16,              // ⬅ un poco más grande
-    color: "#441AD1",          // ⬅ color púrpura intenso
+    fontSize: 16,
+    color: "#441AD1",
     marginBottom: 8,
     marginTop: 9,
     fontWeight: "700",
@@ -704,6 +740,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#555",
   },
-
-
 });

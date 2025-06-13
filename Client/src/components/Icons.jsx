@@ -56,10 +56,5 @@ export const BackIcon = (props) => (
 );
 
 export const ScanQRIcon = (props) => (
-  <MaterialCommunityIcons
-    name="qrcode-scan"
-    size={24}
-    color="#000"
-    {...props}
-  />
+  <MaterialCommunityIcons name="qrcode-scan" size={20} {...props} />
 );

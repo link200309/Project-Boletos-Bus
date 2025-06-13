@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { captureRef } from "react-native-view-shot";
 import * as Sharing from "expo-sharing";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
+import { GlobalStyles} from "../../../../components/Style/GlobalStyles";
 
 export default function PaymentActionButtons({ summaryRef, onConfirm }) {
   const handleShare = async () => {
@@ -20,17 +21,17 @@ export default function PaymentActionButtons({ summaryRef, onConfirm }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={GlobalStyles.formCard}>
       <View style={styles.buttonRow}>
         <ButtonStyle
-          text="Compartir"
+          text="Pagar luego"
           variant={2}
           width={150}
           onClick={handleShare}
           style={{ marginRight: 10 }}
         />
         <ButtonStyle
-          text="Confirmar reserva"
+          text="Confirmar"
           width={150}
           onClick={onConfirm}
         />
@@ -40,18 +41,6 @@ export default function PaymentActionButtons({ summaryRef, onConfirm }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#fff",         
-    padding: 20,
-    borderRadius: 20,
-    marginTop: 20,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 2,
-    width: "100%",
-  },
   buttonRow: {
     flexDirection: "row",
     justifyContent: "center",
