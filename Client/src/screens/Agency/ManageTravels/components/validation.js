@@ -13,4 +13,18 @@ export const validator = {
       message: "No debe ser una fecha posterior a 2026-06-25",
     },
   },
+  costo: {
+    required: {
+      value: true,
+      message: "El costo es requerido",
+    },
+    min: {
+      value: 0,
+      message: "No debe ser un costo negativo",
+    },
+    max: {
+      value: 1000000,
+      message: "No debe ser un costo mayor a 1,000,000",
+    },
+  },
 };

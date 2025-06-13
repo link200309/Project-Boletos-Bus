@@ -1,5 +1,5 @@
 //React
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { Controller, useForm, FormProvider } from "react-hook-form";
 
@@ -24,7 +24,6 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
     fecha_salida: new Date(),
     hora_salida_programada: new Date(),
     hora_salida_real: new Date(),
-    costo: "",
     id_chofer: -1,
     id_bus: -1,
     id_ruta: -1,
@@ -40,6 +39,9 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
   const [showRutaModal, setShowRutaModal] = useState(false);
   const [showPagoModal, setShowPagoModal] = useState(false);
   const [showCreateRuta, setShowCreateRuta] = useState(false);
+  const onChangeChoferRef = useRef(null);
+  const onChangeBusRef = useRef(null);
+  const onChangeRutaRef = useRef(null);
 
   const methods = useForm({
     mode: "onChange",
@@ -47,8 +49,7 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
-    watch,
+    formState: { errors },
   } = methods;
   const [nuevaRuta, setNuevaRuta] = useState({
     origen: "",
@@ -60,7 +61,6 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
   });
 
   const handleDateChange = (event, selectedDate) => {
-    // console.log("Fecha seleccionada:", selectedDate);
     setShowDatePicker(false);
     if (selectedDate) {
       setViaje({ ...viaje, fecha_salida: selectedDate });
@@ -98,6 +98,18 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
         : type === "pago";
 
     setViaje({ ...viaje, [idField]: itemId });
+    if (onChangeChoferRef.current) {
+      switch (idField) {
+        case "id_chofer":
+          onChangeChoferRef.current(item.id_chofer);
+          break;
+        case "id_bus":
+          onChangeBusRef.current(item.id_bus);
+          break;
+        case "id_ruta":
+          onChangeRutaRef.current(item.id_ruta);
+      }
+    }
 
     if (errors[idField]) {
       setErrors({ ...errors, [idField]: null });
@@ -160,47 +172,28 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
     Alert.alert("Éxito", "Ruta creada exitosamente");
   };
 
-  const formatDataForBackend = () => {
-    const formatTime = (date) => {
-      return date.toLocaleTimeString("es-ES", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-    };
-
-    const formatDate = (date) => {
-      return date.toISOString().split("T")[0]; // YYYY-MM-DD
-    };
-
-    return {
-      fecha_salida: formatDate(viaje.fecha_salida),
-      hora_salida_programada: formatTime(viaje.hora_salida_programada),
-      hora_salida_real: formatTime(viaje.hora_salida_real),
-      costo: parseFloat(viaje.costo),
-      id_chofer: parseInt(viaje.id_chofer),
-      id_bus: parseInt(viaje.id_bus),
-      id_ruta: parseInt(viaje.id_ruta),
-      id_pago: parseInt(viaje.id_pago),
-    };
-  };
-
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      const dataToSend = formatDataForBackend();
-      console.log("Datos a enviar:", dataToSend);
+      data["DepartureTime"] = data["DepartureTime"].toLocaleTimeString(
+        "es-ES",
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+        }
+      );
+      console.log("Datos a enviar:", data);
 
-      setViaje({
-        fecha_salida: new Date(),
-        hora_salida_programada: new Date(),
-        hora_salida_real: new Date(),
-        costo: "",
-        id_chofer: "",
-        id_bus: "",
-        id_ruta: "",
-        id_pago: "",
-      });
+      // setViaje({
+      //   fecha_salida: new Date(),
+      //   hora_salida_programada: new Date(),
+      //   hora_salida_real: new Date(),
+      //   costo: "",
+      //   id_chofer: "",
+      //   id_bus: "",
+      //   id_ruta: "",
+      //   id_pago: "",
+      // });
 
       Alert.alert("Éxito", "Viaje creado exitosamente");
     } catch (error) {
@@ -219,7 +212,7 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
             control={control}
             name="departureDate"
             defaultValue={viaje.fecha_salida}
-            rules={validator.fechaSalida}
+            rules={{ required: "La fecha es obligatoria" }}
             render={({ field: { onChange, value } }) => (
               <InputDate
                 label="Fecha de salida *"
@@ -228,9 +221,8 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
                 onClick={() => setShowDatePicker(true)}
                 text={value ? new Date(value).toLocaleDateString("es-ES") : ""}
                 handleDateChange={(event, date) => {
-                  console.log("Fecha seleccionada:", date);
-                  onChange(date); // Actualiza el valor en react-hook-form
-                  handleDateChange(date); // Lógica personalizada externa
+                  onChange(date);
+                  handleDateChange(date);
                 }}
                 valueDateModal={value}
                 showDatePicker={showDatePicker}
@@ -238,65 +230,124 @@ export const FormAddTravel = ({ choferes, buses, rutas }) => {
             )}
           />
 
-          <InputTime
-            label="Hora Salida Programada *"
-            text={viaje.hora_salida_programada.toLocaleTimeString("es-ES", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-            handleTimeChange={handleTimeChange}
-            onClick={() => setShowTimePicker("hora_salida_programada")}
-            valueTimeModal={viaje[showTimePicker]}
-            showTimePicker={showTimePicker}
+          <Controller
+            control={control}
+            name="DepartureTime"
+            defaultValue={viaje.hora_salida_programada}
+            rules={{ required: "La hora de salida programada es obligatoria" }}
+            render={({ field: { onChange, value } }) => (
+              <InputTime
+                label="Hora Salida Programada *"
+                name="DepartureTime"
+                error={errors}
+                text={
+                  value
+                    ? new Date(value).toLocaleTimeString("es-ES", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : ""
+                }
+                handleTimeChange={(event, time) => {
+                  onChange(time);
+                  handleTimeChange(event, time);
+                }}
+                onClick={() => setShowTimePicker("hora_salida_programada")}
+                valueTimeModal={value}
+                showTimePicker={showTimePicker}
+              />
+            )}
           />
 
-          <InputLabel
-            label="Costo (Bs.) *"
-            value={viaje.costo}
-            onChange={(text) => {
-              setViaje({ ...viaje, costo: text });
-              if (errors.costo) {
-                setErrors({ ...errors, costo: null });
-              }
+          <Controller
+            control={control}
+            name="Cost"
+            rules={validator.costo}
+            render={({ field: { onChange, value } }) => (
+              <InputLabel
+                label="Costo (Bs.) *"
+                value={value}
+                name="Cost"
+                error={errors}
+                onChange={onChange}
+                placeholder="Ingrese el costo del viaje"
+                keyboardType="numeric"
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="Chofer"
+            rules={{ required: "El chofer es obligatorio" }}
+            render={({ field: { onChange, value } }) => {
+              onChangeChoferRef.current = onChange;
+
+              return (
+                <SelectField
+                  label="Chofer"
+                  onPress={() => setShowChoferModal(true)}
+                  name="Chofer"
+                  error={errors}
+                  value={
+                    getSelected("chofer", choferes)
+                      ? `${getSelected("chofer", choferes).nombre} ${
+                          getSelected("chofer", choferes).apellido
+                        }`
+                      : null
+                  }
+                />
+              );
             }}
-            placeholder="Ingrese el costo del viaje"
-            keyboardType="numeric"
+          />
+          <Controller
+            control={control}
+            name="Bus"
+            rules={{ required: "El bus es obligatorio" }}
+            render={({ field: { onChange, value } }) => {
+              onChangeBusRef.current = onChange;
+
+              return (
+                <SelectField
+                  label="Bus"
+                  onPress={() => setShowBusModal(true)}
+                  name={"Bus"}
+                  error={errors}
+                  value={
+                    getSelected("bus", buses)
+                      ? `${getSelected("bus", buses).placa} - ${
+                          getSelected("bus", buses).marca
+                        } ${getSelected("bus", buses).modelo}`
+                      : null
+                  }
+                />
+              );
+            }}
           />
 
-          <SelectField
-            label="Chofer"
-            onPress={() => setShowChoferModal(true)}
-            value={
-              getSelected("chofer", choferes)
-                ? `${getSelected("chofer", choferes).nombre} ${
-                    getSelected("chofer", choferes).apellido
-                  }`
-                : null
-            }
-          />
+          <Controller
+            control={control}
+            name="Ruta"
+            rules={{ required: "La ruta es obligatorio" }}
+            render={({ field: { onChange, value } }) => {
+              onChangeRutaRef.current = onChange;
 
-          <SelectField
-            label="Bus"
-            onPress={() => setShowBusModal(true)}
-            value={
-              getSelected("bus", buses)
-                ? `${getSelected("bus", buses).placa} - ${
-                    getSelected("bus", buses).marca
-                  } ${getSelected("bus", buses).modelo}`
-                : null
-            }
-          />
-
-          <SelectField
-            label="Ruta"
-            onPress={() => setShowRutaModal(true)}
-            value={
-              getSelected("ruta", rutas)
-                ? `${getSelected("ruta", rutas).origen} → ${
-                    getSelected("ruta", rutas).destino
-                  }`
-                : null
-            }
+              return (
+                <SelectField
+                  label="Ruta"
+                  name={"Ruta"}
+                  error={errors}
+                  onPress={() => setShowRutaModal(true)}
+                  value={
+                    getSelected("ruta", rutas)
+                      ? `${getSelected("ruta", rutas).origen} → ${
+                          getSelected("ruta", rutas).destino
+                        }`
+                      : null
+                  }
+                />
+              );
+            }}
           />
         </FormProvider>
 
