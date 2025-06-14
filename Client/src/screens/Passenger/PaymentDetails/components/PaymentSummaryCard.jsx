@@ -1,8 +1,9 @@
 import React, { forwardRef } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import SummaryRow from "./SummaryRow";
-import QrCodeDisplay from "./QrCodeDisplay";
+import { BoliviaQRPayment } from "./QrCodeDisplay";
 import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
+import qrImage from "../../assets/qr-BNB.jpeg";
 
 const PaymentSummaryCard = forwardRef(({ summary }, ref) => {
   return (
@@ -28,7 +29,14 @@ const PaymentSummaryCard = forwardRef(({ summary }, ref) => {
         value={summary.busId || "No disponible"}
       />
 
-      <QrCodeDisplay data={summary.qrData} />
+      <BoliviaQRPayment
+        amount={150.5}
+        merchantName="Mi Negocio"
+        merchantAccount="1234567890"
+        merchantPhone="70123456"
+        qrImageSource={qrImage}
+        onPaymentInitiated={(ref) => console.log("Pago iniciado:", ref)}
+      />
     </View>
   );
 });
