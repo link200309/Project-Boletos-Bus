@@ -30,7 +30,7 @@ export const PassengerCard = ({
   const [isScanned, setIsScanned] = useState(false);
   const [isAccountDataUsed, setIsAccountDataUsed] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-
+  console.log( "Pasenger", passenger);
   const showDatePicker = () => {
     setDatePickerVisible(true);
   };

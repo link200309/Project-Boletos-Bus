@@ -1,7 +1,5 @@
 import React from "react";
 import { View, StyleSheet, Alert } from "react-native";
-import { captureRef } from "react-native-view-shot";
-import * as Sharing from "expo-sharing";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 
@@ -15,7 +13,7 @@ export default function PaymentActionButtons({ summaryRef, onConfirm }) {
         {
           text: "Sí, enviado",
           onPress: () => {
-            
+            onConfirm();
           },
         },
       ]

@@ -30,9 +30,9 @@ const PaymentSummaryCard = forwardRef(({ summary }, ref) => {
       />
 
       <BoliviaQRPayment
-        amount={150.5}
-        merchantName="Mi Negocio"
-        merchantAccount="1234567890"
+        amount={Number(summary.total)}
+        merchantName="BusRat"
+        merchantAccount="4589621558"
         merchantPhone="70123456"
         qrImageSource={qrImage}
         onPaymentInitiated={(ref) => console.log("Pago iniciado:", ref)}
