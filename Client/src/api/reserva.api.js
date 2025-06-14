@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.1.4:4000"; // Reemplaza si cambia tu IP o dominio
+const BASE_URL = "http://192.168.0.2:4000"; // Reemplaza si cambia tu IP o dominio
 
 /**
  * Obtiene el historial de reservas del usuario autenticado.

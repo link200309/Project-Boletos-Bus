@@ -6,6 +6,8 @@ import ManageTravelsScreen from "../../../screens/Agency/ManageTravels/ManageTra
 import { commonHeaderOptions } from "../../../components/Style/HeaderLogoTitle";
 import AddTravelScreen from "../../../screens/Agency/ManageTravels/AddTravelScreen";
 import DetailsTravelScreen from "../../../screens/Agency/ManageTravels/DetailsTravelScreen";
+import ReservationsTravelScreen from "../../../screens/Agency/ManageTravels/ReservationsTravelScreen";
+import ReservationDetailsScreen from "../../../screens/Agency/ManageTravels/ReservationDetailsScreen";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +28,16 @@ export default function ManageTravelsStack() {
         name="DetailsTravel"
         component={DetailsTravelScreen}
         options={{ title: "Detalles viajes" }}
+      />
+      <Stack.Screen
+        name="ReservationsTravel"
+        component={ReservationsTravelScreen}
+        options={{ title: "Reservas de viajes" }}
+      />
+      <Stack.Screen
+        name="ReservationDetails"
+        component={ReservationDetailsScreen}
+        options={{ title: "Detalle de reserva" }}
       />
     </Stack.Navigator>
   );

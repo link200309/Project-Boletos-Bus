@@ -22,9 +22,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flex: 1,
     paddingBottom: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 30,
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 15,
     // paddingBottom: 45,
   },
 });
