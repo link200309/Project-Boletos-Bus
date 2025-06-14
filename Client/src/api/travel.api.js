@@ -37,3 +37,8 @@ export const cancelReserve = async (data) => {
   const res = await travelApi.put(`/reserva/cancel`, data);
   return res.data;
 };
+
+export const updateTravel = async (id, data) => {
+  const res = await travelApi.put(`/travel/${id}`, data);
+  return res.data;
+};

@@ -8,6 +8,7 @@ import BusList from "./components/BusList";
 import { getBuses } from "../../../api/bus.api";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+
 export default function ManageBussesScreen({ navigation }) {
   const [buses, setBuses] = useState([]);
   const isFocused = useIsFocused();

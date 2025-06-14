@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 //components
 import { InformativeTitle } from "../../../components/InformativeTitle";
 import { GenericContainer } from "../../../components/GenericContainer";
-import { BlobBg } from "../../../components/Background/BlobBg";
 import { ListAvailableDates } from "./components/ListAvailableDates";
 //api
 import { getTravels } from "../../../api/travel.api";
@@ -38,7 +37,6 @@ export default function AvailabilityDatesScreen({ navigation }) {
           ).length + " Fecha(s) disponible(s)"
         }
       />
-      <BlobBg />
       <ListAvailableDates travels={travels} navigation={navigation} />
     </GenericContainer>
   );

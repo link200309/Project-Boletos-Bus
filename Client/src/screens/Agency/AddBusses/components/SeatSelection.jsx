@@ -8,17 +8,22 @@ import { formatTime, formatDate } from "../../../../utils/dateTime.util";
 export const SeatSelection = ({ navigation, asientos, busData, travels }) => {
   const [selectedFloor, setSelectedFloor] = useState("Superior");
   const [selectedSeats, setSelectedSeats] = useState([]);
+
+  const [forceUpdate, setForceUpdate] = useState(0);
+
   const handleSeatSelection = (seatId) => {
     const asiento = asientos.find((a) => a.id_asiento === seatId);
-    if (!asiento || asiento.estado !== "Disponible") {
+    if (!asiento) {
       return;
     }
-    if (selectedSeats.includes(seatId)) {
-      setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
-      console.log(selectedSeats);
-    } else {
-      setSelectedSeats([...selectedSeats, seatId]);
+
+    if (asiento.estado === "Disponible") {
+      asiento.estado = "No disponible";
+    } else if (asiento.estado === "No disponible") {
+      asiento.estado = "Disponible";
     }
+
+    setForceUpdate((prev) => prev + 1);
   };
 
   const hasTwoFloors =
@@ -59,7 +64,7 @@ export const SeatSelection = ({ navigation, asientos, busData, travels }) => {
 
   return (
     <View style={GlobalStyles.formCard}>
-      <Text style={styles.title}>Selección de asientos</Text>
+      <Text style={styles.title}>Gestión de asientos</Text>
 
       <View style={styles.legend}>
         <View>
@@ -68,15 +73,11 @@ export const SeatSelection = ({ navigation, asientos, busData, travels }) => {
             <Text style={styles.legendText}>Disponible</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.legendBox, styles.selectedLegend]} />
-            <Text style={styles.legendText}>Seleccionado</Text>
-          </View>
-        </View>
-        <View>
-          <View style={styles.legendItem}>
             <View style={[styles.legendBox, styles.unavailableLegend]} />
             <Text style={styles.legendText}>No disponible</Text>
           </View>
+        </View>
+        <View>
           <View style={styles.legendItem}>
             <View style={[styles.legendBox, styles.occupiedLegend]} />
             <Text style={styles.legendText}>Ocupado</Text>
@@ -104,34 +105,20 @@ export const SeatSelection = ({ navigation, asientos, busData, travels }) => {
       )}
 
       <SeatGrid
+        key={forceUpdate} // Agregar key para forzar re-render
         selectedFloor={selectedFloor}
         selectedSeats={selectedSeats}
         onSeatSelect={handleSeatSelection}
         asientos={asientos}
       />
 
-      <View style={styles.footer}>
-        <View>
-          <Text style={styles.selectedCount}>Asientos seleccionados</Text>
-          <Text style={styles.selectedNumber}>
-            {selectedSeats.length} asiento(s)
-          </Text>
-        </View>
-        <ButtonStyle
-          text={"Continuar"}
-          onClick={() => {
-            if (selectedSeats.length === 0) {
-              alert("Por favor selecciona al menos un asiento");
-              return;
-            }
-            navigation.navigate("PassengerData", {
-              selectedSeats: selectedSeats,
-              travelDetails,
-              travels: travels,
-            });
-          }}
-        />
-      </View>
+      <ButtonStyle
+        text={"Guardar cambios"}
+        width="100%"
+        onClick={() => {
+          navigation.goBack();
+        }}
+      />
     </View>
   );
 };
@@ -184,24 +171,5 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     gap: 40,
     marginHorizontal: 10,
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-    paddingTop: 16,
-    width: 150,
-    gap: 20,
-  },
-  selectedCount: {
-    fontSize: 14,
-    color: "#6F767E",
-    marginBottom: 4,
-  },
-  selectedNumber: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#4318D1",
-    marginBottom: 16,
   },
 });
