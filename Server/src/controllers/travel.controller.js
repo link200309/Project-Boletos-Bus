@@ -83,7 +83,16 @@ class TravelController {
           },
           chofer: true,
           ruta: true,
-          reserva: true,
+          reserva: {
+            include: {
+              pasajero: {
+                include: {
+                  usuario: true,
+                },
+              },
+              asiento: true,
+            },
+          },
           pago: true,
         },
       });
