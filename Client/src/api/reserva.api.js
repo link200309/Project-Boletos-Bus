@@ -2,9 +2,11 @@ const BASE_URL = "http://192.168.1.4:4000";
 import axios from "axios";
 
 export const createReserva = (data) => {
-  console.log("Enviando petición a:", `${BASE_URL}/reservas`);
-  console.log("Datos a enviar:", data);
   return axios.post(`${BASE_URL}/reservas`, data);
+};
+
+export const obtenerMisReservas = (userId) => {
+  return axios.get(`${BASE_URL}/reservas/mis-reservas/${userId}`);
 };
 
 /**

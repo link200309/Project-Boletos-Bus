@@ -8,7 +8,7 @@ import {
 const router = express.Router();
 
 router.post("/", createReserva);
-router.get("/mis-reservas", obtenerMisReservas);
+router.get("/mis-reservas/:userId", obtenerMisReservas);
 router.put("/cancel", changeStateReserve);
 
 export default router;

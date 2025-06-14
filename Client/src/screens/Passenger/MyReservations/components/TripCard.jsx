@@ -39,17 +39,9 @@ export default function TripCard({ trip, onEdit, onCancel }) {
 
       <View style={styles.buttons}>
         <ButtonStyle
-          text="Editar"
-          onClick={() => onEdit(trip.id)}
-          width="47%"
-          height={40}
-          sizeText={16}
-        />
-        <ButtonStyle
-          text="Cancelar"
+          text="Descargar QR de Reserva"
           onClick={() => onCancel(trip.id)}
           variant={2}
-          width="47%"
           height={40}
           sizeText={16}
         />
