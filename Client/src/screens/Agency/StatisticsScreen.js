@@ -11,7 +11,6 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { GenericContainer } from "../../components/GenericContainer";
-import { BlobBg } from "../../components/Background/BlobBg";
 import { obtenerEstadisticasAgencia } from "../../api/estadisticas.api";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -64,7 +63,6 @@ export default function StatisticsScreen() {
 
   return (
     <GenericContainer>
-      <BlobBg />
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>
           <Icon name="bar-chart-outline" size={24} color="#4318D1" /> Estadísticas de la Agencia

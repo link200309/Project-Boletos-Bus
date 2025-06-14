@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://192.168.1.4:4000";
+const API = "http://192.168.0.2:4000";
 
 export const getBusSeats = async (busId) => {
   try {
@@ -14,4 +14,3 @@ export const getBusSeats = async (busId) => {
     throw error;
   }
 };
-

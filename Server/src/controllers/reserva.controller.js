@@ -83,3 +83,20 @@ export const obtenerMisReservas = async (req, res) => {
     });
   }
 };
+
+export const changeStateReserve = async (req, res) => {
+  const { id_reserva, newState } = req.body;
+  try {
+    const reservaActualizada = await prisma.reserva.update({
+      where: { id_reserva: Number(id_reserva) },
+      data: { estado: newState }, // Estado dinámico
+    });
+
+    res.json(reservaActualizada);
+  } catch (error) {
+    console.error("Error al cambiar el estado de la reserva:", error);
+    res
+      .status(500)
+      .json({ mensaje: "Error interno al cambiar el estado de la reserva" });
+  }
+};

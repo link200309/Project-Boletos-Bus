@@ -47,7 +47,7 @@ export const FormAddTravel = ({ choferes, buses, navigation }) => {
   const onChangeBusRef = useRef(null);
   const onChangeRutaRef = useRef(null);
   const { user } = useContext(AuthContext);
-
+  const { fetchTravels } = navigation.getState().routes[1].params;
   const methods = useForm({
     mode: "onChange",
   });
@@ -213,8 +213,7 @@ export const FormAddTravel = ({ choferes, buses, navigation }) => {
         id_ruta: data.Ruta,
         id_chofer: data.Chofer,
       });
-
-      console.log("Respuesta del servidor:", res);
+      fetchTravels();
       setViaje({
         fecha_salida: new Date(),
         hora_salida_programada: new Date(),
