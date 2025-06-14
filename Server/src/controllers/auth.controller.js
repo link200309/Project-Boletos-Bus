@@ -5,7 +5,6 @@ import { PrismaClient } from "../generated/prisma/index.js";
 const prisma = new PrismaClient();
 const CLAVE_SECRETA = process.env.JWT_SECRET;
 
-// Registro de usuarios (cliente o agencia)
 export const postRegister = async (req, res) => {
   const {
     tipo_usuario,
@@ -206,7 +205,8 @@ export const postLogin = async (req, res) => {
         nombre: usuario.nombre,
         apellido: usuario.apellido,
         correo_electronico: usuario.correo_electronico,
-        numero_celular: usuario.numero_celular, // ✅ agregado aquí
+        numero_celular: usuario.numero_celular,
+        ci: usuario.ci,
       },
     };
 
@@ -249,8 +249,6 @@ export const postLogin = async (req, res) => {
     });
   }
 };
-
-
 
 // Función auxiliar para obtener información del usuario logueado
 export const getProfile = async (req, res) => {
