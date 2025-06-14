@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import SummaryRow from "./SummaryRow";
 import { BoliviaQRPayment } from "./QrCodeDisplay";
 import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
+import qrImage from "../../assets/qr-BNB.jpeg";
 
 const PaymentSummaryCard = forwardRef(({ summary }, ref) => {
   return (
@@ -29,10 +30,11 @@ const PaymentSummaryCard = forwardRef(({ summary }, ref) => {
       />
 
       <BoliviaQRPayment
-        amount={Number(summary.total)}
-        merchantName="BusRat"
-        merchantAccount="4185755187"
-        merchantPhone="74834487"
+        amount={150.5}
+        merchantName="Mi Negocio"
+        merchantAccount="1234567890"
+        merchantPhone="70123456"
+        qrImageSource={qrImage}
         onPaymentInitiated={(ref) => console.log("Pago iniciado:", ref)}
       />
     </View>

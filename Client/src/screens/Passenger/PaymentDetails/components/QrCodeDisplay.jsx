@@ -7,8 +7,9 @@ import {
   TouchableOpacity,
   Share,
   Clipboard,
+  Linking,
+  Image,
 } from "react-native";
-import QRCode from "react-native-qrcode-svg";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 
 export const BoliviaQRPayment = ({
@@ -16,11 +17,12 @@ export const BoliviaQRPayment = ({
   merchantName = "Tu Negocio",
   merchantAccount = "1234567890",
   merchantPhone = "70000000",
+  qrImageSource,
   onPaymentInitiated,
 }) => {
-  const [qrData, setQrData] = useState(null);
   const [paymentReference, setPaymentReference] = useState(null);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [paymentInfo, setPaymentInfo] = useState("");
 
   useEffect(() => {
     generatePaymentInfo();
@@ -32,35 +34,24 @@ export const BoliviaQRPayment = ({
       .substr(2, 4)
       .toUpperCase()}`;
 
-    const paymentInfo = {
-      tipo: "PAGO",
-      beneficiario: merchantName,
-      cuenta: merchantAccount,
-      banco: "MERCANTIL SANTA CRUZ",
-      monto: `Bs. ${amount.toFixed(2)}`,
-      referencia: reference,
-      contacto: merchantPhone,
-      fecha: new Date().toLocaleDateString("es-BO"),
-    };
-
-    const qrText = `PAGO A: ${merchantName}
-    BANCO: MERCANTIL SANTA CRUZ
-    CUENTA: ${merchantAccount}
-    MONTO: Bs. ${amount.toFixed(2)}
-    REFERENCIA: ${reference}
-    CONTACTO: ${merchantPhone}
-    FECHA: ${paymentInfo.fecha}
+    const infoText = `PAGO A: ${merchantName}
+BANCO: MERCANTIL SANTA CRUZ
+CUENTA: ${merchantAccount}
+MONTO: Bs. ${amount.toFixed(2)}
+REFERENCIA: ${reference}
+CONTACTO: ${merchantPhone}
+FECHA: ${new Date().toLocaleDateString("es-BO")}
 
 Para confirmar el pago, envía el comprobante a WhatsApp: ${merchantPhone}`;
 
-    setQrData(qrText);
+    setPaymentInfo(infoText);
     setPaymentReference(reference);
     onPaymentInitiated?.(reference);
   };
 
   const copyToClipboard = async () => {
     try {
-      await Clipboard.setString(qrData);
+      await Clipboard.setString(paymentInfo);
       Alert.alert("Copiado", "Información de pago copiada al portapapeles");
     } catch (error) {
       console.error("Error al copiar:", error);
@@ -70,7 +61,7 @@ Para confirmar el pago, envía el comprobante a WhatsApp: ${merchantPhone}`;
   const sharePaymentInfo = async () => {
     try {
       await Share.share({
-        message: qrData,
+        message: paymentInfo,
         title: "Información de Pago",
       });
     } catch (error) {
@@ -87,7 +78,6 @@ Para confirmar el pago, envía el comprobante a WhatsApp: ${merchantPhone}`;
       ""
     )}?text=${encodeURIComponent(message)}`;
 
-    // En React Native usarías Linking.openURL(whatsappUrl)
     Alert.alert(
       "Contactar por WhatsApp",
       "Se abrirá WhatsApp para coordinar el pago",
@@ -95,7 +85,11 @@ Para confirmar el pago, envía el comprobante a WhatsApp: ${merchantPhone}`;
         { text: "Cancelar", style: "cancel" },
         {
           text: "Abrir WhatsApp",
-          onPress: () => console.log("Abrir:", whatsappUrl),
+          onPress: () => {
+            Linking.openURL(whatsappUrl).catch((err) =>
+              Alert.alert("Error", "No se pudo abrir WhatsApp")
+            );
+          },
         },
       ]
     );
@@ -104,7 +98,7 @@ Para confirmar el pago, envía el comprobante a WhatsApp: ${merchantPhone}`;
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.bankName}>Pago con Transferencia</Text>
+        <Text style={styles.bankName}>Pago con QR</Text>
         <Text style={styles.subtitle}>Banco Mercantil Santa Cruz</Text>
       </View>
 
@@ -115,12 +109,11 @@ Para confirmar el pago, envía el comprobante a WhatsApp: ${merchantPhone}`;
       </View>
 
       <View style={styles.qrContainer}>
-        {qrData && (
-          <QRCode
-            value={qrData}
-            size={200}
-            backgroundColor="white"
-            color="black"
+        {qrImageSource && (
+          <Image
+            source={qrImageSource}
+            style={styles.qrImage}
+            resizeMode="contain"
           />
         )}
       </View>
@@ -134,8 +127,22 @@ Para confirmar el pago, envía el comprobante a WhatsApp: ${merchantPhone}`;
       </View>
 
       <View style={styles.buttonContainer}>
-        <ButtonStyle text="Copiar Datos" onClick={copyToClipboard} width={140} sizeText={14} height={40} variant={2}/>
-        <ButtonStyle text="Compartir" onClick={sharePaymentInfo} width={140} sizeText={14} height={40} variant={2}/>
+        <ButtonStyle
+          text="Copiar Datos"
+          onClick={copyToClipboard}
+          width={140}
+          sizeText={14}
+          height={40}
+          variant={2}
+        />
+        <ButtonStyle
+          text="Compartir"
+          onClick={sharePaymentInfo}
+          width={140}
+          sizeText={14}
+          height={40}
+          variant={2}
+        />
       </View>
 
       <TouchableOpacity style={styles.whatsappButton} onPress={openWhatsApp}>
@@ -156,23 +163,23 @@ Para confirmar el pago, envía el comprobante a WhatsApp: ${merchantPhone}`;
           <Text style={styles.instructionsTitle}>Cómo pagar:</Text>
           <Text style={styles.instructionsText}>
             <Text style={styles.stepNumber}>1.</Text> Abre tu app bancaria{"\n"}
-            <Text style={styles.stepNumber}>2.</Text> Selecciona "Transferir"
+            <Text style={styles.stepNumber}>2.</Text> Selecciona "Pagar con QR"
             {"\n"}
-            <Text style={styles.stepNumber}>3.</Text> Usa los datos mostrados
-            arriba{"\n"}
-            <Text style={styles.stepNumber}>4.</Text> Incluye la referencia en
-            el concepto{"\n"}
+            <Text style={styles.stepNumber}>3.</Text> Escanea el código QR de
+            arriba
+            {"\n"}
+            <Text style={styles.stepNumber}>4.</Text> Verifica el monto y
+            confirma
+            {"\n"}
             <Text style={styles.stepNumber}>5.</Text> Toma captura del
-            comprobante{"\n"}
+            comprobante
+            {"\n"}
             <Text style={styles.stepNumber}>6.</Text> Envía comprobante por
-            WhatsApp{"\n"}
-            <Text style={styles.stepNumber}>7.</Text> Confirma el pago aquí
-            abajo
+            WhatsApp
           </Text>
 
           <Text style={styles.warningText}>
-            ⚠️ IMPORTANTE: Siempre incluye la referencia en el concepto de la
-            transferencia
+            ⚠️ IMPORTANTE: Guarda el comprobante de pago para cualquier consulta
           </Text>
         </View>
       )}
@@ -209,7 +216,6 @@ const styles = StyleSheet.create({
   },
   amountContainer: {
     alignItems: "center",
-    marginBottom: 20,
     padding: 15,
     backgroundColor: "#F8F9FA",
     borderRadius: 8,
@@ -233,14 +239,13 @@ const styles = StyleSheet.create({
   },
   qrContainer: {
     padding: 20,
-    backgroundColor: "#FFFFFF",
     borderRadius: 12,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  qrImage: {
+    width: 250,
+    height: 250,
   },
   accountInfoContainer: {
     width: "100%",
@@ -268,20 +273,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     marginBottom: 15,
-  },
-  button: {
-    flex: 1,
-    backgroundColor: "#E3F2FD",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginHorizontal: 5,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#1E3A8A",
-    fontWeight: "600",
-    fontSize: 14,
   },
   whatsappButton: {
     backgroundColor: "#25D366",
@@ -336,18 +327,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFEBEE",
     padding: 8,
     borderRadius: 4,
-  },
-  confirmButton: {
-    backgroundColor: "#4CAF50",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 8,
-    width: "100%",
-    alignItems: "center",
-  },
-  confirmButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
   },
 });
