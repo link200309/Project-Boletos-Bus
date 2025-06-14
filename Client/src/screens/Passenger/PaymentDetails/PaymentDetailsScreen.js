@@ -19,13 +19,6 @@ export default function PaymentDetailsScreen({ navigation, route }) {
     contact = {},
   } = route?.params || {};
 
-  console.log("=== DEBUGGING PAYMENT DETAILS ===");
-  console.log("user completo:", JSON.stringify(user, null, 2));
-  console.log("contact:", contact);
-  console.log("passengers:", passengers);
-  console.log("travelDetails:", travelDetails);
-  console.log("travels:", travels);
-
   const seatNumbers = Array.isArray(passengers)
     ? passengers.map((p) => p.seat)
     : [];
@@ -38,7 +31,6 @@ export default function PaymentDetailsScreen({ navigation, route }) {
     travelDetails.hora_salida_programada,
     travelDetails.ruta.tiempo_estimado
   )}`;
-
   const summaryData = {
     horario: horario || "N/D",
     count: seatNumbers.length,
@@ -48,7 +40,6 @@ export default function PaymentDetailsScreen({ navigation, route }) {
     busId: travelDetails.bus?.id_bus || "N/D",
     qrData: travelDetails.qr,
   };
-
   const handleConfirm = async () => {
     if (isLoading) return;
     try {
@@ -67,17 +58,14 @@ export default function PaymentDetailsScreen({ navigation, route }) {
         );
         return;
       }
-
       if (!travelDetails.id_viaje) {
         Alert.alert("Error", "No se encontró información del viaje.");
         return;
       }
-
       if (!Array.isArray(passengers) || passengers.length === 0) {
         Alert.alert("Error", "No se encontraron asientos seleccionados.");
         return;
       }
-
       const asientos = passengers
         .map((p) => p.seat)
         .filter((seat) => seat !== undefined && seat !== null);
@@ -86,7 +74,6 @@ export default function PaymentDetailsScreen({ navigation, route }) {
         Alert.alert("Error", "No hay asientos válidos seleccionados.");
         return;
       }
-
       const dataToSend = {
         id_viaje: travelDetails.id_viaje,
         estado: "pendiente",
@@ -107,7 +94,6 @@ export default function PaymentDetailsScreen({ navigation, route }) {
         Alert.alert("Error", "Asientos inválidos");
         return;
       }
-
       const response = await createReserva(dataToSend);
       Alert.alert("¡Éxito!", "Su reserva ha sido creada correctamente.", [
         {

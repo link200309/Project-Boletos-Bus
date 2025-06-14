@@ -53,7 +53,7 @@ export const SeatGrid = ({
   const getOrderedLayout = () => {
     if (sortedSeats.length === 0) return [];
     const rows = [];
-    const seatsPerRow = 4; // 2 + 2 asientos por fila
+    const seatsPerRow = 4; 
     for (let i = 0; i < sortedSeats.length; i += seatsPerRow) {
       const rowSeats = sortedSeats.slice(i, i + seatsPerRow);
       const row = [null, null, null, null];

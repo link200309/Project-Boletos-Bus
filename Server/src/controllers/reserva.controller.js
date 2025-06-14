@@ -3,25 +3,20 @@ const prisma = new PrismaClient();
 
 export const createReserva = async (req, res) => {
   console.log("Datos recibidos:", req.body);
-
   const {
     id_viaje,
     estado = "pendiente",
     comprobante = "N/D",
     fecha_reserva,
     id_pasajero,
-    id_asiento, // puede ser un solo número o un array
+    id_asiento,
   } = req.body;
-
   try {
-    // Validar campos obligatorios
     if (!id_viaje || !id_pasajero || !id_asiento) {
       return res.status(400).json({ mensaje: "Faltan datos obligatorios." });
     }
-
     const asientos = Array.isArray(id_asiento) ? id_asiento : [id_asiento];
     const reservas = [];
-
     for (const asiento of asientos) {
       const nuevaReserva = await prisma.reserva.create({
         data: {
@@ -33,10 +28,12 @@ export const createReserva = async (req, res) => {
           id_asiento: asiento,
         },
       });
-
+      await prisma.asiento.update({
+        where: { id_asiento: asiento },
+        data: { estado: "Reservado" },
+      });
       reservas.push(nuevaReserva);
     }
-
     res.status(201).json({
       mensaje: "Reservas creadas con éxito",
       reservas,
