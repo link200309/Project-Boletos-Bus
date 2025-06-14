@@ -134,8 +134,8 @@ Para confirmar el pago, envía el comprobante a WhatsApp: ${merchantPhone}`;
       </View>
 
       <View style={styles.buttonContainer}>
-        <ButtonStyle text="Copiar Datos" onClick={copyToClipboard} />
-        <ButtonStyle text="Compartir" onClick={sharePaymentInfo} />
+        <ButtonStyle text="Copiar Datos" onClick={copyToClipboard} width={140} sizeText={14} height={40} variant={2}/>
+        <ButtonStyle text="Compartir" onClick={sharePaymentInfo} width={140} sizeText={14} height={40} variant={2}/>
       </View>
 
       <TouchableOpacity style={styles.whatsappButton} onPress={openWhatsApp}>
