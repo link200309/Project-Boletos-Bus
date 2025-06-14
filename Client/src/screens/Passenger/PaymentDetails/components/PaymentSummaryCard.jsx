@@ -33,7 +33,7 @@ const PaymentSummaryCard = forwardRef(({ summary }, ref) => {
         amount={Number(summary.total)}
         merchantName="BusRat"
         merchantAccount="4589621558"
-        merchantPhone="70123456"
+        merchantPhone="74834487"
         qrImageSource={qrImage}
         onPaymentInitiated={(ref) => console.log("Pago iniciado:", ref)}
       />

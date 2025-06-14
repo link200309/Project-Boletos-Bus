@@ -117,7 +117,7 @@ export const FormPassenger = () => {
           render={({ field: { onChange, value } }) => (
             <InputLabel
               label="Fecha de Nacimiento *"
-              placeholder="Ej: 2001-06-20"
+              placeholder="Ej: 06/20/2000"
               value={value}
               onChange={onChange}
               error={errors}

@@ -12,6 +12,7 @@ import { AuthContext } from "../../../context/AuthContext";
 export default function PaymentDetailsScreen({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useContext(AuthContext);
+  console.log(user);
   const {
     travels = [],
     travelDetails = {},
@@ -82,6 +83,7 @@ export default function PaymentDetailsScreen({ navigation, route }) {
         id_pasajero: userId,
         id_asiento: asientos,
       };
+
       if (!dataToSend.id_pasajero) {
         Alert.alert("Error", "ID de pasajero inválido");
         return;
