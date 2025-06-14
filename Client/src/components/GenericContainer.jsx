@@ -5,9 +5,7 @@ import { BlobBg } from "./Background/BlobBg";
 export const GenericContainer = ({ children, style, scroll = false }) => {
   if (scroll) {
     return (
-      <ScrollView style={[styles.container, style]}>
-        {children}
-      </ScrollView>
+      <ScrollView style={[styles.container, style]}>{children}</ScrollView>
     );
   }
 

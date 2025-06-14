@@ -6,6 +6,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export const HomeIcon = (props) => (
   <Entypo name="home" size={30} color="black" {...props} />
@@ -65,4 +66,10 @@ export const DateIcon = (props) => (
 );
 export const TimeIcon = (props) => (
   <AntDesign name="clockcircleo" size={24} color="black" {...props} />
+);
+export const GlobalInformationIcon = (props) => (
+  <MaterialIcons name="travel-explore" size={24} color="black" {...props} />
+);
+export const DriverIcon = (props) => (
+  <FontAwesome6 name="drivers-license" size={24} color="black" {...props} />
 );

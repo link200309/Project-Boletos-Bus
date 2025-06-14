@@ -21,6 +21,10 @@ export const Travels = ({ travelInfo, navigation, onClick }) => {
     return disponibles;
   };
 
+  const seeDetailTravel = () => {
+    navigation.navigate("DetailsTravel", travel);
+  };
+
   return (
     <Pressable onPress={onClick} style={Style.pressable}>
       <View style={Style.container}>
@@ -75,6 +79,7 @@ export const Travels = ({ travelInfo, navigation, onClick }) => {
               text={"Detalles"}
               style={Style.detailsButton}
               styleText={Style.detailsButtonText}
+              onClick={seeDetailTravel}
             />
             <ButtonStyle
               text={"Editar"}
