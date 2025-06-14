@@ -13,17 +13,16 @@ const AddTravelScreen = ({ navigation }) => {
   const [choferes, setChoferes] = useState([]);
   const [buses, setBuses] = useState([]);
   const [rutas, setRutas] = useState([]);
+  const { travels } = navigation.getState().routes[1].params;
 
   useEffect(() => {
     const fetchAgencyData = async () => {
       try {
-        const id_agencia =
-          navigation.getState().routes[1].params[0].bus.id_agencia;
+        const id_agencia = travels[0].bus.id_agencia;
         const agencyData = await getAgencyInformation(id_agencia);
         setChoferes(agencyData.choferes || []);
         setBuses(agencyData.buses || []);
 
-        const travels = navigation.getState().routes[1].params;
         travels.forEach((travel) => {
           setRutas((prev) => {
             if (!prev.some((c) => c.id_ruta === travel.ruta.id_ruta)) {

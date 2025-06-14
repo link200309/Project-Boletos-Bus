@@ -9,6 +9,7 @@ export const ButtonStyle = ({
   height = 50,
   sizeText = 18,
   style,
+  icon,
   styleText,
 }) => {
   const buttonStyle = [

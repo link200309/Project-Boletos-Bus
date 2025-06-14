@@ -24,6 +24,9 @@ export const Travels = ({ travelInfo, navigation, onClick }) => {
   const seeDetailTravel = () => {
     navigation.navigate("DetailsTravel", travel);
   };
+  const seeReservationsTravel = () => {
+    navigation.navigate("ReservationsTravel", travel);
+  };
 
   return (
     <Pressable onPress={onClick} style={Style.pressable}>
@@ -74,6 +77,7 @@ export const Travels = ({ travelInfo, navigation, onClick }) => {
               text={"Reservas"}
               style={Style.reserveButton}
               styleText={Style.reserveButtonText}
+              onClick={seeReservationsTravel}
             />
             <ButtonStyle
               text={"Detalles"}
@@ -83,6 +87,7 @@ export const Travels = ({ travelInfo, navigation, onClick }) => {
             />
             <ButtonStyle
               text={"Editar"}
+              variant={2}
               style={Style.editButton}
               styleText={Style.editButtonText}
             />
@@ -185,7 +190,7 @@ const Style = StyleSheet.create({
     gap: 12,
   },
   reserveButton: {
-    backgroundColor: "#7C3AED",
+    backgroundColor: "#5B21B6",
     paddingHorizontal: 17,
     paddingVertical: 12,
     borderRadius: 12,
@@ -199,7 +204,7 @@ const Style = StyleSheet.create({
     textAlign: "center",
   },
   detailsButton: {
-    backgroundColor: "#5B21B6",
+    backgroundColor: "#7C3AED",
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 12,
@@ -212,9 +217,6 @@ const Style = StyleSheet.create({
     textAlign: "center",
   },
   editButton: {
-    backgroundColor: "#E5E7EB",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
     borderRadius: 12,
     flex: 1,
     justifyContent: "center",
