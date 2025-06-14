@@ -121,7 +121,7 @@ Para confirmar el pago, envía el comprobante a WhatsApp: ${merchantPhone}`;
       <View style={styles.accountInfoContainer}>
         <Text style={styles.accountInfoTitle}>Datos para transferencia:</Text>
         <Text style={styles.accountText}>Beneficiario: {merchantName}</Text>
-        <Text style={styles.accountText}>Banco: Mercantil Santa Cruz</Text>
+        <Text style={styles.accountText}>Banco: BNB</Text>
         <Text style={styles.accountText}>Cuenta: {merchantAccount}</Text>
         <Text style={styles.accountText}>Referencia: {paymentReference}</Text>
       </View>

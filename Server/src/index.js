@@ -33,7 +33,7 @@ app.use("/choferes", choferRoutes);
 app.use("/bus", busRoutes);
 app.use("/asiento", asientoRoutes);
 app.use("/viajes", viajeRoutes);
-app.use("/reserva", reservaRoutes);
+app.use("/reservas", reservaRoutes);
 app.use("/estadistica", estadisticasRoutes);
 app.use("/reporte", reporteRoutes);
 app.use("/agency", agencyRoutes);
