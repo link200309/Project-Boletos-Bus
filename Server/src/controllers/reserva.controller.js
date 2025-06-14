@@ -2,7 +2,6 @@ import { PrismaClient } from "../generated/prisma/index.js";
 const prisma = new PrismaClient();
 
 export const createReserva = async (req, res) => {
-  console.log("Datos recibidos:", req.body);
   const {
     id_viaje,
     estado = "pendiente",
@@ -49,21 +48,47 @@ export const createReserva = async (req, res) => {
 
 export const obtenerMisReservas = async (req, res) => {
   try {
-    const id_usuario = req.usuario?.id_usuario;
+    const { userId } = req.params;
+    console.log("UserID recibido:", userId);
 
-    if (!id_usuario) {
+    if (!userId) {
       return res.status(401).json({ mensaje: "Usuario no autenticado." });
     }
-
+    const pasajero = await prisma.pasajero.findUnique({
+      where: {
+        id_pasajero: parseInt(userId), // Asegurar que sea número
+      },
+    });
+    if (!pasajero) {
+      return res.status(404).json({ mensaje: "Pasajero no encontrado." });
+    }
     const reservas = await prisma.reserva.findMany({
       where: {
-        id_usuario,
+        id_pasajero: pasajero.id_pasajero,
       },
       include: {
+        asiento: true,
         viaje: {
-          include: {
-            ruta: true,
-            bus: true,
+          select: {
+            fecha_salida: true,
+            hora_salida_programada: true,
+            costo: true,
+            ruta: {
+              select: {
+                origen: true,
+                destino: true,
+              },
+            },
+            bus: {
+              select: {
+                tipo_bus: true,
+                agencia: {
+                  select: {
+                    nombre_agencia: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -72,11 +97,15 @@ export const obtenerMisReservas = async (req, res) => {
       },
     });
 
-    res.json(reservas);
+    res.json({
+      mensaje: "Reservas obtenidas con éxito",
+      reservas,
+    });
   } catch (error) {
     console.error("Error al obtener reservas:", error);
     res.status(500).json({
       mensaje: "Error interno al obtener las reservas",
+      error: error.message,
     });
   }
 };
@@ -86,7 +115,7 @@ export const changeStateReserve = async (req, res) => {
   try {
     const reservaActualizada = await prisma.reserva.update({
       where: { id_reserva: Number(id_reserva) },
-      data: { estado: newState }, // Estado dinámico
+      data: { estado: newState },
     });
 
     res.json(reservaActualizada);
