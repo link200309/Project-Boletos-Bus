@@ -6,7 +6,6 @@ import { useNavigation } from "@react-navigation/native";
 export default function PriceSummaryContainer({
   ticketPrice,
   passengerCount,
-  onConfirm,
   travels,
   travelDetails,
   passengers,
@@ -16,7 +15,6 @@ export default function PriceSummaryContainer({
   const totalPrice = (price * passengerCount).toFixed(2);
 
   const handleConfirm = () => {
-    if (onConfirm) onConfirm();
     navigation.navigate("PaymentDetails", { travels, travelDetails, passengers });
   };
 
