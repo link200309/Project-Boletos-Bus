@@ -1,4 +1,13 @@
-const BASE_URL = "http://192.168.0.2:4000"; // Reemplaza si cambia tu IP o dominio
+const BASE_URL = "http://192.168.1.4:4000";
+import axios from "axios";
+
+export const createReserva = (data) => {
+  return axios.post(`${BASE_URL}/reservas`, data);
+};
+
+export const obtenerMisReservas = (userId) => {
+  return axios.get(`${BASE_URL}/reservas/mis-reservas/${userId}`);
+};
 
 /**
  * Obtiene el historial de reservas del usuario autenticado.
@@ -14,7 +23,6 @@ export const obtenerHistorialReservas = async (token) => {
       },
     });
 
-    // Asegura que el cuerpo de la respuesta sea JSON
     const data = await response.json().catch(() => {
       throw new Error("Respuesta no válida del servidor");
     });
@@ -23,7 +31,7 @@ export const obtenerHistorialReservas = async (token) => {
       throw new Error(data.mensaje || "Error al obtener historial");
     }
 
-    return data; // Se espera que sea un array de reservas
+    return data;
   } catch (error) {
     console.error("Error al obtener historial de reservas:", error);
     throw error;
