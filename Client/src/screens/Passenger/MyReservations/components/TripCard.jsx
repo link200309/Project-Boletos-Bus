@@ -1,11 +1,17 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
+import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 
 export default function TripCard({ trip, onEdit, onCancel }) {
   return (
-    <View style={styles.card}>
-      <Text style={styles.route}>{trip.from} → {trip.to}</Text>
-      <Text style={styles.date}>{trip.date} - {trip.time}</Text>
+    <View style={GlobalStyles.formCard}>
+      <Text style={styles.route}>
+        {trip.from} → {trip.to}
+      </Text>
+      <Text style={styles.date}>
+        {trip.date} - {trip.time}
+      </Text>
 
       <View style={styles.infoRow}>
         <View style={styles.infoColumn}>
@@ -32,37 +38,27 @@ export default function TripCard({ trip, onEdit, onCancel }) {
       <View style={styles.separator} />
 
       <View style={styles.buttons}>
-        <TouchableOpacity style={styles.editButton} onPress={() => onEdit(trip.id)}>
-          <Text style={styles.editText}>Editar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.cancelButton} onPress={() => onCancel(trip.id)}>
-          <Text style={styles.cancelText}>Cancelar</Text>
-        </TouchableOpacity>
+        <ButtonStyle
+          text="Descargar QR de Reserva"
+          onClick={() => onCancel(trip.id)}
+          variant={2}
+          height={40}
+          sizeText={16}
+        />
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 16,
-    margin: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-    width: 350
-  },
   route: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#4B2EC2",
-    marginBottom: 4,
+    marginBottom: 2,
   },
   date: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#777",
     marginBottom: 12,
   },
@@ -72,48 +68,26 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   infoColumn: {
-    flex: 1,
+    flexDirection: "row",
+    gap: 8,
+    width: "48%",
   },
   label: {
     fontSize: 13,
     color: "#999",
   },
   value: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "bold",
     color: "#000",
   },
   separator: {
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
-    marginVertical: 12,
+    marginTop: 8,
   },
   buttons: {
     flexDirection: "row",
-  },
-  editButton: {
-    flex: 1,
-    backgroundColor: "#4B2EC2",
-    padding: 10,
-    borderRadius: 10,
-    alignItems: "center",
-    marginRight: 6,
-  },
-  cancelButton: {
-    flex: 1,
-    borderColor: "#4B2EC2",
-    borderWidth: 2,
-    padding: 10,
-    borderRadius: 10,
-    alignItems: "center",
-    marginLeft: 6,
-  },
-  editText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  cancelText: {
-    color: "#4B2EC2",
-    fontWeight: "bold",
+    justifyContent: "space-between",
   },
 });

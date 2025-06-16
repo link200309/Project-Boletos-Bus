@@ -1,38 +1,57 @@
-//react
 import { View, Text, StyleSheet } from "react-native";
-import { BusIcon, Location, ChairIcon } from "../../../components/Icons";
-import { ButtonStyle } from "../../../components/Button/ButtonStyle";
+import { BusIcon, Location, ChairIcon } from "../../../../components/Icons";
+import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
+import { formatTime, formatDate } from "../../../../utils/dateTime.util";
 
-export const AvailableSchedules = ({ travel }) => {
+export const AvailableSchedules = ({ travel, navigation }) => {
+  const travelData = travel.item || travel;
+  const handleBusPress = (selectedTravel) => {
+    navigation.navigate("AvailabilitySeat", {
+      travels: [selectedTravel],
+      busId: selectedTravel.bus.id_bus,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerContent}>
-        <Text style={styles.text}>Viernes 18 de Abril</Text>
-        <Text style={styles.text}>EL DORADO</Text>
+        <Text style={styles.text}>
+          {formatDate(travelData.fecha_salida).formatedDate}
+        </Text>
+        <Text style={styles.text}>{travelData.bus.agencia.nombre_agencia}</Text>
       </View>
       <View style={{ ...styles.bodySchedule, ...styles.containerContent }}>
         <BusIcon />
-        <Text>07:30</Text>
+        <Text>{travelData.hora_salida_programada.slice(0, 5)}</Text>
         <View style={styles.lineContainer}>
           <View style={styles.circle} />
           <View style={styles.line} />
-          {/* <Text style={styles.duration}>5h 30min</Text> */}
         </View>
-        <Text>13:00</Text>
+        <Text>
+          {formatTime(
+            travelData.hora_salida_programada,
+            travelData.ruta.tiempo_estimado
+          )}
+        </Text>
         <Location />
       </View>
 
       <View style={styles.containerContent}>
         <View>
-        <Text style={[styles.text, { fontSize: 25 }]}>Bs. 95</Text>
-
+          <Text style={[styles.text, { fontSize: 25 }]}>
+            Bs.{travelData.costo}
+          </Text>
           <Text style={styles.text}>Por asiento</Text>
         </View>
-        <View style={{alignItems:"center"}}>
+        <View style={{ alignItems: "center" }}>
           <ChairIcon />
-          <Text style={styles.text}>CAMA</Text>
+          <Text style={styles.text}>{travelData.bus.tipo_bus}</Text>
         </View>
-        <ButtonStyle width="115" text={"Reservar"} />
+        <ButtonStyle
+          width="115"
+          text={"Reservar"}
+          onClick={() => handleBusPress(travelData)}
+        />
       </View>
     </View>
   );
@@ -94,6 +113,6 @@ const styles = StyleSheet.create({
 
   text: {
     color: "#4318D1",
-    fontWeight: 500
+    fontWeight: 500,
   },
 });

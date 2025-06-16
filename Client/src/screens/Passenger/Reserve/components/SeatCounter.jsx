@@ -1,19 +1,35 @@
 import React from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
+import { Controller, useFormContext } from "react-hook-form";
 
-export const SeatCounter = () => {
+export const SeatCounter = ({ name }) => {
+  const { control } = useFormContext();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Número de asientos</Text>
-      <View style={styles.seatContainer}>
-        <Pressable style={styles.pressable}>
-          <Text style={styles.textPressable}>-</Text>
-        </Pressable>
-        <Text style={styles.text}>1</Text>
-        <Pressable style={styles.pressable}>
-          <Text style={styles.textPressable}>+</Text>
-        </Pressable>
-      </View>
+      <Text style={styles.label}>Cantidad de asientos</Text>
+      <Controller
+        control={control}
+        name={name}
+        defaultValue={1}
+        render={({ field: { onChange, value } }) => (
+          <View style={styles.seatContainer}>
+            <Pressable
+              style={styles.pressable}
+              onPress={() => value > 1 && onChange(value - 1)}
+            >
+              <Text style={styles.textPressable}>-</Text>
+            </Pressable>
+            <Text style={styles.text}>{value}</Text>
+            <Pressable
+              style={styles.pressable}
+              onPress={() => value < 20 && onChange(value + 1)}
+            >
+              <Text style={styles.textPressable}>+</Text>
+            </Pressable>
+          </View>
+        )}
+      />
     </View>
   );
 };
@@ -35,7 +51,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E6E8FF",
     borderRadius: 20,
-    backgroundColor: "#F8F9FF",
+    backgroundColor: "#F3F4F9",
     height: 60,
   },
   pressable: {

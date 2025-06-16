@@ -1,27 +1,30 @@
 import React from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { BlobBg } from "./Background/BlobBg";
 
 export const GenericContainer = ({ children, style, scroll = false }) => {
-  const Container = scroll ? ScrollView : View;
+  if (scroll) {
+    return (
+      <ScrollView style={[styles.container, style]}>{children}</ScrollView>
+    );
+  }
 
   return (
-    <Container
-      contentContainerStyle={scroll ? [styles.container, style] : undefined}
-      style={!scroll ? [styles.container, style] : undefined}
-    >
+    <View style={[styles.container, style]}>
       {children}
-    </Container>
+      <BlobBg />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F0F3FF",
     flexGrow: 1,
     flex: 1,
-    alignItems: "center",
-    padding: 20,
+    paddingBottom: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 15,
+    // paddingBottom: 45,
   },
 });
-
-

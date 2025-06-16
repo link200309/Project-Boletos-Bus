@@ -1,31 +1,28 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import { CitySelector } from "./CitySelector";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { SeatCounter } from "./SeatCounter";
+import { useForm, FormProvider } from "react-hook-form";
+import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 
 export const TripSearchForm = ({ navigation }) => {
+  const methods = useForm();
+  const onSubmit = (data) => {
+    navigation.navigate("AvailabilityDates", { formData: data });
+  };
+
   return (
-    <View style={Style.container}>
-      <CitySelector label="origen" />
-      <CitySelector label="destino" />
-      <SeatCounter />
-      <ButtonStyle
-        text={"Buscar viajes disponibles"}
-        variant={1}
-        height={50}
-        onClick={() => navigation.navigate("AvailabilityDates")}
-      />
-    </View>
+    <FormProvider {...methods}>
+      <View style={GlobalStyles.formCard}>
+        <CitySelector label="origen" name="origen" />
+        <CitySelector label="destino" name="destino" />
+        <SeatCounter name="asientos" />
+        <ButtonStyle
+          text={"Buscar viajes disponibles"}
+          onClick={methods.handleSubmit(onSubmit)}
+        />
+      </View>
+    </FormProvider>
   );
 };
-
-const Style = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
-    borderRadius: 20,
-    width: 370,
-    marginVertical: 20,
-    padding: 20,
-  },
-});

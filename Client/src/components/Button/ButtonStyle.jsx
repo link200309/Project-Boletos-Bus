@@ -7,22 +7,29 @@ export const ButtonStyle = ({
   onClick,
   width = "100%",
   height = 50,
+  sizeText = 18,
+  style,
+  icon,
+  styleText,
 }) => {
   const buttonStyle = [
     styles.button,
     variant === 1 ? styles.buttonVariant1 : styles.buttonVariant2,
     { width, height },
+    style,
   ];
 
   const textStyle = [
     styles.text,
     variant === 1 ? styles.textVariant1 : styles.textVariant2,
+    { fontSize: sizeText },
+    styleText,
   ];
 
   return (
-      <Pressable style={buttonStyle} onPress={onClick}>
-        <Text style={textStyle}>{text}</Text>
-      </Pressable>
+    <Pressable style={buttonStyle} onPress={onClick}>
+      <Text style={textStyle}>{text}</Text>
+    </Pressable>
   );
 };
 
@@ -45,7 +52,7 @@ const styles = StyleSheet.create({
     borderColor: "#4318D1",
   },
   text: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
   },
   textVariant1: {
