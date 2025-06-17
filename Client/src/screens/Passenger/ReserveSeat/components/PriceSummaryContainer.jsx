@@ -15,10 +15,8 @@ export default function PriceSummaryContainer({
   const totalPrice = (price * passengerCount).toFixed(2);
 
   const handleConfirm = () => {
-    navigation.navigate("PaymentDetails", { travels, travelDetails, passengers });
+    navigation.navigate("PaymentDetails", { travelDetails, passengers });
   };
-
-  console.log("TravelDetails PriceSummaryContainer",travelDetails);
 
   return (
     <View style={styles.container}>

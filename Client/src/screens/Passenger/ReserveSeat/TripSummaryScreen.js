@@ -9,8 +9,6 @@ import PriceSummaryContainer from "./components/PriceSummaryContainer";
 
 export default function TripSummaryScreen({ navigation, route }) {
   const { formData, travels } = route.params || {};
-  console.log("TripSummaryScreen formData", formData);
-  console.log("TripSummaryScreen travels", travels);
 
   return (
     <GenericContainer>

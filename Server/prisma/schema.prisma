@@ -29,8 +29,6 @@ model Usuario {
   pasajero Pasajero?
 }
 
-
-
 model Agencia {
   id_agencia     Int    @id
   nombre_agencia String @db.VarChar(80)
@@ -67,7 +65,6 @@ model Pasajero {
   usuario Usuario @relation(fields: [id_pasajero], references: [id_usuario], onDelete: Cascade)
 }
 
-
 model Bus {
   id_bus      Int    @id @default(autoincrement())
   placa       String @db.VarChar(20)
@@ -84,7 +81,6 @@ model Bus {
   viajes   Viaje[]
 }
 
-
 model Asiento {
   id_asiento Int    @id @default(autoincrement())
   numero     String @db.VarChar(20)
@@ -93,7 +89,7 @@ model Asiento {
 
   id_bus Int
   bus    Bus @relation(fields: [id_bus], references: [id_bus], onDelete: Cascade)
-  reservas Reserva[]
+  pasajerosSecundarios PasajeroSecundario[]
 }
 
 model Viaje {
@@ -164,13 +160,25 @@ model Reserva {
   id_reserva    Int      @id @default(autoincrement())
   id_pasajero   Int
   id_viaje      Int
-  id_asiento    Int
   estado        String   @default("pendiente")
   comprobante   String?
   fecha_reserva DateTime @default(now())
 
-  pasajero  Pasajero    @relation(fields: [id_pasajero], references: [id_pasajero])
-  viaje     Viaje      @relation(fields: [id_viaje], references: [id_viaje])
-  asiento   Asiento     @relation(fields: [id_asiento], references: [id_asiento])
+  pasajero             Pasajero           @relation(fields: [id_pasajero], references: [id_pasajero])
+  viaje                Viaje              @relation(fields: [id_viaje],    references: [id_viaje])
+  pasajerosSecundarios PasajeroSecundario[]
+}
 
+model PasajeroSecundario{
+  id_pasec           Int      @id @default(autoincrement())
+  nombre             String?  @db.VarChar(50)    // ahora opcional para evitar errores de migración
+  apellido           String?  @db.VarChar(50)
+  ci                 String?  @db.VarChar(20)
+  fecha_nacimiento   DateTime
+
+  id_reserva         Int
+  reserva   Reserva  @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
+
+  id_asiento         Int
+  asiento   Asiento  @relation(fields: [id_asiento], references: [id_asiento], onDelete: Cascade)
 }

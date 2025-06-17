@@ -52,7 +52,6 @@ Para confirmar el pago, envía el comprobante a WhatsApp: ${merchantPhone}`;
   const copyToClipboard = async () => {
     try {
       await Clipboard.setString(paymentInfo);
-      Alert.alert("Copiado", "Información de pago copiada al portapapeles");
     } catch (error) {
       console.error("Error al copiar:", error);
     }
