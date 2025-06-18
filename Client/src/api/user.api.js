@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.0.2:4000"; // tu IP local o dominio
+const BASE_URL = "http://192.168.35.144:4000"; // tu IP local o dominio
 
 /**
  * Actualiza el perfil del usuario autenticado.
