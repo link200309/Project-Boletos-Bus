@@ -1,14 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 
-export default function TripCard({
-  trip,
-  onCancel,
-  onViewDetails,
-  onPayReservation,
-}) {
+export default function TripCard({ trip, navigation, reservaCompleta  }) {
+  console.log("TripCard", trip);
+  console.log("Reserva Completa", reservaCompleta);
   const getStatusStyle = (estado) => {
     switch (estado?.toLowerCase()) {
       case "confirmada":
@@ -28,6 +25,18 @@ export default function TripCard({
       default:
         return "Desconocido";
     }
+  };
+  // función para ver detalles
+  const handleViewDetails = () => {
+    navigation.navigate("ViewDetails", {
+      reservaCompleta: reservaCompleta,
+    });
+  };
+  // función para pagar reserva
+  const handlePayReservation = () => {
+    navigation.navigate("PayReservation", {
+      payDetails: trip,
+    });
   };
 
   return (
@@ -81,7 +90,7 @@ export default function TripCard({
           <>
             <ButtonStyle
               text="Ver Detalles"
-              onClick={() => onViewDetails(trip.id)}
+              onClick={handleViewDetails}
               variant={2}
               width="45%"
               height={40}
@@ -89,7 +98,7 @@ export default function TripCard({
             />
             <ButtonStyle
               text="Pagar Reserva"
-              onClick={() => onPayReservation(trip.id)}
+              onClick={handlePayReservation}
               width="45%"
               height={40}
               sizeText={16}
@@ -98,7 +107,7 @@ export default function TripCard({
         ) : (
           <ButtonStyle
             text="Ver Detalles"
-            onClick={() => onViewDetails(trip.id)}
+            onClick={handleViewDetails}
             variant={2}
             width="100%"
             height={40}

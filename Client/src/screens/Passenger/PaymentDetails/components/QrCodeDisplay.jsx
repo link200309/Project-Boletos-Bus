@@ -98,7 +98,7 @@ Para confirmar el pago, envía el comprobante a WhatsApp: ${merchantPhone}`;
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.bankName}>Pago con QR</Text>
-        <Text style={styles.subtitle}>Banco Mercantil Santa Cruz</Text>
+        <Text style={styles.subtitle}>Banco BNB</Text>
       </View>
 
       <View style={styles.amountContainer}>
