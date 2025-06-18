@@ -1,14 +1,62 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 
-export default function TripCard({ trip, onEdit, onCancel }) {
+export default function TripCard({ trip, navigation, reservaCompleta  }) {
+  console.log("TripCard", trip);
+  console.log("Reserva Completa", reservaCompleta);
+  const getStatusStyle = (estado) => {
+    switch (estado?.toLowerCase()) {
+      case "confirmada":
+        return { backgroundColor: "#4CAF50", color: "#fff" };
+      case "pendiente":
+        return { backgroundColor: "#FF9800", color: "#fff" };
+      default:
+        return { backgroundColor: "#9E9E9E", color: "#fff" };
+    }
+  };
+  const getStatusText = (estado) => {
+    switch (estado?.toLowerCase()) {
+      case "confirmada":
+        return "Confirmada";
+      case "pendiente":
+        return "Pendiente";
+      default:
+        return "Desconocido";
+    }
+  };
+  // función para ver detalles
+  const handleViewDetails = () => {
+    navigation.navigate("ViewDetails", {
+      reservaCompleta: reservaCompleta,
+    });
+  };
+  // función para pagar reserva
+  const handlePayReservation = () => {
+    navigation.navigate("PayReservation", {
+      payDetails: trip,
+    });
+  };
+
   return (
     <View style={GlobalStyles.formCard}>
-      <Text style={styles.route}>
-        {trip.from} → {trip.to}
-      </Text>
+      <View style={styles.header}>
+        <Text style={styles.route}>
+          {trip.from} → {trip.to}
+        </Text>
+        <View style={[styles.statusBadge, getStatusStyle(trip.estado)]}>
+          <Text
+            style={[
+              styles.statusText,
+              { color: getStatusStyle(trip.estado).color },
+            ]}
+          >
+            {getStatusText(trip.estado)}
+          </Text>
+        </View>
+      </View>
+
       <Text style={styles.date}>
         {trip.date} - {trip.time}
       </Text>
@@ -38,24 +86,62 @@ export default function TripCard({ trip, onEdit, onCancel }) {
       <View style={styles.separator} />
 
       <View style={styles.buttons}>
-        <ButtonStyle
-          text="Descargar QR de Reserva"
-          onClick={() => onCancel(trip.id)}
-          variant={2}
-          height={40}
-          sizeText={16}
-        />
+        {trip.estado?.toLowerCase() === "pendiente" ? (
+          <>
+            <ButtonStyle
+              text="Ver Detalles"
+              onClick={handleViewDetails}
+              variant={2}
+              width="45%"
+              height={40}
+              sizeText={16}
+            />
+            <ButtonStyle
+              text="Pagar Reserva"
+              onClick={handlePayReservation}
+              width="45%"
+              height={40}
+              sizeText={16}
+            />
+          </>
+        ) : (
+          <ButtonStyle
+            text="Ver Detalles"
+            onClick={handleViewDetails}
+            variant={2}
+            width="100%"
+            height={40}
+            sizeText={16}
+          />
+        )}
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 2,
+  },
   route: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#4B2EC2",
-    marginBottom: 2,
+    flex: 1,
+  },
+  statusBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    marginLeft: 8,
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: "bold",
+    textAlign: "center",
   },
   date: {
     fontSize: 12,

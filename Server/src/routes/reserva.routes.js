@@ -1,14 +1,14 @@
 import express from "express";
 import {
   createReserva,
-  obtenerMisReservas,
+  obtenerMisReservasPasajero,
   changeStateReserve,
 } from "../controllers/reserva.controller.js";
 
 const router = express.Router();
 
 router.post("/", createReserva);
-router.get("/mis-reservas/:userId", obtenerMisReservas);
+router.get("/pasajero/:userId", obtenerMisReservasPasajero);
 router.put("/cancel", changeStateReserve);
 
 export default router;

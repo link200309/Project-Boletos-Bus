@@ -13,12 +13,9 @@ export default function PaymentDetailsScreen({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useContext(AuthContext);
   const {
-    travels = [],
     travelDetails = {},
     passengers = [],
-    contact = {},
   } = route?.params || {};
-
   const seatNumbers = Array.isArray(passengers)
     ? passengers.map((p) => p.seat)
     : [];
@@ -40,12 +37,36 @@ export default function PaymentDetailsScreen({ navigation, route }) {
     busId: travelDetails.bus?.id_bus || "N/D",
     qrData: travelDetails.qr,
   };
+
+  // función para convertir la fecha a formato ISO, manejando diferentes formatos de entrada
+  const convertDateToISO = (dateString) => {
+    if (!dateString) return new Date().toISOString();
+    try {
+      if (dateString.includes("T") || dateString.includes("-")) {
+        return new Date(dateString).toISOString();
+      }
+      const [month, day, year] = dateString.split("/");
+      if (month && day && year) {
+        const date = new Date(
+          parseInt(year),
+          parseInt(month) - 1,
+          parseInt(day)
+        );
+        return date.toISOString();
+      }
+      return new Date().toISOString();
+    } catch (error) {
+      console.error("Error converting date:", error);
+      return new Date().toISOString();
+    }
+  };
+
+  // función para crear la reserva, recuperando los datos del usuario y validando los pasajeros
   const handleConfirm = async () => {
     if (isLoading) return;
     try {
       setIsLoading(true);
       let userId = null;
-
       if (user?.datos_pasajero?.id_pasajero) {
         userId = user.datos_pasajero.id_pasajero;
       } else if (user?.usuario?.id) {
@@ -63,35 +84,37 @@ export default function PaymentDetailsScreen({ navigation, route }) {
         return;
       }
       if (!Array.isArray(passengers) || passengers.length === 0) {
-        Alert.alert("Error", "No se encontraron asientos seleccionados.");
+        Alert.alert("Error", "No se encontraron pasajeros seleccionados.");
         return;
       }
-      const asientos = passengers
-        .map((p) => p.seat)
-        .filter((seat) => seat !== undefined && seat !== null);
-
-      if (asientos.length === 0) {
-        Alert.alert("Error", "No hay asientos válidos seleccionados.");
+      const invalidPassengers = passengers.filter((p) => !p.seat);
+      if (invalidPassengers.length > 0) {
+        Alert.alert("Error", "Algunos pasajeros no tienen asientos asignados.");
         return;
       }
       const dataToSend = {
         id_viaje: travelDetails.id_viaje,
+        id_pasajero: userId,
         estado: "pendiente",
         comprobante: "N/D",
         fecha_reserva: new Date().toISOString(),
-        id_pasajero: userId,
-        id_asiento: asientos,
+        pasajeros_secundarios: passengers.map((p) => ({
+          nombre: p.firstName?.trim() || "N/D",
+          apellido: p.lastName?.trim() || "N/D",
+          ci: p.identityNumber?.trim() || "N/D",
+          fecha_nacimiento: convertDateToISO(p.birthDate),
+          id_asiento: parseInt(p.seat),
+        })),
       };
-      if (!dataToSend.id_pasajero) {
-        Alert.alert("Error", "ID de pasajero inválido");
-        return;
-      }
-      if (!dataToSend.id_viaje) {
-        Alert.alert("Error", "ID de viaje inválido");
-        return;
-      }
-      if (!dataToSend.id_asiento || dataToSend.id_asiento.length === 0) {
-        Alert.alert("Error", "Asientos inválidos");
+      if (
+        !dataToSend.pasajeros_secundarios.every(
+          (p) => p.id_asiento && p.fecha_nacimiento
+        )
+      ) {
+        Alert.alert(
+          "Error",
+          "Faltan datos obligatorios de los pasajeros (asiento o fecha de nacimiento)."
+        );
         return;
       }
       const response = await createReserva(dataToSend);
@@ -114,9 +137,7 @@ export default function PaymentDetailsScreen({ navigation, route }) {
     } catch (error) {
       console.error("Error completo al crear reserva:", error);
       console.error("Response del error:", error.response?.data);
-
       let errorMessage = "Ocurrió un error al crear la reserva.";
-
       if (error.response?.data?.mensaje) {
         errorMessage = error.response.data.mensaje;
       } else if (error.response?.data?.message) {
@@ -124,7 +145,6 @@ export default function PaymentDetailsScreen({ navigation, route }) {
       } else if (error.message) {
         errorMessage = error.message;
       }
-
       Alert.alert("Error", errorMessage);
     } finally {
       setIsLoading(false);

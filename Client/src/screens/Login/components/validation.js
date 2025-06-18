@@ -65,8 +65,8 @@ export const accountValidationRules = {
   birthdate: {
     required: "La fecha de nacimiento es obligatoria",
     pattern: {
-      value: /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d\d$/,
-      message: "Formato inválido. Use DD/MM/AAAA",
+      value: /^((19|20)\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/,
+      message: "Formato inválido. Use AAAA-MM-DD",
     },
     validate: validateAge,
   },
