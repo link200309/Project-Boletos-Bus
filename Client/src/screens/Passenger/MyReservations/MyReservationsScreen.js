@@ -18,7 +18,7 @@ import {
   cancelarReserva,
 } from "../../../api/reserva.api";
 
-export default function MyReservationsScreen() {
+export default function MyReservationsScreen({ navigation }) {
   const { user } = useContext(AuthContext);
   const [trips, setTrips] = useState([]);
   const [cancelId, setCancelId] = useState(null);
@@ -99,11 +99,27 @@ export default function MyReservationsScreen() {
     cargarReservas();
   }, [cargarReservas]);
 
-  const handleEdit = useCallback((id) => {
-    // Aquí podrías navegar a una pantalla de edición
-    console.log("Editar reserva con ID:", id);
-    // navigation.navigate('EditReservation', { reservationId: id });
-  }, []);
+  // función para ver detalles
+  const handleViewDetails = useCallback(
+    (id) => {
+      const trip = trips.find((t) => t.id === id);
+      navigation.navigate("ViewDetails", {
+        reserveDetails: trip,
+      });
+    },
+    [navigation, trips]
+  );
+
+  // función para pagar reserva
+  const handlePayReservation = useCallback(
+    (id) => {
+      const trip = trips.find((t) => t.id === id);
+      navigation.navigate("PayReservation", {
+        payDetails: trip,
+      });
+    },
+    [navigation, trips]
+  );
 
   const confirmCancel = useCallback(
     (id) => {
@@ -172,9 +188,14 @@ export default function MyReservationsScreen() {
 
   const renderTripCard = useCallback(
     ({ item }) => (
-      <TripCard trip={item} onEdit={handleEdit} onCancel={confirmCancel} />
+      <TripCard
+        trip={item}
+        onCancel={confirmCancel}
+        onViewDetails={handleViewDetails}
+        onPayReservation={handlePayReservation}
+      />
     ),
-    [handleEdit, confirmCancel]
+    [confirmCancel, handleViewDetails, handlePayReservation]
   );
 
   const keyExtractor = useCallback((item) => item.id.toString(), []);
