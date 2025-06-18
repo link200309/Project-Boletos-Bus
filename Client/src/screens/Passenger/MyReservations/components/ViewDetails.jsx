@@ -1,13 +1,18 @@
 import React from "react";
-import { View } from "react-native";
+import { ScrollView } from "react-native";
 import TabsContainer from "../../ReserveSeat/components/TabsContainer";
 import { GenericContainer } from "../../../../components/GenericContainer";
 import { BlobBg } from "../../../../components/Background/BlobBg";
 import { InformativeTitle } from "../../../../components/InformativeTitle";
+import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
+import {
+  formatDate,
+  formatFechaParaVista,
+} from "../../../../utils/dateTime.util";
 
 export default function ViewDetails({ route }) {
   const { reservaCompleta } = route.params || {};
-  console.log("ViewDetails", reservaCompleta);
+
   const ejemploTravelDetails = [
     {
       fecha_salida: reservaCompleta.viaje.fecha_salida,
@@ -32,9 +37,14 @@ export default function ViewDetails({ route }) {
       firstName: pasajero.nombre,
       lastName: pasajero.apellido,
       seat: pasajero.asiento?.numero,
-      identityNumber: pasajero.ci, 
-      birthDate: pasajero.fecha_nacimiento,
+      identityNumber: pasajero.ci,
+      birthDate: formatFechaParaVista(pasajero.fecha_nacimiento),
     })),
+  };
+
+  const ejemploReserva = {
+    ...formatDate(reservaCompleta.fecha_reserva),
+    estado: reservaCompleta.estado,
   };
 
   return (
@@ -44,10 +54,17 @@ export default function ViewDetails({ route }) {
         title="Detalles de Reserva"
         description="Aquí puedes ver los detalles de tu reserva, incluyendo los pasajeros y el itinerario."
       />
-      <TabsContainer
-        passengers={ejemploPassengers}
-        travelDetails={ejemploTravelDetails}
-      />
+      <ScrollView>
+        <TabsContainer
+          passengers={ejemploPassengers}
+          travelDetails={ejemploTravelDetails}
+          reserve={true}
+          Reserva={ejemploReserva}
+        />
+        {reservaCompleta.estado === "pendiente" && (
+          <ButtonStyle text="Cancelar Reserva" onClick={() => {}} />
+        )}
+      </ScrollView>
     </GenericContainer>
   );
 }

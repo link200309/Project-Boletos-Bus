@@ -26,17 +26,23 @@ export const formatDate = (departureDate) => {
   const date = new Date(departureDate);
   const day = date.getUTCDate();
   const year = date.getUTCFullYear();
-
   let weekDay = date.toLocaleDateString("es-ES", {
     weekday: "long",
     timeZone: "UTC",
   });
-
   weekDay = weekDay.charAt(0).toUpperCase() + weekDay.slice(1);
-
   const month = date.toLocaleDateString("es-ES", {
     month: "long",
     timeZone: "UTC",
   });
   return { weekDay, formatedDate: `${day} ${month} ${year}` };
+};
+
+export const formatFechaParaVista = (isoDateStr) => {
+  if (!isoDateStr) return "";
+  const date = new Date(isoDateStr);
+  const dd = String(date.getDate() + 1).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
 };
