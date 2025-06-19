@@ -1,12 +1,13 @@
 // BusFormWrapper.jsx (fixed)
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import BusForm from "./BusForm";
 import { createBus, updateBus } from "../../../../api/bus.api";
+import { AuthContext } from "../../../../context/AuthContext";
 
-const BusFormWrapper = ({ 
-  mode = "register", 
-  initialData = {}, 
-  onSave = () => {} 
+const BusFormWrapper = ({
+  mode = "register",
+  initialData = {},
+  onSave = () => {},
 }) => {
   const [formData, setFormData] = useState({
     placa: "",
@@ -17,12 +18,14 @@ const BusFormWrapper = ({
     año_modelo: "",
     ...initialData,
   });
+  const { user } = useContext(AuthContext);
 
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
   };
 
   const handleSubmit = async () => {
+    console.log(formData);
     const dataToSend = {
       placa: formData.placa,
       marca: formData.marca,
@@ -32,9 +35,10 @@ const BusFormWrapper = ({
       estado: formData.estado,
       agencia: {
         connect: {
-          id_agencia: 1, 
+          id_agencia: user.datos_agencia.id_agencia,
         },
       },
+      asientos: formData.asientos_configurados,
     };
 
     try {
@@ -43,7 +47,7 @@ const BusFormWrapper = ({
       } else {
         await createBus(dataToSend);
       }
-      onSave(); 
+      onSave();
     } catch (err) {
       console.error("Error al guardar:", err.response?.data || err.message);
     }

@@ -73,3 +73,12 @@ export const GlobalInformationIcon = (props) => (
 export const DriverIcon = (props) => (
   <FontAwesome6 name="drivers-license" size={24} color="black" {...props} />
 );
+export const ScheduleIcon = (props) => (
+  <MaterialIcons name="schedule" size={24} color="black" {...props} />
+);
+export const PerfilIcon = (props) => (
+  <MaterialIcons name="person-outline" size={24} color="black" {...props} />
+);
+export const TicketIcon = (props) => (
+  <Ionicons name="ticket-outline" size={24} color="black" {...props} />
+);

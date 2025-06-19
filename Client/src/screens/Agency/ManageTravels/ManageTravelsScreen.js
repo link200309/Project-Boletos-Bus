@@ -51,7 +51,11 @@ export default function ManageTravelsScreen({ navigation }) {
         btnText={"+ Viaje"}
         onClick={addTravel}
       />
-      <ListTravels travels={travels} navigation={navigation} />
+      <ListTravels
+        travels={travels}
+        navigation={navigation}
+        fetchTravels={fetchTravels}
+      />
     </GenericContainer>
   );
 }
