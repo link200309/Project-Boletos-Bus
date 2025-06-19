@@ -90,10 +90,13 @@ class TravelController {
                   usuario: true,
                 },
               },
-              asiento: true,
+              pasajerosSecundarios: {
+                include: {
+                  asiento: true,
+                },
+              },
             },
           },
-          pago: true,
         },
       });
       res.json(viajes);

@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.post("/", createReserva);
 router.get("/pasajero/:userId", obtenerMisReservasPasajero);
-router.put("/cancel", changeStateReserve);
+router.put("/updateState", changeStateReserve);
 
 export default router;
