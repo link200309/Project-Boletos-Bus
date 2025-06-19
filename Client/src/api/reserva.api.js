@@ -1,14 +1,13 @@
-const BASE_URL = "http://192.168.35.144:4000";
+const BASE_URL = "http://192.168.1.7:4000";
 import axios from "axios";
 
 export const createReserva = (data) => {
   return axios.post(`${BASE_URL}/reservas`, data);
 };
 
-export const obtenerMisReservas = (userId) => {
-  return axios.get(`${BASE_URL}/reservas/mis-reservas/${userId}`);
+export const obtenerMisReservasPasajero = async (userId) => {
+  return await axios.get(`${BASE_URL}/reservas/pasajero/${userId}`);
 };
-
 /**
  * Obtiene el historial de reservas del usuario autenticado.
  * @param {string} token - JWT del usuario.
