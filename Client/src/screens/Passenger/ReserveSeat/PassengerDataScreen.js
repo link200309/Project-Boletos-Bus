@@ -24,9 +24,6 @@ export default function PassengerDataScreen({ navigation, route }) {
   };
 
   const { selectedSeats, travelDetails, travels } = route.params || {};
-  console.log("Selected Seats:", selectedSeats);
-  console.log("Travel Details:", travelDetails);
-  console.log("Travels:", travels);
   useEffect(() => {
     const defaultValues = selectedSeats.map((seat) => ({
       seat,
@@ -81,6 +78,7 @@ export default function PassengerDataScreen({ navigation, route }) {
               passenger={passenger}
               handlePassengerChange={handlePassengerChange}
               userAccountData={userAccountData}
+              selectedSeats={selectedSeats[index]}
             />
           ))}
 

@@ -77,9 +77,10 @@ export default function PaymentDetailsScreen({ navigation, route }) {
           apellido: p.lastName?.trim() || "N/D",
           ci: p.identityNumber?.trim() || "N/D",
           fecha_nacimiento: convertDateToISO(p.birthDate),
-          id_asiento: parseInt(p.seat),
+          id_asiento: parseInt(p.seat.id),
         })),
       };
+      console.log("Datos a enviar:", dataToSend);
       if (
         !dataToSend.pasajeros_secundarios.every(
           (p) => p.id_asiento && p.fecha_nacimiento

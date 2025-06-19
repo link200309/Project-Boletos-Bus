@@ -21,7 +21,7 @@ const PaymentSummaryCard = forwardRef(({ summary }, ref) => {
       <SummaryRow label="Total a pagar" value={`Bs. ${summary.total}`} />
       <SummaryRow
         label="Número de asientos"
-        value={summary.seatNumbers.join(", ")}
+        value={summary.seatNumbers.map((seat) => seat.numero).join(", ")}
       />
       <SummaryRow label="Cantidad de Asientos" value={summary.count} />
       <SummaryRow

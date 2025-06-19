@@ -53,7 +53,7 @@ const TabsContainer = ({
                   <Icon name="calendar-outline" style={styles.icon} />
                 </View>
                 <View style={styles.textWrapper}>
-                  <Text style={styles.detailTitle}>Fecha de Reserva</Text>
+                  <Text style={styles.detailTitle}>Fecha de reserva</Text>
                   <Text style={styles.detailContent}>
                     {Reserva.formatedDate}
                   </Text>
@@ -65,7 +65,7 @@ const TabsContainer = ({
                   <Icon name="checkmark-circle-outline" style={styles.icon} />
                 </View>
                 <View style={styles.textWrapper}>
-                  <Text style={styles.detailTitle}>Estado de Reserva</Text>
+                  <Text style={styles.detailTitle}>Estado de reserva</Text>
                   <Text style={styles.detailContent}>{Reserva.estado}</Text>
                 </View>
               </View>
@@ -149,7 +149,7 @@ const TabsContainer = ({
                 <Text style={styles.passengerName}>
                   {passenger.firstName} {passenger.lastName}
                 </Text>
-                <Text style={styles.seatLabel}>Asiento {passenger.seat}</Text>
+                <Text style={styles.seatLabel}>Asiento {passenger.seat.numero}</Text>
               </View>
               <Text style={styles.passengerDetail}>
                 CI: {passenger.identityNumber}
