@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,65 +8,21 @@ import {
   SafeAreaView,
   StatusBar,
   Alert,
-  ActivityIndicator,
+  Linking,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+
+//Components
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
+import { PassengerDetailsCard } from "./components/PassengerDetailsCard";
+
+//Utils
+import { formatearFechaHora, calcularEdad } from "../../../utils/dateTime.util";
 
 const ReservationDetailsScreen = ({ navigation, route }) => {
-  const [reserva, setReserva] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [reserva, setReserva] = useState(route.params.reserva);
   const handleCambiarEstado = route.params.handleCambiarEstado;
-
-  useEffect(() => {
-    cargarReserva();
-  }, []);
-
-  const cargarReserva = async () => {
-    setLoading(true);
-    try {
-      setReserva(route.params.reserva);
-    } catch (error) {
-      console.error("Error al cargar reserva:", error);
-      setLoading(false);
-      Alert.alert("Error", "No se pudo cargar la información de la reserva");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const formatearFecha = (fechaISO) => {
-    const fecha = new Date(fechaISO);
-    return fecha.toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
-
-  const formatearFechaHora = (fechaISO) => {
-    const fecha = new Date(fechaISO);
-    return fecha.toLocaleString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const calcularEdad = (fechaNacimiento) => {
-    const hoy = new Date();
-    const nacimiento = new Date(fechaNacimiento);
-    let edad = hoy.getFullYear() - nacimiento.getFullYear();
-    const mes = hoy.getMonth() - nacimiento.getMonth();
-
-    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
-      edad--;
-    }
-
-    return edad;
-  };
+  const viaje = route.params.travel;
 
   const getEstadoColor = (estado) => {
     switch (estado.toLowerCase()) {
@@ -94,17 +50,28 @@ const ReservationDetailsScreen = ({ navigation, route }) => {
     }
   };
 
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor="#7C3AED" barStyle="light-content" />
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#7C3AED" />
-          <Text style={styles.loadingText}>Cargando reserva...</Text>
-        </View>
-      </SafeAreaView>
+  const openWhatsApp = () => {
+    const message = `Hola, le hablamos de la agencia de buses`;
+    const whatsappUrl = `https://wa.me/591${usuario.numero_celular
+      .toString()
+      .replace(/^0+/, "")}?text=${encodeURIComponent(message)}`;
+
+    Alert.alert(
+      "Contactar por WhatsApp",
+      "Se abrirá WhatsApp para coordinar la reserva",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Abrir WhatsApp",
+          onPress: () => {
+            Linking.openURL(whatsappUrl).catch((err) =>
+              Alert.alert("Error", "No se pudo abrir WhatsApp")
+            );
+          },
+        },
+      ]
     );
-  }
+  };
 
   if (!reserva) {
     return (
@@ -121,8 +88,7 @@ const ReservationDetailsScreen = ({ navigation, route }) => {
     );
   }
 
-  const { pasajero, asiento } = reserva;
-  const viaje = route.params.travel;
+  const { pasajero } = reserva;
   const usuario = pasajero.usuario;
 
   return (
@@ -136,7 +102,9 @@ const ReservationDetailsScreen = ({ navigation, route }) => {
         {/* Comprobante y Estado */}
         <View style={styles.comprobanteCard}>
           <View style={styles.comprobanteHeader}>
-            <Text style={styles.comprobanteNumero}>{reserva.comprobante}</Text>
+            <Text style={styles.fechaReserva}>
+              Reservado: {formatearFechaHora(reserva.fecha_reserva)}
+            </Text>
             <View
               style={[
                 styles.estadoBadge,
@@ -148,16 +116,13 @@ const ReservationDetailsScreen = ({ navigation, route }) => {
               </Text>
             </View>
           </View>
-          <Text style={styles.fechaReserva}>
-            Reservado: {formatearFechaHora(reserva.fecha_reserva)}
-          </Text>
         </View>
 
-        {/* Información del Pasajero */}
+        {/* Información de contacto */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Icon name="person" size={24} color="#7C3AED" />
-            <Text style={styles.cardTitle}>Información del Pasajero</Text>
+            <Text style={styles.cardTitle}>Información de Contacto</Text>
           </View>
 
           <View style={styles.infoRow}>
@@ -188,25 +153,28 @@ const ReservationDetailsScreen = ({ navigation, route }) => {
             <Text style={styles.infoLabel}>Correo electrónico:</Text>
             <Text style={styles.infoValue}>{usuario.correo_electronico}</Text>
           </View>
+
+          <TouchableOpacity
+            style={styles.whatsappButton}
+            onPress={openWhatsApp}
+          >
+            <Text style={styles.whatsappButtonText}>
+              Contactar por WhatsApp
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Información del Asiento */}
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Icon name="event-seat" size={24} color="#7C3AED" />
-            <Text style={styles.cardTitle}>Asiento Asignado</Text>
-          </View>
-
-          <View style={styles.asientoInfo}>
-            <View style={styles.asientoVisual}>
-              <Text style={styles.asientoNumero}>{asiento.numero}</Text>
-            </View>
-            <View style={styles.asientoDetails}>
-              <Text style={styles.asientoTipo}>{asiento.ubicacion}</Text>
-              <Text style={styles.asientoId}>ID: {reserva.id_asiento}</Text>
-            </View>
-          </View>
-        </View>
+        {reserva.pasajerosSecundarios &&
+          reserva.pasajerosSecundarios.map((pasajero, index) => {
+            return (
+              <PassengerDetailsCard
+                pasajero={pasajero}
+                index={index}
+                key={index}
+                calcularEdad={calcularEdad}
+              />
+            );
+          })}
 
         {/* Información de Pago */}
         <View style={styles.card}>
@@ -217,7 +185,9 @@ const ReservationDetailsScreen = ({ navigation, route }) => {
 
           <View style={styles.precioContainer}>
             <Text style={styles.precioLabel}>Monto Total:</Text>
-            <Text style={styles.precioValue}>Bs. {viaje.costo}</Text>
+            <Text style={styles.precioValue}>
+              Bs. {viaje.costo * reserva.pasajerosSecundarios.length}
+            </Text>
           </View>
         </View>
 
@@ -226,7 +196,9 @@ const ReservationDetailsScreen = ({ navigation, route }) => {
             reserva.estado.toLowerCase() === "cancelado") && (
             <ButtonStyle
               text={"Confirmar reserva"}
-              onClick={() => handleCambiarEstado(reserva, "confirmado")}
+              onClick={() =>
+                handleCambiarEstado(reserva, "confirmado", setReserva)
+              }
             />
           )}
 
@@ -236,8 +208,7 @@ const ReservationDetailsScreen = ({ navigation, route }) => {
               text={"Cancelar reserva"}
               variant={2}
               onClick={() => {
-                setReserva((prev) => ({ ...prev, estado: "cancelado" }));
-                handleCambiarEstado(reserva, "cancelado");
+                handleCambiarEstado(reserva, "cancelado", setReserva);
               }}
             />
           )}
@@ -252,21 +223,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F3F4F6",
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loadingText: {
-    marginTop: 16,
-    fontSize: 16,
-    color: "#666",
-  },
   errorContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 32,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 15,
   },
   errorText: {
     fontSize: 18,
@@ -368,37 +335,6 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "right",
   },
-  asientoInfo: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  asientoVisual: {
-    width: 60,
-    height: 60,
-    backgroundColor: "#7C3AED",
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 16,
-  },
-  asientoNumero: {
-    color: "white",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  asientoDetails: {
-    flex: 1,
-  },
-  asientoTipo: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  asientoId: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 4,
-  },
   precioContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -430,6 +366,19 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 3,
+  },
+  whatsappButton: {
+    backgroundColor: "#25D366",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+  whatsappButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 14,
+    textAlign: "center",
   },
 });
 
