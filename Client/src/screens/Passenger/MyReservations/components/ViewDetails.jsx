@@ -36,7 +36,10 @@ export default function ViewDetails({ route }) {
     passengers: reservaCompleta.pasajeros_secundarios?.map((pasajero) => ({
       firstName: pasajero.nombre,
       lastName: pasajero.apellido,
-      seat: pasajero.asiento?.numero,
+      seat: {
+        id: pasajero.asiento?.id_asiento || "S/N",
+        numero: pasajero.asiento?.numero || "S/N",
+      },
       identityNumber: pasajero.ci,
       birthDate: formatFechaParaVista(pasajero.fecha_nacimiento),
     })),

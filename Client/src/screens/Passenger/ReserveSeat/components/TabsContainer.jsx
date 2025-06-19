@@ -149,7 +149,7 @@ const TabsContainer = ({
                 <Text style={styles.passengerName}>
                   {passenger.firstName} {passenger.lastName}
                 </Text>
-                <Text style={styles.seatLabel}>Asiento {passenger.seat}</Text>
+                <Text style={styles.seatLabel}>Asiento {passenger.seat.numero}</Text>
               </View>
               <Text style={styles.passengerDetail}>
                 CI: {passenger.identityNumber}

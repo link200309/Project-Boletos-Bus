@@ -42,18 +42,18 @@ export const SeatGrid = ({
   const convertedSeats = floorSeats.map((asiento) => ({
     id: asiento.id_asiento,
     status: getStatusFromAPI(asiento.estado),
-    numero: parseInt(asiento.numero_asiento || asiento.numero || 0),
+    numero: asiento.numero_asiento || asiento.numero || "",
     fila: asiento.fila,
     columna: asiento.columna,
     ubicacion: asiento.ubicacion || asiento.piso,
   }));
 
   const sortedSeats = convertedSeats.sort((a, b) => a.numero - b.numero);
-  
+
   const getOrderedLayout = () => {
     if (sortedSeats.length === 0) return [];
     const rows = [];
-    const seatsPerRow = 4; 
+    const seatsPerRow = 4;
     for (let i = 0; i < sortedSeats.length; i += seatsPerRow) {
       const rowSeats = sortedSeats.slice(i, i + seatsPerRow);
       const row = [null, null, null, null];
@@ -103,7 +103,7 @@ export const SeatGrid = ({
                     id={seat.id}
                     numero={seat.numero}
                     status={seat.status}
-                    isSelected={selectedSeats.includes(seat.id)}
+                    isSelected={selectedSeats.some((s) => s.id === seat.id)}
                     onPress={onSeatSelect}
                   />
                 </View>
@@ -124,7 +124,7 @@ export const SeatGrid = ({
                     id={seat.id}
                     numero={seat.numero}
                     status={seat.status}
-                    isSelected={selectedSeats.includes(seat.id)}
+                    isSelected={selectedSeats.some((s) => s.id === seat.id)}
                     onPress={onSeatSelect}
                   />
                 </View>
