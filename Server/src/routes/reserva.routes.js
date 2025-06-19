@@ -3,6 +3,7 @@ import {
   createReserva,
   obtenerMisReservasPasajero,
   cancelarReserva,
+  changeStateReserve,
 } from "../controllers/reserva.controller.js";
 
 const router = express.Router();
