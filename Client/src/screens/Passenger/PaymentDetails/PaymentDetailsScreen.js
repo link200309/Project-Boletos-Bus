@@ -5,18 +5,14 @@ import { BlobBg } from "../../../components/Background/BlobBg";
 import { InformativeTitle } from "../../../components/InformativeTitle";
 import PaymentSummaryCard from "./components/PaymentSummaryCard";
 import PaymentActionButtons from "./components/PaymentActionButtons";
-import { formatTime } from "../../../utils/dateTime.util";
+import { formatTime, convertDateToISO } from "../../../utils/dateTime.util";
 import { createReserva } from "../../../api/reserva.api";
 import { AuthContext } from "../../../context/AuthContext";
 
 export default function PaymentDetailsScreen({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useContext(AuthContext);
-  console.log(user);
-  const {
-    travelDetails = {},
-    passengers = [],
-  } = route?.params || {};
+  const { travelDetails = {}, passengers = [] } = route?.params || {};
   const seatNumbers = Array.isArray(passengers)
     ? passengers.map((p) => p.seat)
     : [];
@@ -37,29 +33,6 @@ export default function PaymentDetailsScreen({ navigation, route }) {
     total,
     busId: travelDetails.bus?.id_bus || "N/D",
     qrData: travelDetails.qr,
-  };
-
-  // función para convertir la fecha a formato ISO, manejando diferentes formatos de entrada
-  const convertDateToISO = (dateString) => {
-    if (!dateString) return new Date().toISOString();
-    try {
-      if (dateString.includes("T") || dateString.includes("-")) {
-        return new Date(dateString).toISOString();
-      }
-      const [month, day, year] = dateString.split("/");
-      if (month && day && year) {
-        const date = new Date(
-          parseInt(year),
-          parseInt(month) - 1,
-          parseInt(day)
-        );
-        return date.toISOString();
-      }
-      return new Date().toISOString();
-    } catch (error) {
-      console.error("Error converting date:", error);
-      return new Date().toISOString();
-    }
   };
 
   // función para crear la reserva, recuperando los datos del usuario y validando los pasajeros

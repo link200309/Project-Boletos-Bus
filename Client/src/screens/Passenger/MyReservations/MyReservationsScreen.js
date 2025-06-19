@@ -9,22 +9,17 @@ import {
   ActivityIndicator,
 } from "react-native";
 import TripCard from "./components/TripCard";
-import ReservationModal from "./components/ReservationModal";
 import { BlobBg } from "../../../components/Background/BlobBg";
 import { GenericContainer } from "../../../components/GenericContainer";
 import { AuthContext } from "../../../context/AuthContext";
-import {
-  obtenerMisReservasPasajero,
-  cancelarReserva,
-} from "../../../api/reserva.api";
+import { obtenerMisReservasPasajero } from "../../../api/reserva.api";
 
 export default function MyReservationsScreen({ navigation }) {
   const { user } = useContext(AuthContext);
   const [trips, setTrips] = useState([]);
-  const [cancelId, setCancelId] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [reservasData, setReservasData] = useState([]);
 
   const transformReservaToTrip = useCallback((reserva) => {
     return {
@@ -58,6 +53,7 @@ export default function MyReservationsScreen({ navigation }) {
         } else {
           setLoading(true);
         }
+
         const userId = user?.datos_pasajero?.id_pasajero;
         if (!userId) {
           Alert.alert(
@@ -66,9 +62,15 @@ export default function MyReservationsScreen({ navigation }) {
           );
           return;
         }
+
         const response = await obtenerMisReservasPasajero(userId);
-        console.log("Reservas cargadas:", response.data?.total_reservas || 0);
         const reservasData = response.data || response;
+
+        const reservasDataRaw = response.data?.reservas || [];
+        setReservasData(reservasDataRaw);
+        const tripsTransformados = reservasDataRaw.map(transformReservaToTrip);
+        setTrips(tripsTransformados);
+
         if (
           reservasData &&
           reservasData.reservas &&
@@ -99,105 +101,24 @@ export default function MyReservationsScreen({ navigation }) {
     cargarReservas();
   }, [cargarReservas]);
 
-  // función para ver detalles
-  const handleViewDetails = useCallback(
-    (id) => {
-      const trip = trips.find((t) => t.id === id);
-      console.log("El viaje", trip);
-
-      navigation.navigate("ViewDetails", {
-        reserveDetails: trip,
-      });
-    },
-    [navigation, trips]
-  );
-
-  // función para pagar reserva
-  const handlePayReservation = useCallback(
-    (id) => {
-      const trip = trips.find((t) => t.id === id);
-      navigation.navigate("PayReservation", {
-        payDetails: trip,
-      });
-    },
-    [navigation, trips]
-  );
-
-  const confirmCancel = useCallback(
-    (id) => {
-      const trip = trips.find((t) => t.id === id);
-      if (trip?.estado === "confirmada") {
-        Alert.alert(
-          "Reserva Confirmada",
-          "Esta reserva ya ha sido confirmada. Para cancelarla, contacta directamente con la agencia.",
-          [{ text: "Entendido", style: "default" }]
-        );
-        return;
-      }
-      setCancelId(id);
-      setModalVisible(true);
-    },
-    [trips]
-  );
-
-  const handleConfirmCancel = useCallback(async () => {
-    try {
-      // Si tienes una API para cancelar reservas
-      // await cancelarReserva(cancelId);
-      const updatedTrips = trips.filter((trip) => trip.id !== cancelId);
-      setTrips(updatedTrips);
-      setModalVisible(false);
-      setCancelId(null);
-      Alert.alert(
-        "Reserva Cancelada",
-        "Tu reserva ha sido cancelada exitosamente.",
-        [{ text: "Aceptar", style: "default" }]
-      );
-    } catch (error) {
-      console.error("Error al cancelar reserva:", error);
-      Alert.alert(
-        "Error",
-        "No se pudo cancelar la reserva. Inténtalo nuevamente."
-      );
-    }
-  }, [trips, cancelId]);
-
-  const handleSendReceipt = useCallback(() => {
-    Alert.alert(
-      "Enviar Comprobante",
-      "Serás redirigido para enviar el comprobante de pago a la agencia.",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Continuar",
-          onPress: () => {
-            setModalVisible(false);
-            setCancelId(null);
-          },
-        },
-      ]
-    );
-  }, []);
-
-  const handleCloseModal = useCallback(() => {
-    setModalVisible(false);
-    setCancelId(null);
-  }, []);
-
   const onRefresh = useCallback(() => {
     cargarReservas(true);
   }, [cargarReservas]);
 
   const renderTripCard = useCallback(
-    ({ item }) => (
-      <TripCard
-        trip={item}
-        onCancel={confirmCancel}
-        onViewDetails={handleViewDetails}
-        onPayReservation={handlePayReservation}
-      />
-    ),
-    [confirmCancel, handleViewDetails, handlePayReservation]
+    ({ item }) => {
+      const reservaCompleta = reservasData.find(
+        (r) => r.id_reserva === item.id
+      );
+      return (
+        <TripCard
+          trip={item}
+          navigation={navigation}
+          reservaCompleta={reservaCompleta}
+        />
+      );
+    },
+    [navigation, reservasData]
   );
 
   const keyExtractor = useCallback((item) => item.id.toString(), []);
@@ -240,12 +161,6 @@ export default function MyReservationsScreen({ navigation }) {
           contentContainerStyle={styles.listContainer}
         />
       )}
-      <ReservationModal
-        visible={modalVisible}
-        onClose={handleCloseModal}
-        onSendReceipt={handleSendReceipt}
-        onConfirmCancel={handleConfirmCancel}
-      />
     </GenericContainer>
   );
 }

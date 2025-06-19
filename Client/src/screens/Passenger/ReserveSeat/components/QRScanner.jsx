@@ -154,19 +154,6 @@ const parseBolivianDocument = (qrData) => {
         birthDate: "08/10/2003",
       };
     }
-    // try {
-    //   const jsonData = JSON.parse(qrData);
-    //   if (jsonData.nombres || jsonData.firstName) {
-    //     return {
-    //       firstName: jsonData.nombres || jsonData.firstName || "",
-    //       lastName: jsonData.apellidos || jsonData.lastName || "",
-    //       identityNumber: jsonData.ci || jsonData.identityNumber || "",
-    //       birthDate: formatDate(
-    //         jsonData.fechaNacimiento || jsonData.birthDate || ""
-    //       ),
-    //     };
-    //   }
-    // } catch (e) {}
 
     let parts = [];
     if (qrData.includes("|")) {
