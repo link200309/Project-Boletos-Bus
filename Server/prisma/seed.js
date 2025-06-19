@@ -18,7 +18,7 @@ async function main() {
   await prisma.usuario.deleteMany();
 
   const contraseñaHasheada = await bcrypt.hash("12345678", 10);
-  const contraseñaHasheadaPasajero = await bcrypt.hash("password123", 10);
+  const contraseñaHasheadaPasajero = await bcrypt.hash("password123", 10); // Faltaba hashear
 
   const usuarioAgencia = await prisma.usuario.create({
     data: {
@@ -51,21 +51,6 @@ async function main() {
     },
   });
 
-  console.log(`✅ Agencia creada con ID: ${agencia.id_agencia}`);
-
-  // 🔍 Debug: verificar que la agencia existe
-  const agenciaVerificacion = await prisma.agencia.findUnique({
-    where: { id_agencia: agencia.id_agencia },
-  });
-
-  if (!agenciaVerificacion) {
-    throw new Error(
-      `❌ Error: No se encontró la agencia con ID ${agencia.id_agencia}`
-    );
-  }
-
-  console.log(`✅ Agencia verificada: ${agenciaVerificacion.nombre_agencia}`);
-
   const usuarioPasajero = await prisma.usuario.create({
     data: {
       tipo_usuario: "cliente",
@@ -73,7 +58,7 @@ async function main() {
       apellido: "García",
       ci: "9876543CB",
       correo_electronico: "maria@gmail.com",
-      contraseña: contraseñaHasheadaPasajero,
+      contraseña: contraseñaHasheadaPasajero, // Usar contraseña hasheada
       numero_celular: 78912345,
     },
   });
@@ -97,24 +82,14 @@ async function main() {
     },
   });
 
-  console.log(
-    `✅ Bus creado con ID: ${bus.id_bus}, asociado a agencia: ${agencia.id_agencia}`
-  );
-
-  // Crear asientos individualmente para manejar la clave compuesta correctamente
-  const asientos = [];
-  for (let i = 0; i < 40; i++) {
-    const asiento = await prisma.asiento.create({
-      data: {
-        id_asiento: i + 1, // ID del asiento dentro del bus
-        numero: `${i + 1}`,
-        ubicacion: i < 20 ? "Superior" : "Inferior",
-        estado: "Disponible",
-        id_bus: bus.id_bus,
-      },
-    });
-    asientos.push(asiento);
-  }
+  await prisma.asiento.createMany({
+    data: Array.from({ length: 40 }, (_, i) => ({
+      numero: `${i + 1}`,
+      ubicacion: i < 20 ? "Superior" : "Inferior",
+      estado: "Disponible",
+      id_bus: bus.id_bus,
+    })),
+  });
 
   await prisma.ruta.createMany({
     data: [
@@ -245,12 +220,9 @@ async function main() {
   // Segunda reserva
   asientoDisponible = await prisma.asiento.findFirst({
     where: {
-      id_bus_id_asiento: {
-        id_bus: bus.id_bus,
-        id_asiento: asiento1.id_asiento,
-      },
+      id_bus: bus.id_bus,
+      estado: "Disponible",
     },
-    data: { estado: "Reservado" },
   });
 
   const reserva2 = await prisma.reserva.create({

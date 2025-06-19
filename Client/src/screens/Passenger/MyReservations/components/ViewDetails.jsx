@@ -4,6 +4,9 @@ import { BoliviaQRPayment } from "../../PaymentDetails/components/QrCodeDisplay"
 
 export default function ViewDetails({ route }) {
   const { reserveDetails } = route.params || {};
+
+  console.log("El qr payment en", reserveDetails);
+
   return (
     <BoliviaQRPayment
       amount={reserveDetails.amount}

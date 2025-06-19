@@ -103,6 +103,8 @@ export default function MyReservationsScreen({ navigation }) {
   const handleViewDetails = useCallback(
     (id) => {
       const trip = trips.find((t) => t.id === id);
+      console.log("El viaje", trip);
+
       navigation.navigate("ViewDetails", {
         reserveDetails: trip,
       });
@@ -214,7 +216,6 @@ export default function MyReservationsScreen({ navigation }) {
 
   return (
     <GenericContainer style={styles.container}>
-      <BlobBg />
       {trips.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>No tienes reservas activas</Text>
