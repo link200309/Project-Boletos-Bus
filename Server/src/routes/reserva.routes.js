@@ -2,13 +2,13 @@ import express from "express";
 import {
   createReserva,
   obtenerMisReservasPasajero,
-  changeStateReserve,
+  cancelarReserva,
 } from "../controllers/reserva.controller.js";
 
 const router = express.Router();
 
 router.post("/", createReserva);
 router.get("/pasajero/:userId", obtenerMisReservasPasajero);
-router.put("/cancel", changeStateReserve);
+router.put("/cancel/:id_reserva", cancelarReserva);
 
 export default router;

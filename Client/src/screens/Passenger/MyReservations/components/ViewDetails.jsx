@@ -1,5 +1,4 @@
-import React from "react";
-import { ScrollView } from "react-native";
+import React, { useState } from "react";
 import TabsContainer from "../../ReserveSeat/components/TabsContainer";
 import { GenericContainer } from "../../../../components/GenericContainer";
 import { BlobBg } from "../../../../components/Background/BlobBg";
@@ -9,9 +8,11 @@ import {
   formatDate,
   formatFechaParaVista,
 } from "../../../../utils/dateTime.util";
+import { CancelModal } from "./CancelModal";
 
 export default function ViewDetails({ route }) {
   const { reservaCompleta } = route.params || {};
+  const [modalVisible, setModalVisible] = useState(false);
 
   const ejemploTravelDetails = [
     {
@@ -50,6 +51,14 @@ export default function ViewDetails({ route }) {
     estado: reservaCompleta.estado,
   };
 
+  const abrirModalCancelar = () => {
+    setModalVisible(true);
+  };
+
+  const cerrarModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <GenericContainer>
       <BlobBg />
@@ -57,17 +66,21 @@ export default function ViewDetails({ route }) {
         title="Detalles de Reserva"
         description="Aquí puedes ver los detalles de tu reserva, incluyendo los pasajeros y el itinerario."
       />
-      <ScrollView>
-        <TabsContainer
-          passengers={ejemploPassengers}
-          travelDetails={ejemploTravelDetails}
-          reserve={true}
-          Reserva={ejemploReserva}
-        />
-        {reservaCompleta.estado === "pendiente" && (
-          <ButtonStyle text="Cancelar Reserva" onClick={() => {}} />
-        )}
-      </ScrollView>
+      <TabsContainer
+        passengers={ejemploPassengers}
+        travelDetails={ejemploTravelDetails}
+        reserve={true}
+        Reserva={ejemploReserva}
+      />
+      {reservaCompleta.estado === "pendiente" && (
+        <ButtonStyle text="Cancelar Reserva" onClick={abrirModalCancelar} />
+      )}
+
+      <CancelModal
+        visible={modalVisible}
+        id_reserva={reservaCompleta.id_reserva}
+        onClose={cerrarModal}
+      />
     </GenericContainer>
   );
 }

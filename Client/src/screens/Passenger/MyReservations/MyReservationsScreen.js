@@ -53,7 +53,6 @@ export default function MyReservationsScreen({ navigation }) {
         } else {
           setLoading(true);
         }
-
         const userId = user?.datos_pasajero?.id_pasajero;
         if (!userId) {
           Alert.alert(
@@ -62,15 +61,12 @@ export default function MyReservationsScreen({ navigation }) {
           );
           return;
         }
-
         const response = await obtenerMisReservasPasajero(userId);
         const reservasData = response.data || response;
-
         const reservasDataRaw = response.data?.reservas || [];
         setReservasData(reservasDataRaw);
         const tripsTransformados = reservasDataRaw.map(transformReservaToTrip);
         setTrips(tripsTransformados);
-
         if (
           reservasData &&
           reservasData.reservas &&
@@ -147,7 +143,11 @@ export default function MyReservationsScreen({ navigation }) {
         </View>
       ) : (
         <FlatList
-          data={trips}
+          data={trips.filter(
+            (trip) =>
+              trip.estado?.toLowerCase() === "pendiente" ||
+              trip.estado?.toLowerCase() === "confirmado"
+          )}
           keyExtractor={keyExtractor}
           renderItem={renderTripCard}
           refreshControl={

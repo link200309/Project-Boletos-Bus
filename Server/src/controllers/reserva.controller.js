@@ -130,6 +130,7 @@ export const createReserva = async (req, res) => {
   }
 };
 
+// Controlador para obtener las reservas de un pasajero específico
 export const obtenerMisReservasPasajero = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -302,5 +303,48 @@ export const changeStateReserve = async (req, res) => {
     res
       .status(500)
       .json({ mensaje: "Error interno al cambiar el estado de la reserva" });
+  }
+};
+
+// Controlador para cambiar el estado de una reserva a "cancelada"
+export const cancelarReserva = async (req, res) => {
+  const { id_reserva } = req.params;
+  try {
+    const reserva = await prisma.reserva.findUnique({
+      where: { id_reserva: Number(id_reserva) },
+    });
+    if (!reserva) {
+      return res.status(404).json({ mensaje: "Reserva no encontrada." });
+    }
+    if (reserva.estado === "cancelada") {
+      return res.status(400).json({ mensaje: "La reserva ya está cancelada." });
+    }
+    const reservaActualizada = await prisma.reserva.update({
+      where: { id_reserva: Number(id_reserva) },
+      data: { estado: "cancelada" },
+    });
+    // Liberar los asientos reservados
+    const paSec = await prisma.pasajeroSecundario.findMany({
+      where: { id_reserva: Number(id_reserva) },
+      include: { asiento: true },
+    });
+    await prisma.asiento.updateMany({
+      where: {
+        id_asiento: {
+          in: paSec.map((ps) => ps.asiento.id_asiento),
+        },
+      },
+      data: { estado: "Disponible" },
+    });
+    res.json({
+      mensaje: "Reserva cancelada con éxito",
+      reserva: reservaActualizada,
+    });
+  } catch (error) {
+    console.error("Error al cancelar la reserva:", error);
+    res.status(500).json({
+      mensaje: "Error interno al cancelar la reserva",
+      error: error.message,
+    });
   }
 };
