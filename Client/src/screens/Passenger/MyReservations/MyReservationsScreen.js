@@ -13,6 +13,7 @@ import { BlobBg } from "../../../components/Background/BlobBg";
 import { GenericContainer } from "../../../components/GenericContainer";
 import { AuthContext } from "../../../context/AuthContext";
 import { obtenerMisReservasPasajero } from "../../../api/reserva.api";
+import { InformativeTitle } from "../../../components/InformativeTitle";
 
 export default function MyReservationsScreen({ navigation }) {
   const { user } = useContext(AuthContext);
@@ -134,6 +135,10 @@ export default function MyReservationsScreen({ navigation }) {
   return (
     <GenericContainer style={styles.container}>
       <BlobBg />
+      <InformativeTitle
+        title={"Mis Reservas"}
+        description={"Aquí puedes ver todas tus reservas activas."}
+      />
       {trips.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>No tienes reservas activas</Text>
