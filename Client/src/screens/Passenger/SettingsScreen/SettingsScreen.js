@@ -4,29 +4,29 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
   Modal,
   Pressable,
   TextInput,
+  Linking,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { AuthContext } from "../../context/AuthContext";
-import { GenericContainer } from "../../components/GenericContainer";
-import { ButtonStyle } from "../../components/Button/ButtonStyle";
-import { BlobBg } from "../../components/Background/BlobBg";
+import { AuthContext } from "../../../context/AuthContext";
+import { GenericContainer } from "../../../components/GenericContainer";
+import { ButtonStyle } from "../../../components/Button/ButtonStyle";
+import { BlobBg } from "../../../components/Background/BlobBg";
+import { ProfileCard } from "./components/ProfileCard";
+import { AccountSection } from "./components/AccountSection";
+import { GeneralSection } from "./components/GeneralSection";
 import {
   actualizarPerfilUsuario,
   cambiarPasswordUsuario,
-} from "../../api/user.api";
-import { obtenerHistorialReservas } from "../../api/reserva.api";
+} from "../../../api/user.api";
 
-export default function PassengerSettingsScreen() {
+export default function SettingsScreen({ navigation }) {
   const { user, logout, setUser } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState("");
-  const [reservas, setReservas] = useState([]);
-
   const [errors, setErrors] = useState({});
 
   const [personalInfo, setPersonalInfo] = useState({
@@ -34,6 +34,12 @@ export default function PassengerSettingsScreen() {
     apellido: user?.usuario?.apellido || "",
     correo: user?.usuario?.correo_electronico || "",
     nacimiento: user?.datos_pasajero?.fecha_nacimiento?.slice(0, 10) || "",
+  });
+
+  const [passwordForm, setPasswordForm] = useState({
+    actual: "",
+    nueva: "",
+    confirmacion: "",
   });
 
   const handleSavePersonalInfo = async () => {
@@ -113,49 +119,16 @@ export default function PassengerSettingsScreen() {
     }
   };
 
-  const obtenerHistorialReservas = async () => {
-    try {
-      const token = user?.token;
-      if (!token) {
-        console.warn("No se encontró el token del usuario");
-        return;
-      }
-      const data = await fetchHistorialReservas(token);
-      if (Array.isArray(data)) {
-        setReservas(data);
-      } else {
-        console.warn("La respuesta de reservas no es un array:", data);
-        setReservas([]);
-      }
-    } catch (error) {
-      console.error("Error al cargar historial de reservas:", error);
-      setReservas([]);
+  const handleItemPress = (contentKey) => {
+    if (contentKey === "historial") {
+      // Navegar a HistorialReserver en lugar de abrir modal
+      navigation.navigate("ReservationHistory");
+    } else {
+      // Para otros elementos, abrir modal como antes
+      setModalContent(contentKey);
+      setModalVisible(true);
     }
   };
-
-  const [passwordForm, setPasswordForm] = useState({
-    actual: "",
-    nueva: "",
-    confirmacion: "",
-  });
-
-  const openModal = (content) => {
-    setModalContent(content);
-    setModalVisible(true);
-    if (content === "historial") {
-      obtenerHistorialReservas();
-    }
-  };
-
-  const renderItem = (iconName, text, contentKey, iconColor = "#4318D1") => (
-    <TouchableOpacity
-      style={styles.itemRow}
-      onPress={() => openModal(contentKey)}
-    >
-      <Icon name={iconName} size={24} color={iconColor} />
-      <Text style={styles.itemText}>{text}</Text>
-    </TouchableOpacity>
-  );
 
   const renderModalContent = () => {
     switch (modalContent) {
@@ -219,21 +192,9 @@ export default function PassengerSettingsScreen() {
 
             <Pressable
               style={styles.saveButton}
-              onPress={
-                modalContent === "info"
-                  ? handleSavePersonalInfo
-                  : modalContent === "password"
-                  ? handleChangePassword
-                  : () => {}
-              }
+              onPress={handleSavePersonalInfo}
             >
-              <Text style={styles.saveButtonText}>
-                {modalContent === "info"
-                  ? "Guardar cambios"
-                  : modalContent === "password"
-                  ? "Actualizar contraseña"
-                  : "Aceptar"}
-              </Text>
+              <Text style={styles.saveButtonText}>Guardar cambios</Text>
             </Pressable>
           </View>
         );
@@ -249,10 +210,14 @@ export default function PassengerSettingsScreen() {
                 placeholderTextColor="#A0A0A0"
                 secureTextEntry
                 value={passwordForm.actual}
-                onChangeText={(text) =>
-                  setPasswordForm({ ...passwordForm, actual: text })
-                }
+                onChangeText={(text) => {
+                  setPasswordForm({ ...passwordForm, actual: text });
+                  setErrors({ ...errors, actual: null });
+                }}
               />
+              {errors.actual && (
+                <Text style={styles.errorText}>{errors.actual}</Text>
+              )}
             </View>
 
             <View style={styles.inputGroup}>
@@ -291,57 +256,10 @@ export default function PassengerSettingsScreen() {
               )}
             </View>
 
-            <Pressable
-              style={styles.popupCloseButton}
-              onPress={handleChangePassword}
-            >
-              <Text style={styles.popupCloseText}>Actualizar contraseña</Text>
+            <Pressable style={styles.saveButton} onPress={handleChangePassword}>
+              <Text style={styles.saveButtonText}>Actualizar contraseña</Text>
             </Pressable>
           </View>
-        );
-
-      case "historial":
-        return (
-          <ScrollView style={{ width: "100%", maxHeight: 400 }}>
-            {reservas.length === 0 ? (
-              <Text style={{ textAlign: "center", marginVertical: 20 }}>
-                No tienes reservas registradas.
-              </Text>
-            ) : (
-              reservas.map((reserva) => (
-                <View key={reserva.id_reserva} style={styles.historialCard}>
-                  <Text style={styles.ruta}>
-                    {reserva.viaje.ruta.origen} → {reserva.viaje.ruta.destino}
-                  </Text>
-
-                  <View style={styles.historialRow}>
-                    <Icon name="calendar-outline" size={16} color="#441AD1" />
-                    <Text style={styles.historialInfo}>
-                      {new Date(
-                        reserva.viaje.fecha_salida
-                      ).toLocaleDateString()}{" "}
-                      - {reserva.viaje.hora_salida_programada}
-                    </Text>
-                  </View>
-
-                  <View style={styles.historialRow}>
-                    <Icon name="bus-outline" size={16} color="#441AD1" />
-                    <Text style={styles.historialInfo}>
-                      {reserva.viaje.bus.tipo_bus} | Asiento:{" "}
-                      {reserva.asiento.numero}
-                    </Text>
-                  </View>
-
-                  <View style={styles.historialRow}>
-                    <Icon name="cash-outline" size={16} color="#441AD1" />
-                    <Text style={styles.historialInfo}>
-                      Bs. {reserva.viaje.costo}
-                    </Text>
-                  </View>
-                </View>
-              ))
-            )}
-          </ScrollView>
         );
 
       case "nosotros":
@@ -441,48 +359,12 @@ export default function PassengerSettingsScreen() {
     <GenericContainer>
       <BlobBg />
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Avatar y nombre */}
-        <View style={styles.profileCard}>
-          <Image
-            source={require("./assets/avatar-default.jpg")}
-            style={styles.avatar}
-          />
-          <View>
-            <Text style={styles.name}>
-              {user?.usuario?.nombre && user?.usuario?.apellido
-                ? `${user.usuario.nombre} ${user.usuario.apellido}`
-                : "Nombre no disponible"}
-            </Text>
-            <Text style={styles.email}>
-              {user?.usuario?.correo_electronico || "Correo no disponible"}
-            </Text>
-          </View>
-        </View>
+        <ProfileCard user={user} />
 
-        {/* Sección: Cuenta */}
-        <Text style={styles.sectionTitle}>Cuenta</Text>
-        <View style={styles.sectionBox}>
-          {renderItem("person-outline", "Información personal", "info")}
-          {renderItem("lock-closed-outline", "Cambiar contraseña", "password")}
-          {renderItem("calendar-outline", "Historial de viajes", "historial")}
-        </View>
+        <AccountSection onItemPress={handleItemPress} />
 
-        {/* Sección: General */}
-        <Text style={styles.sectionTitle}>General</Text>
-        <View style={styles.sectionBox}>
-          {renderItem(
-            "chatbox-ellipses-outline",
-            "Enviar sugerencias",
-            "sugerencias"
-          )}
-          {renderItem(
-            "information-circle-outline",
-            "Sobre nosotros",
-            "nosotros"
-          )}
-        </View>
+        <GeneralSection onItemPress={handleItemPress} />
 
-        {/* Botón cerrar sesión */}
         <View style={styles.logoutContainer}>
           <ButtonStyle
             width="100%"
@@ -493,7 +375,6 @@ export default function PassengerSettingsScreen() {
         </View>
       </ScrollView>
 
-      {/* Modal */}
       <Modal
         transparent={true}
         visible={modalVisible}
@@ -502,7 +383,6 @@ export default function PassengerSettingsScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.popupBox}>
-            {/* Icono Cerrar */}
             <Pressable
               style={styles.closeIcon}
               onPress={() => setModalVisible(false)}
@@ -510,16 +390,13 @@ export default function PassengerSettingsScreen() {
               <Icon name="close" size={24} color="#555" />
             </Pressable>
 
-            {/* Título */}
             <Text style={styles.popupTitle}>
               {modalContent === "info" && "Información personal"}
               {modalContent === "password" && "Cambiar contraseña"}
-              {modalContent === "historial" && "Historial de reservas"}
               {modalContent === "sugerencias" && "Enviar Sugerencias"}
               {modalContent === "nosotros" && "Sobre Nosotros"}
             </Text>
 
-            {/* Contenido dinámico */}
             {renderModalContent()}
           </View>
         </View>
@@ -532,20 +409,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     paddingBottom: 60,
-  },
-  profileBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  profileCard: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 15,
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-    elevation: 2,
   },
   aboutTitle: {
     fontSize: 18,
@@ -564,62 +427,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#441AD1",
   },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 15,
-  },
-  name: {
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  email: {
-    fontSize: 14,
-    color: "#777",
-  },
-  sectionTitle: {
-    fontSize: 16,
-    color: "#441AD1",
-    marginBottom: 8,
-    marginTop: 9,
-    fontWeight: "700",
-  },
-  sectionBox: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    marginBottom: 10,
-    elevation: 2,
-  },
-  itemRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 14,
-    borderBottomColor: "#eee",
-    borderBottomWidth: 1,
-  },
-  itemText: {
-    fontSize: 16,
-    marginLeft: 15,
-    color: "#333",
-  },
-
-  aboutTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#441AD1",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  aboutText: {
-    fontSize: 14,
-    color: "#333",
-    lineHeight: 20,
-    marginBottom: 10,
-  },
-
   logoutContainer: {
     alignItems: "center",
   },
@@ -646,7 +453,6 @@ const styles = StyleSheet.create({
     marginTop: -6,
     marginBottom: 8,
   },
-
   popupTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -692,7 +498,6 @@ const styles = StyleSheet.create({
     color: "#555",
     fontWeight: "600",
   },
-
   closeIcon: {
     position: "absolute",
     top: 10,
@@ -712,32 +517,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "600",
-  },
-
-  historialCard: {
-    backgroundColor: "#F5F5F5",
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 10,
-  },
-  ruta: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
-  info: {
-    fontSize: 14,
-    color: "#555",
-  },
-
-  historialRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 6,
-  },
-  historialInfo: {
-    marginLeft: 8,
-    fontSize: 14,
-    color: "#555",
   },
 });

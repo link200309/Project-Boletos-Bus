@@ -8,6 +8,11 @@ export const createReserva = (data) => {
 export const obtenerMisReservasPasajero = async (userId) => {
   return await axios.get(`${BASE_URL}/reservas/pasajero/${userId}`);
 };
+
+export const cancelarReserva = async (id_reserva) => {
+  return await axios.put(`${BASE_URL}/reservas/cancel/${id_reserva}`);
+};
+
 /**
  * Obtiene el historial de reservas del usuario autenticado.
  * @param {string} token - JWT del usuario.

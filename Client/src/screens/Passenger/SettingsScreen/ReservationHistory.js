@@ -8,14 +8,13 @@ import {
   RefreshControl,
   ActivityIndicator,
 } from "react-native";
-import TripCard from "./components/TripCard";
+import TripCard from "../MyReservations/components/TripCard";
 import { BlobBg } from "../../../components/Background/BlobBg";
 import { GenericContainer } from "../../../components/GenericContainer";
 import { AuthContext } from "../../../context/AuthContext";
 import { obtenerMisReservasPasajero } from "../../../api/reserva.api";
-import { InformativeTitle } from "../../../components/InformativeTitle";
 
-export default function MyReservationsScreen({ navigation }) {
+export default function ReservationHistoryScreen({ navigation }) {
   const { user } = useContext(AuthContext);
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -135,10 +134,6 @@ export default function MyReservationsScreen({ navigation }) {
   return (
     <GenericContainer style={styles.container}>
       <BlobBg />
-      <InformativeTitle
-        title={"Mis Reservas"}
-        description={"Aquí puedes ver todas tus reservas activas."}
-      />
       {trips.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>No tienes reservas activas</Text>
@@ -149,9 +144,7 @@ export default function MyReservationsScreen({ navigation }) {
       ) : (
         <FlatList
           data={trips.filter(
-            (trip) =>
-              trip.estado?.toLowerCase() === "pendiente" ||
-              trip.estado?.toLowerCase() === "confirmado"
+            (trip) => trip.estado?.toLowerCase() === "cancelada"
           )}
           keyExtractor={keyExtractor}
           renderItem={renderTripCard}

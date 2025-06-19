@@ -3,13 +3,15 @@ import { View, Text, StyleSheet } from "react-native";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 
-export default function TripCard({ trip, navigation, reservaCompleta  }) {
+export default function TripCard({ trip, navigation, reservaCompleta }) {
   const getStatusStyle = (estado) => {
     switch (estado?.toLowerCase()) {
       case "confirmada":
         return { backgroundColor: "#4CAF50", color: "#fff" };
       case "pendiente":
         return { backgroundColor: "#FF9800", color: "#fff" };
+      case "cancelada":
+        return { backgroundColor: "#F44336", color: "#fff" };
       default:
         return { backgroundColor: "#9E9E9E", color: "#fff" };
     }
@@ -20,6 +22,8 @@ export default function TripCard({ trip, navigation, reservaCompleta  }) {
         return "Confirmada";
       case "pendiente":
         return "Pendiente";
+      case "cancelada":
+        return "Cancelada";
       default:
         return "Desconocido";
     }

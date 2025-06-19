@@ -18,6 +18,7 @@ export const PassengerCard = ({
   passenger,
   handlePassengerChange,
   userAccountData,
+  selectedSeats = [],
 }) => {
   const {
     control,
@@ -136,7 +137,7 @@ export const PassengerCard = ({
       <TouchableOpacity style={styles.headerContainer} onPress={toggleCollapse}>
         <View style={styles.headerContent}>
           <Text style={styles.title}>Pasajero {index + 1}</Text>
-          <Text style={styles.seat}>Asiento: {passenger.seat}</Text>
+          <Text style={styles.seat}>Asiento: {selectedSeats.numero || "S/N"}</Text>
         </View>
         <MaterialIcons
           name={isCollapsed ? "expand-more" : "expand-less"}
@@ -163,9 +164,7 @@ export const PassengerCard = ({
                   isScanned && styles.labelAccountDataActive,
                 ]}
               >
-                {isScanned
-                  ? "CI escaneado ✓"
-                  : "Escanear CI"}
+                {isScanned ? "CI escaneado ✓" : "Escanear CI"}
               </Text>
             </TouchableOpacity>
 
@@ -188,9 +187,7 @@ export const PassengerCard = ({
                   isAccountDataUsed && styles.labelAccountDataActive,
                 ]}
               >
-                {isAccountDataUsed
-                  ? "Cuenta aplicada ✓"
-                  : "Datos de cuenta"}
+                {isAccountDataUsed ? "Cuenta aplicada ✓" : "Datos de cuenta"}
               </Text>
             </TouchableOpacity>
           </View>

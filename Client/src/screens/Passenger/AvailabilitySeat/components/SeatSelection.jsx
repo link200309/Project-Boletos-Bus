@@ -8,16 +8,21 @@ import { formatTime, formatDate } from "../../../../utils/dateTime.util";
 export const SeatSelection = ({ navigation, asientos, busData, travels }) => {
   const [selectedFloor, setSelectedFloor] = useState("Superior");
   const [selectedSeats, setSelectedSeats] = useState([]);
+
   const handleSeatSelection = (seatId) => {
     const asiento = asientos.find((a) => a.id_asiento === seatId);
-    if (!asiento || asiento.estado !== "Disponible") {
-      return;
-    }
-    if (selectedSeats.includes(seatId)) {
-      setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
-      console.log(selectedSeats);
+    if (!asiento || asiento.estado !== "Disponible") return;
+    const isAlreadySelected = selectedSeats.some((s) => s.id === seatId);
+    if (isAlreadySelected) {
+      setSelectedSeats(selectedSeats.filter((s) => s.id !== seatId));
     } else {
-      setSelectedSeats([...selectedSeats, seatId]);
+      setSelectedSeats([
+        ...selectedSeats,
+        {
+          id: seatId,
+          numero: asiento.numero_asiento || asiento.numero || "S/N",
+        },
+      ]);
     }
   };
 
@@ -125,9 +130,9 @@ export const SeatSelection = ({ navigation, asientos, busData, travels }) => {
               return;
             }
             navigation.navigate("PassengerData", {
-              selectedSeats: selectedSeats,
+              selectedSeats,
               travelDetails,
-              travels: travels,
+              travels,
             });
           }}
         />
