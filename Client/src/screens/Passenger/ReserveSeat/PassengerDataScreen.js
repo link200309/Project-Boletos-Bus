@@ -6,18 +6,17 @@ import { InformativeTitle } from "../../../components/InformativeTitle";
 import PassengerCard from "./components/PassengerCard";
 import ContactCard from "./components/ContactCard";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
-import { formatDate } from "../../../utils/dateTime.util";
+import { formatDate, formatFechaParaVista } from "../../../utils/dateTime.util";
 import { useForm, FormProvider } from "react-hook-form";
 import { AuthContext } from "../../../context/AuthContext";
 
 export default function PassengerDataScreen({ navigation, route }) {
   const methods = useForm();
+
   const onSubmit = async (data) => {
     const isValid = await methods.trigger();
     if (!isValid) return;
-
     const passengers = methods.getValues("passengers");
-
     navigation.navigate("TripSummary", {
       formData: { passengers, contact },
       travels,
@@ -25,6 +24,9 @@ export default function PassengerDataScreen({ navigation, route }) {
   };
 
   const { selectedSeats, travelDetails, travels } = route.params || {};
+  console.log("Selected Seats:", selectedSeats);
+  console.log("Travel Details:", travelDetails);
+  console.log("Travels:", travels);
   useEffect(() => {
     const defaultValues = selectedSeats.map((seat) => ({
       seat,
@@ -46,14 +48,7 @@ export default function PassengerDataScreen({ navigation, route }) {
   };
   const passengers = methods.watch("passengers") || [];
   const { user } = useContext(AuthContext);
-  const formatFechaParaVista = (isoDateStr) => {
-    if (!isoDateStr) return "";
-    const date = new Date(isoDateStr);
-    const dd = String(date.getDate() + 1).padStart(2, "0");
-    const mm = String(date.getMonth() + 1).padStart(2, "0");
-    const yyyy = date.getFullYear();
-    return `${dd}/${mm}/${yyyy}`;
-  };
+
   const userAccountData = {
     firstName: user?.usuario?.nombre || "",
     lastName: user?.usuario?.apellido || "",
@@ -61,6 +56,7 @@ export default function PassengerDataScreen({ navigation, route }) {
     birthDate:
       formatFechaParaVista(user?.datos_pasajero?.fecha_nacimiento) || "",
   };
+
   const contactAccountData = {
     correo: user?.usuario?.correo_electronico || "",
     celular: user?.usuario?.numero_celular || "",

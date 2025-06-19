@@ -4,8 +4,6 @@ import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 
 export default function TripCard({ trip, navigation, reservaCompleta  }) {
-  console.log("TripCard", trip);
-  console.log("Reserva Completa", reservaCompleta);
   const getStatusStyle = (estado) => {
     switch (estado?.toLowerCase()) {
       case "confirmada":
