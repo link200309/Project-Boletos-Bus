@@ -12,12 +12,11 @@ import { AuthContext } from "../../../context/AuthContext";
 
 export default function PassengerDataScreen({ navigation, route }) {
   const methods = useForm();
+
   const onSubmit = async (data) => {
     const isValid = await methods.trigger();
     if (!isValid) return;
-
     const passengers = methods.getValues("passengers");
-
     navigation.navigate("TripSummary", {
       formData: { passengers, contact },
       travels,
@@ -25,6 +24,9 @@ export default function PassengerDataScreen({ navigation, route }) {
   };
 
   const { selectedSeats, travelDetails, travels } = route.params || {};
+  console.log("Selected Seats:", selectedSeats);
+  console.log("Travel Details:", travelDetails);
+  console.log("Travels:", travels);
   useEffect(() => {
     const defaultValues = selectedSeats.map((seat) => ({
       seat,

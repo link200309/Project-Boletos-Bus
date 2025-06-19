@@ -1,6 +1,5 @@
 export const formatTime = (time, tiempo_estimado) => {
   const [hours, minutes, seconds] = time.split(":").map(Number);
-
   const now = new Date();
   const horaSalida = new Date(
     now.getFullYear(),
@@ -10,18 +9,17 @@ export const formatTime = (time, tiempo_estimado) => {
     minutes,
     seconds || 0
   );
-
   const horas = Math.floor(tiempo_estimado);
   const minutos = Math.round((tiempo_estimado % 1) * 100);
   const horaLlegada = new Date(
     horaSalida.getTime() + (horas * 60 + minutos) * 60 * 1000
   );
-
   const hh = horaLlegada.getHours().toString().padStart(2, "0");
   const mm = horaLlegada.getMinutes().toString().padStart(2, "0");
   return `${hh}:${mm}`;
 };
 
+// Formatear fecha de salida del viaje a un objeto con día de la semana y fecha formateada
 export const formatDate = (departureDate) => {
   const date = new Date(departureDate);
   const day = date.getUTCDate();
@@ -38,6 +36,7 @@ export const formatDate = (departureDate) => {
   return { weekDay, formatedDate: `${day} ${month} ${year}` };
 };
 
+// Formatear fecha ISO 8601 a dd/mm/yyyy para vista
 export const formatFechaParaVista = (isoDateStr) => {
   if (!isoDateStr) return "";
   const date = new Date(isoDateStr);
@@ -45,4 +44,25 @@ export const formatFechaParaVista = (isoDateStr) => {
   const mm = String(date.getMonth() + 1).padStart(2, "0");
   const yyyy = date.getFullYear();
   return `${dd}/${mm}/${yyyy}`;
+};
+
+//Convertir dd/mm/yyyy a formato ISO 8601 yyyy-mm-ddTHH:MM:SSZ
+export const convertDateToISO = (dateString) => {
+  if (!dateString) return new Date().toISOString();
+  try {
+    if (/\d{4}-\d{2}-\d{2}T?/.test(dateString)) {
+      const date = new Date(dateString);
+      return isNaN(date) ? new Date().toISOString() : date.toISOString();
+    }
+    const parts = dateString.split("/");
+    if (parts.length === 3) {
+      const [day, month, year] = parts.map((p) => parseInt(p, 10));
+      const date = new Date(Date.UTC(year, month - 1, day));
+      return isNaN(date) ? new Date().toISOString() : date.toISOString();
+    }
+    return new Date().toISOString();
+  } catch (error) {
+    console.error("Error converting date:", error);
+    return new Date().toISOString();
+  }
 };
