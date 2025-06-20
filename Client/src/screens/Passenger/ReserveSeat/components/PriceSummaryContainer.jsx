@@ -37,7 +37,6 @@ export default function PriceSummaryContainer({
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
     borderRadius: 20,

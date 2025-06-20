@@ -206,6 +206,7 @@ class TravelController {
 
       const hora = new Date(hora_salida_programada);
       console.log("Hola antes");
+
       const nuevoViaje = await prisma.viaje.create({
         data: {
           fecha_salida: new Date(fecha_salida),
@@ -215,7 +216,7 @@ class TravelController {
           id_bus: parseInt(id_bus),
           id_ruta: parseInt(id_ruta),
           id_chofer: parseInt(id_chofer),
-          id_pago: 3,
+          id_pago: 1,
         },
         include: {
           bus: {

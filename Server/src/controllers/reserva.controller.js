@@ -11,6 +11,7 @@ export const createReserva = async (req, res) => {
     id_pasajero,
     pasajeros_secundarios = [],
   } = req.body;
+
   try {
     if (!id_viaje || !id_pasajero) {
       return res.status(400).json({
@@ -18,12 +19,15 @@ export const createReserva = async (req, res) => {
           "Faltan datos obligatorios: id_viaje e id_pasajero son requeridos.",
       });
     }
+
     if (!pasajeros_secundarios || pasajeros_secundarios.length === 0) {
       return res.status(400).json({
         mensaje:
           "Debe proporcionar al menos un pasajero secundario con su asiento.",
       });
     }
+
+    // Validar datos de pasajeros secundarios
     for (let i = 0; i < pasajeros_secundarios.length; i++) {
       const pasajero = pasajeros_secundarios[i];
       if (!pasajero.id_asiento || !pasajero.fecha_nacimiento) {
@@ -34,13 +38,31 @@ export const createReserva = async (req, res) => {
         });
       }
     }
+
+    // Obtener información del viaje para conseguir el id_bus
+    const viaje = await prisma.viaje.findUnique({
+      where: { id_viaje },
+      include: { bus: true },
+    });
+
+    if (!viaje) {
+      return res.status(404).json({
+        mensaje: "El viaje especificado no existe.",
+      });
+    }
+
+    const id_bus = viaje.id_bus;
     const asientos = pasajeros_secundarios.map((p) => p.id_asiento);
+
+    // Verificar disponibilidad de asientos con la clave compuesta
     const asientosDisponibles = await prisma.asiento.findMany({
       where: {
+        id_bus: id_bus,
         id_asiento: { in: asientos },
         estado: "Disponible",
       },
     });
+
     if (asientosDisponibles.length !== asientos.length) {
       const asientosNoDisponibles = asientos.filter(
         (asiento) => !asientosDisponibles.some((a) => a.id_asiento === asiento)
@@ -50,6 +72,7 @@ export const createReserva = async (req, res) => {
         asientos_no_disponibles: asientosNoDisponibles,
       });
     }
+
     const resultado = await prisma.$transaction(async (tx) => {
       // 1. Crear la reserva principal
       const nuevaReserva = await tx.reserva.create({
@@ -61,6 +84,7 @@ export const createReserva = async (req, res) => {
           id_pasajero,
         },
       });
+
       // 2. Crear los pasajeros secundarios y actualizar asientos
       const pasajerosSecundariosCreados = [];
       for (const pasajeroData of pasajeros_secundarios) {
@@ -70,21 +94,33 @@ export const createReserva = async (req, res) => {
             apellido: pasajeroData.apellido || null,
             ci: pasajeroData.ci || null,
             fecha_nacimiento: new Date(pasajeroData.fecha_nacimiento),
-            id_reserva: nuevaReserva.id_reserva,
+            id_bus: id_bus, // Agregado el id_bus requerido
             id_asiento: pasajeroData.id_asiento,
+            id_reserva: nuevaReserva.id_reserva,
           },
         });
+
+        // Actualizar el estado del asiento usando la clave compuesta
         await tx.asiento.update({
-          where: { id_asiento: pasajeroData.id_asiento },
+          where: {
+            id_bus_id_asiento: {
+              id_bus: id_bus,
+              id_asiento: pasajeroData.id_asiento,
+            },
+          },
           data: { estado: "Reservado" },
         });
+
         pasajerosSecundariosCreados.push(pasajeroSecundario);
       }
+
       return {
         reserva: nuevaReserva,
         pasajeros_secundarios: pasajerosSecundariosCreados,
       };
     });
+
+    // Obtener la reserva completa para la respuesta
     const reservaCompleta = await prisma.reserva.findUnique({
       where: { id_reserva: resultado.reserva.id_reserva },
       include: {
@@ -112,6 +148,7 @@ export const createReserva = async (req, res) => {
         },
       },
     });
+
     res.status(201).json({
       mensaje: "Reserva creada con éxito",
       reserva: reservaCompleta,
@@ -119,6 +156,7 @@ export const createReserva = async (req, res) => {
         total_pasajeros: resultado.pasajeros_secundarios.length,
         asientos_reservados: asientos,
         estado_reserva: estado,
+        id_bus: id_bus,
       },
     });
   } catch (err) {

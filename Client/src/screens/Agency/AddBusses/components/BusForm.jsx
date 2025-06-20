@@ -85,12 +85,6 @@ const BusForm = ({ formData, onChange, onSubmit, buttonText }) => {
       />
 
       <InputLabel
-        label="Asientos"
-        placeholder="Selecciona los asientos"
-        onClick={() => setSeatModalVisible(true)}
-      />
-
-      <InputLabel
         label="Modelo *"
         placeholder="Modelo"
         value={formData.modelo}
@@ -110,6 +104,12 @@ const BusForm = ({ formData, onChange, onSubmit, buttonText }) => {
         placeholder="Ej: Operativo"
         value={formData.estado}
         onChange={handleChange("estado")}
+      />
+
+      <ButtonStyle
+        text="Asientos"
+        onClick={() => setSeatModalVisible(true)}
+        variant={2}
       />
 
       <ButtonStyle text={buttonText} onClick={onSubmit} />
