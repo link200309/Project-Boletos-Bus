@@ -59,7 +59,7 @@ export const BackIcon = (props) => (
 );
 
 export const ScanQRIcon = (props) => (
-  <MaterialCommunityIcons name="qrcode-scan" size={20} {...props} />
+  <MaterialCommunityIcons name="card-account-details" size={20} {...props} />
 );
 export const DateIcon = (props) => (
   <Fontisto name="date" size={24} color="black" {...props} />

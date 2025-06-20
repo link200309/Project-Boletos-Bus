@@ -9,7 +9,7 @@ import {
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScanQRIcon } from "../../../../components/Icons";
-import { QRScanner } from "./QRScanner";
+import { OCRScanner } from "./OCRScanner";
 import { Controller, useFormContext } from "react-hook-form";
 import { accountValidationRules } from "../../../Login/components/validation";
 
@@ -27,10 +27,11 @@ export const PassengerCard = ({
   } = useFormContext();
 
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-  const [isQRScannerVisible, setQRScannerVisible] = useState(false);
+  const [isOCRScannerVisible, setOCRScannerVisible] = useState(false); // Cambiado de QRScanner a OCRScanner
   const [isScanned, setIsScanned] = useState(false);
   const [isAccountDataUsed, setIsAccountDataUsed] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+
   const showDatePicker = () => {
     setDatePickerVisible(true);
   };
@@ -45,9 +46,10 @@ export const PassengerCard = ({
     hideDatePicker();
   };
 
-  const handleQRScan = () => {
+  const handleOCRScan = () => {
+    // Cambiado de handleQRScan a handleOCRScan
     if (!isScanned) {
-      setQRScannerVisible(true);
+      setOCRScannerVisible(true);
     }
   };
 
@@ -64,7 +66,7 @@ export const PassengerCard = ({
 
     setIsScanned(true);
     setIsAccountDataUsed(false);
-    setQRScannerVisible(false);
+    setOCRScannerVisible(false);
   };
 
   const handleUseAccountData = () => {
@@ -137,7 +139,9 @@ export const PassengerCard = ({
       <TouchableOpacity style={styles.headerContainer} onPress={toggleCollapse}>
         <View style={styles.headerContent}>
           <Text style={styles.title}>Pasajero {index + 1}</Text>
-          <Text style={styles.seat}>Asiento: {selectedSeats.numero || "S/N"}</Text>
+          <Text style={styles.seat}>
+            Asiento: {selectedSeats.numero || "S/N"}
+          </Text>
         </View>
         <MaterialIcons
           name={isCollapsed ? "expand-more" : "expand-less"}
@@ -154,7 +158,7 @@ export const PassengerCard = ({
                 styles.accountDataGroup,
                 isScanned && styles.accountDataGroupActive,
               ]}
-              onPress={handleQRScan}
+              onPress={handleOCRScan} // Cambiado de handleQRScan a handleOCRScan
               disabled={isScanned}
             >
               <ScanQRIcon color={isScanned ? "#007AFF" : "#666666"} />
@@ -339,9 +343,9 @@ export const PassengerCard = ({
             maximumDate={new Date()}
           />
 
-          <QRScanner
-            visible={isQRScannerVisible}
-            onClose={() => setQRScannerVisible(false)}
+          <OCRScanner
+            visible={isOCRScannerVisible} // Cambiado de isQRScannerVisible a isOCRScannerVisible
+            onClose={() => setOCRScannerVisible(false)}
             onScanSuccess={handleScanSuccess}
           />
         </>
