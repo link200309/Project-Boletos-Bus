@@ -6,7 +6,7 @@ import { GlobalStyles } from "../../../../components/Style/GlobalStyles";
 export default function TripCard({ trip, navigation, reservaCompleta }) {
   const getStatusStyle = (estado) => {
     switch (estado?.toLowerCase()) {
-      case "confirmada":
+      case "confirmado":
         return { backgroundColor: "#4CAF50", color: "#fff" };
       case "pendiente":
         return { backgroundColor: "#FF9800", color: "#fff" };
@@ -18,8 +18,8 @@ export default function TripCard({ trip, navigation, reservaCompleta }) {
   };
   const getStatusText = (estado) => {
     switch (estado?.toLowerCase()) {
-      case "confirmada":
-        return "Confirmada";
+      case "confirmado":
+        return "Confirmado";
       case "pendiente":
         return "Pendiente";
       case "cancelada":

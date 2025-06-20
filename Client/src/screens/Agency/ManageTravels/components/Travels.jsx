@@ -8,7 +8,7 @@ import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 //utils
 import { formatDate, formatTime } from "../../../../utils/dateTime.util";
 
-export const Travels = ({ travelInfo, navigation, onClick }) => {
+export const Travels = ({ travelInfo, navigation, onClick, fetchTravels }) => {
   const [travel, setTravel] = useState({});
   useEffect(() => {
     setTravel(travelInfo.item);
@@ -26,6 +26,9 @@ export const Travels = ({ travelInfo, navigation, onClick }) => {
   };
   const seeReservationsTravel = () => {
     navigation.navigate("ReservationsTravel", travel);
+  };
+  const seeEditTravel = () => {
+    navigation.navigate("EditTravel", { travel, fetchTravels });
   };
 
   return (
@@ -90,6 +93,7 @@ export const Travels = ({ travelInfo, navigation, onClick }) => {
               variant={2}
               style={Style.editButton}
               styleText={Style.editButtonText}
+              onClick={seeEditTravel}
             />
           </View>
         </View>

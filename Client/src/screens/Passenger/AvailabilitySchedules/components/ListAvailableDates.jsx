@@ -3,6 +3,7 @@ import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
 //components
 import { AvailableDates } from "./AvailableDates";
+import { GenericContainer } from "../../../../components/GenericContainer";
 //utils
 import { formatDate } from "../../../../utils/dateTime.util";
 
@@ -22,7 +23,7 @@ export const ListAvailableDates = ({ travels, navigation }) => {
     travels.filter((travel) => travel.fecha_salida === fecha_salida);
 
   return (
-    <View style={styles.containerDates}>
+    <GenericContainer scroll={true}>
       {loading ? (
         <ActivityIndicator size="large" />
       ) : (
@@ -42,7 +43,7 @@ export const ListAvailableDates = ({ travels, navigation }) => {
           );
         })
       )}
-    </View>
+    </GenericContainer>
   );
 };
 

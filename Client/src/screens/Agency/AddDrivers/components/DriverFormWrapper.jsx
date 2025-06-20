@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import DriverForm from "./DriverForm";
 import { createDriver, updateDriver } from "../../../../api/driver.api";
 
-const DriverFormWrapper = ({ mode = "register", initialData = {}, onSave = () => {} }) => {
+const DriverFormWrapper = ({
+  mode = "register",
+  initialData = {},
+  onSave = () => {},
+}) => {
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
@@ -20,8 +24,11 @@ const DriverFormWrapper = ({ mode = "register", initialData = {}, onSave = () =>
 
   const handleSubmit = async () => {
     try {
-      // Basic validation
-      if (!formData.nombre || !formData.apellido || !formData.carnet_identidad) {
+      if (
+        !formData.nombre ||
+        !formData.apellido ||
+        !formData.carnet_identidad
+      ) {
         console.error("Validation failed: Missing required fields");
         return;
       }
@@ -38,7 +45,7 @@ const DriverFormWrapper = ({ mode = "register", initialData = {}, onSave = () =>
     } catch (err) {
       console.error("Error saving driver:", {
         error: err.response?.data || err.message,
-        requestData: formData
+        requestData: formData,
       });
     }
   };
@@ -48,7 +55,7 @@ const DriverFormWrapper = ({ mode = "register", initialData = {}, onSave = () =>
       formData={formData}
       onChange={handleChange}
       onSubmit={handleSubmit}
-      buttonText={mode === "register" ? "Register Driver" : "Save Changes"}
+      buttonText={mode === "register" ? "Registrar chofer" : "Guardar cambios"}
     />
   );
 };

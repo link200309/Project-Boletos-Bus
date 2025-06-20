@@ -41,7 +41,9 @@
     "react-native-vector-icons": "^10.2.0",
     "react-native-view-shot": "^4.0.3",
     "react-native-web": "~0.20.0",
-    "undefined": "\\"
+    "expo-camera": "~16.1.8",
+    "expo-image-picker": "~16.1.4",
+    "expo-linear-gradient": "~14.1.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

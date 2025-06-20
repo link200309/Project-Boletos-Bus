@@ -1,5 +1,5 @@
 //React
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,53 +11,32 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
-
+import {
+  ScheduleIcon,
+  PerfilIcon,
+  TicketIcon,
+  CalendarIcon,
+  BusIcon,
+} from "../../../components/Icons";
 //Api
-import { cancelReserve } from "../../../api/travel.api";
+import { updateStateReserve } from "../../../api/travel.api";
 
 //Components
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
 
+//Utils
+import { formatearFechaHora } from "../../../utils/dateTime.util";
+
 const ReservationsTravelScreen = ({ navigation, route }) => {
-  const [reservas, setReservas] = useState([]);
-  const [viajeInfo, setViajeInfo] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [reservas, setReservas] = useState(route.params.reserva || []);
+  const [viajeInfo, setViajeInfo] = useState(route.params);
   const [refreshing, setRefreshing] = useState(false);
   const [actualizandoEstado, setActualizandoEstado] = useState({});
-
-  useEffect(() => {
-    cargarReservasViaje();
-  }, []);
-
-  const cargarReservasViaje = async () => {
-    setLoading(true);
-    try {
-      setReservas(route.params.reserva);
-      setViajeInfo(route.params);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error al cargar reservas del viaje:", error);
-      setLoading(false);
-      Alert.alert("Error", "No se pudieron cargar las reservas del viaje");
-    }
-  };
 
   const onRefresh = async () => {
     setRefreshing(true);
     await cargarReservasViaje();
     setRefreshing(false);
-  };
-
-  const formatearFechaHora = (fechaISO) => {
-    const fecha = new Date(fechaISO);
-    return fecha.toLocaleString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
   };
 
   const getEstadoColor = (estado) => {
@@ -86,12 +65,19 @@ const ReservationsTravelScreen = ({ navigation, route }) => {
     }
   };
 
-  const handleCambiarEstado = async (reserva, nuevoEstado) => {
+  const changeStateReserve = (setReserva, nuevoEstado) => {
+    if (setReserva) setReserva((prev) => ({ ...prev, estado: nuevoEstado }));
+  };
+
+  const handleCambiarEstado = async (reserva, nuevoEstado, setReserva) => {
     Alert.alert(
       "Cambiar Estado",
       `¿Está seguro de cambiar el estado a ${getEstadoTexto(nuevoEstado)}?`,
       [
-        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
         {
           text: "Confirmar",
           onPress: async () => {
@@ -100,11 +86,12 @@ const ReservationsTravelScreen = ({ navigation, route }) => {
               [reserva.id_reserva]: true,
             }));
             try {
-              const res = await cancelReserve({
+              const res = await updateStateReserve({
                 id_reserva: reserva.id_reserva,
                 newState: nuevoEstado,
               });
               reserva.estado = nuevoEstado;
+              changeStateReserve(setReserva, nuevoEstado);
             } catch (error) {
               console.error("Error al actualizar estado:", error);
               setActualizandoEstado((prev) => ({
@@ -170,14 +157,13 @@ const ReservationsTravelScreen = ({ navigation, route }) => {
     );
   };
 
-  const renderReservaCard = ({ item }) => {
+  const renderReservaCard = ({ item, index }) => {
     const usuario = item.pasajero.usuario;
-
     return (
       <View style={styles.reservaCard}>
         {/* Header con comprobante y estado */}
         <View style={styles.reservaHeader}>
-          <Text style={styles.comprobanteText}>{item.comprobante}</Text>
+          <Text style={styles.comprobanteText}>{index + 1}</Text>
           <View
             style={[
               styles.estadoBadge,
@@ -191,30 +177,21 @@ const ReservationsTravelScreen = ({ navigation, route }) => {
         {/* Información del pasajero */}
         <View style={styles.pasajeroSection}>
           <View style={styles.pasajeroInfo}>
-            <Icon name="person" size={20} color="#7C3AED" />
+            <PerfilIcon />
             <Text style={styles.pasajeroNombre}>
               {usuario.nombre} {usuario.apellido}
             </Text>
           </View>
         </View>
 
-        {/* Información del asiento */}
-        <View style={styles.asientoSection}>
-          <View style={styles.asientoInfo}>
-            <View style={styles.asientoVisual}>
-              <Text style={styles.asientoNumero}>{item.asiento.numero}</Text>
-            </View>
-            <View style={styles.asientoDetails}>
-              <Text style={styles.asientoTipo}>{item.asiento.ubicacion}</Text>
-              <Text style={styles.asientoId}>
-                Asiento ID: {item.id_asiento}
-              </Text>
-            </View>
-          </View>
-        </View>
-
         <View style={styles.fechaSection}>
-          <Icon name="schedule" size={16} color="#666" />
+          <TicketIcon size={16} color="#666" />
+          <Text style={styles.fechaReserva}>
+            Pasajes Reservados: {item.pasajerosSecundarios.length}
+          </Text>
+        </View>
+        <View style={styles.fechaSection}>
+          <ScheduleIcon size={16} color="#666" />
           <Text style={styles.fechaReserva}>
             Reservado: {formatearFechaHora(item.fecha_reserva)}
           </Text>
@@ -247,18 +224,6 @@ const ReservationsTravelScreen = ({ navigation, route }) => {
     return { confirmadas, pendientes, canceladas };
   };
 
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor="#7C3AED" barStyle="light-content" />
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#7C3AED" />
-          <Text style={styles.loadingText}>Cargando reservas...</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   const estadisticas = getEstadisticas();
 
   return (
@@ -277,19 +242,19 @@ const ReservationsTravelScreen = ({ navigation, route }) => {
 
           <View style={styles.viajeDetalles}>
             <View style={styles.viajeDetalle}>
-              <Icon name="calendar-today" size={16} color="#666" />
+              <CalendarIcon size={16} color="#666" />
               <Text style={styles.viajeDetalleText}>
                 {viajeInfo.fecha_salida.slice(0, 10)}
               </Text>
             </View>
             <View style={styles.viajeDetalle}>
-              <Icon name="access-time" size={16} color="#666" />
+              <ScheduleIcon size={16} color="#666" />
               <Text style={styles.viajeDetalleText}>
                 {viajeInfo.hora_salida_programada.slice(0, 5)}
               </Text>
             </View>
             <View style={styles.viajeDetalle}>
-              <Icon name="directions-bus" size={16} color="#666" />
+              <BusIcon size={16} color="#666" />
               <Text style={styles.viajeDetalleText}>{viajeInfo.bus.placa}</Text>
             </View>
           </View>
@@ -338,7 +303,7 @@ const ReservationsTravelScreen = ({ navigation, route }) => {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Icon name="event-seat" size={64} color="#D1D5DB" />
+            <BusIcon size={64} color="#D1D5DB" />
             <Text style={styles.emptyText}>
               No hay reservas para este viaje
             </Text>
@@ -354,17 +319,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F3F4F6",
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loadingText: {
-    marginTop: 16,
-    fontSize: 16,
-    color: "#666",
-  },
-
   viajeInfoCard: {
     backgroundColor: "white",
     margin: 16,
@@ -461,8 +415,14 @@ const styles = StyleSheet.create({
   },
   comprobanteText: {
     fontSize: 16,
+    width: 30,
+    height: 30,
+    textAlign: "center",
     fontWeight: "bold",
-    color: "#333",
+    color: "white",
+    backgroundColor: "#7C3AED",
+    padding: 4,
+    borderRadius: 20,
   },
   estadoBadge: {
     paddingHorizontal: 12,
@@ -487,39 +447,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#333",
     marginLeft: 8,
-  },
-  asientoSection: {
-    marginBottom: 12,
-  },
-  asientoInfo: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  asientoVisual: {
-    width: 40,
-    height: 40,
-    backgroundColor: "#7C3AED",
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-  asientoNumero: {
-    color: "white",
-    fontSize: 14,
-    fontWeight: "bold",
-  },
-  asientoDetails: {
-    flex: 1,
-  },
-  asientoTipo: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#333",
-  },
-  asientoId: {
-    fontSize: 12,
-    color: "#666",
   },
   fechaSection: {
     flexDirection: "row",

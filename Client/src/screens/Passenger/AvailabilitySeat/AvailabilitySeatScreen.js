@@ -6,7 +6,6 @@ import { formatTime } from "../../../utils/dateTime.util";
 //Components
 import { GenericContainer } from "../../../components/GenericContainer";
 import { InformativeTitle } from "../../../components/InformativeTitle";
-import { BlobBg } from "../../../components/Background/BlobBg";
 import { SeatSelection } from "./components/SeatSelection";
 
 export default function AvailabilitySeatScreen({ navigation }) {
@@ -27,7 +26,7 @@ export default function AvailabilitySeatScreen({ navigation }) {
       setBusData(response.bus);
       setAsientos(response.asientos);
     } catch (error) {
-      console.error("❌ Error completo:", error);
+      console.error("Error completo:", error);
       Alert.alert("Error", "No se pudieron cargar los asientos del bus");
     } finally {
       setLoading(false);
@@ -52,7 +51,6 @@ export default function AvailabilitySeatScreen({ navigation }) {
 
   return (
     <>
-      <BlobBg />
       <ScrollView>
         <GenericContainer>
           <InformativeTitle

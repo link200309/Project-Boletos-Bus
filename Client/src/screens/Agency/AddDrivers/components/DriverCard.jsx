@@ -9,47 +9,47 @@ const DriverCard = ({ driver, onEdit, onDelete }) => {
 
       <View style={styles.row}>
         <Text style={styles.label}>Nombre:</Text>
-        <Text>{driver.nombre} {driver.apellido}</Text>
+        <Text>
+          {driver.nombre} {driver.apellido}
+        </Text>
       </View>
-      
+
       <View style={styles.row}>
         <Text style={styles.label}>Carnet de identidad:</Text>
         <Text>{driver.carnet_identidad}</Text>
       </View>
-      
+
       <View style={styles.row}>
         <Text style={styles.label}>Celular:</Text>
         <Text>{driver.numero_celular}</Text>
       </View>
-      
+
       <View style={styles.row}>
         <Text style={styles.label}>Categoria licencia:</Text>
         <Text>{driver.categoria_licencia}</Text>
       </View>
-      
+
       <View style={styles.row}>
         <Text style={styles.label}>Estado:</Text>
-        <Text style={driver.estado === 'Activo' ? styles.active : styles.inactive}>
+        <Text
+          style={driver.estado === "Activo" ? styles.active : styles.inactive}
+        >
           {driver.estado}
         </Text>
       </View>
-      
+
       <View style={styles.row}>
         <Text style={styles.label}>Direccion:</Text>
         <Text>{driver.direccion_contacto}</Text>
       </View>
 
       <View style={styles.buttonRow}>
-        <ButtonStyle 
-          text="Edit" 
-          onClick={() => onEdit(driver)} 
-          width={120} 
-        />
-        <ButtonStyle 
-          text="Delete" 
-          variant={2} 
-          onClick={() => onDelete(driver.id_chofer)} 
-          width={120} 
+        <ButtonStyle text="Editar" onClick={() => onEdit(driver)} width={120} />
+        <ButtonStyle
+          text="Eliminar"
+          variant={2}
+          onClick={() => onDelete(driver.id_chofer)}
+          width={120}
         />
       </View>
     </View>
