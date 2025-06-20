@@ -144,7 +144,7 @@ export default function ReservationHistoryScreen({ navigation }) {
       ) : (
         <FlatList
           data={trips.filter(
-            (trip) => trip.estado?.toLowerCase() === "cancelada"
+            (trip) => trip.estado?.toLowerCase() === "cancelado"
           )}
           keyExtractor={keyExtractor}
           renderItem={renderTripCard}

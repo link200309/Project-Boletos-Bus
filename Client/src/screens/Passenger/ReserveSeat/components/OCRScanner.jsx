@@ -11,14 +11,18 @@ import {
 } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
+import * as FileSystem from "expo-file-system";
 import { MaterialIcons } from "@expo/vector-icons";
-import MlkitOcr from "react-native-mlkit-ocr";
+
+// OCR.Space API Key gratuita - Reemplaza con tu propia key
+const OCR_SPACE_API_KEY = "K87899142388957"; // Key de prueba, obten la tuya en https://ocr.space/ocrapi
+const OCR_SPACE_URL = "https://api.ocr.space/parse/image";
 
 export const OCRScanner = ({ visible, onClose, onScanSuccess }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
-  const [ocrAvailable, setOcrAvailable] = useState(false);
   const cameraRef = useRef(null);
 
   useEffect(() => {
@@ -27,19 +31,8 @@ export const OCRScanner = ({ visible, onClose, onScanSuccess }) => {
       setHasPermission(status === "granted");
     };
 
-    const checkOCRAvailability = () => {
-      // Verificar si MlkitOcr está disponible
-      if (MlkitOcr && typeof MlkitOcr.detectFromUri === "function") {
-        setOcrAvailable(true);
-      } else {
-        console.warn("MlkitOcr not available, using fallback method");
-        setOcrAvailable(false);
-      }
-    };
-
     if (visible) {
       getCameraPermissions();
-      checkOCRAvailability();
       setCapturedImage(null);
       setIsProcessing(false);
     }
@@ -57,7 +50,7 @@ export const OCRScanner = ({ visible, onClose, onScanSuccess }) => {
       });
 
       setCapturedImage(photo.uri);
-      await processImageWithOCR(photo.uri);
+      await processImageWithOCRSpace(photo.uri);
     } catch (error) {
       console.error("Error capturing image:", error);
       Alert.alert("Error", "Error al capturar la imagen");
@@ -77,7 +70,7 @@ export const OCRScanner = ({ visible, onClose, onScanSuccess }) => {
       if (!result.canceled && result.assets[0]) {
         setIsProcessing(true);
         setCapturedImage(result.assets[0].uri);
-        await processImageWithOCR(result.assets[0].uri);
+        await processImageWithOCRSpace(result.assets[0].uri);
       }
     } catch (error) {
       console.error("Error picking image:", error);
@@ -85,48 +78,88 @@ export const OCRScanner = ({ visible, onClose, onScanSuccess }) => {
     }
   };
 
-  const processImageWithOCR = async (imageUri) => {
+  const processImageWithOCRSpace = async (imageUri) => {
     try {
-      console.log("Processing image with OCR:", imageUri);
+      console.log("Processing image with OCR.Space API:", imageUri);
 
-      let result;
+      // Redimensionar imagen para optimizar la API
+      const manipulatedImage = await ImageManipulator.manipulateAsync(
+        imageUri,
+        [
+          { resize: { width: 1024 } }, // Tamaño óptimo para OCR.Space
+        ],
+        {
+          compress: 0.8,
+          format: ImageManipulator.SaveFormat.JPEG,
+        }
+      );
 
-      if (ocrAvailable && MlkitOcr) {
-        // Usar MlkitOcr si está disponible
-        result = await MlkitOcr.detectFromUri(imageUri);
-        console.log("OCR Result:", result);
-      } else {
-        // Fallback: usar entrada manual
-        Alert.alert(
-          "OCR no disponible",
-          "El reconocimiento automático no está disponible. ¿Deseas ingresar los datos manualmente?",
-          [
-            { text: "Cancelar", onPress: () => setIsProcessing(false) },
-            { text: "Ingresar manualmente", onPress: () => showManualEntry() },
-          ]
-        );
-        return;
+      // Convertir imagen a base64
+      const base64Image = await FileSystem.readAsStringAsync(
+        manipulatedImage.uri,
+        {
+          encoding: FileSystem.EncodingType.Base64,
+        }
+      );
+
+      // Preparar FormData para OCR.Space API
+      const formData = new FormData();
+      formData.append("base64Image", `data:image/jpeg;base64,${base64Image}`);
+      formData.append("language", "spa"); // Español
+      formData.append("isOverlayRequired", "false");
+      formData.append("detectOrientation", "true");
+      formData.append("scale", "true");
+      formData.append("isTable", "false");
+      formData.append("OCREngine", "2"); // Engine 2 es mejor para documentos
+
+      // Hacer llamada a OCR.Space API
+      const response = await fetch(OCR_SPACE_URL, {
+        method: "POST",
+        headers: {
+          apikey: OCR_SPACE_API_KEY,
+        },
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.IsErroredOnProcessing) {
+        throw new Error(result.ErrorMessage || "Error en OCR.Space API");
       }
 
-      if (result && result.length > 0) {
-        // Extraer todo el texto
-        const fullText = result.map((block) => block.text).join(" ");
-        console.log("Full extracted text:", fullText);
+      if (result.ParsedResults && result.ParsedResults.length > 0) {
+        const extractedText = result.ParsedResults[0].ParsedText;
 
-        // Parsear los datos del carnet
-        const parsedData = parseBolivianIDCard(fullText);
+        if (extractedText && extractedText.trim().length > 0) {
+          console.log("Texto extraído:", extractedText);
 
-        if (parsedData) {
-          onScanSuccess(parsedData);
-          onClose();
+          // Parsear los datos del carnet
+          const parsedData = parseBolivianIDCard(extractedText);
+
+          if (parsedData) {
+            onScanSuccess(parsedData);
+            onClose();
+          } else {
+            // Si no se puede parsear automáticamente, mostrar el texto
+            Alert.alert(
+              "Datos no reconocidos",
+              `Texto detectado: "${extractedText.substring(
+                0,
+                150
+              )}..."\n\n¿Deseas ingresar los datos manualmente?`,
+              [
+                { text: "Reintentar", onPress: () => setIsProcessing(false) },
+                {
+                  text: "Ingresar manualmente",
+                  onPress: () => showManualEntry(),
+                },
+              ]
+            );
+          }
         } else {
-          // Si no se puede parsear automáticamente, mostrar el texto y permitir entrada manual
           Alert.alert(
-            "Datos no reconocidos",
-            `Texto detectado: "${fullText.substring(
-              0,
-              100
-            )}..."\n\n¿Deseas ingresar los datos manualmente?`,
+            "Sin texto detectado",
+            "No se detectó texto en la imagen. Intenta con mejor iluminación.",
             [
               { text: "Reintentar", onPress: () => setIsProcessing(false) },
               {
@@ -137,20 +170,29 @@ export const OCRScanner = ({ visible, onClose, onScanSuccess }) => {
           );
         }
       } else {
-        Alert.alert(
-          "Error",
-          "No se detectó texto en la imagen. Intenta con mejor iluminación.",
-          [
-            { text: "Reintentar", onPress: () => setIsProcessing(false) },
-            { text: "Ingresar manualmente", onPress: () => showManualEntry() },
-          ]
-        );
+        throw new Error("Respuesta inesperada de la API");
       }
     } catch (error) {
-      console.error("OCR Error:", error);
+      console.error("OCR.Space API Error:", error);
+
+      let errorMessage = "Error al procesar la imagen";
+      if (error.message.includes("API key")) {
+        errorMessage = "Error con la API Key. Verifica tu configuración.";
+      } else if (
+        error.message.includes("quota") ||
+        error.message.includes("limit")
+      ) {
+        errorMessage = "Has excedido tu cuota gratuita de OCR.Space API.";
+      } else if (
+        error.message.includes("network") ||
+        error.message.includes("fetch")
+      ) {
+        errorMessage = "Error de conexión. Verifica tu internet.";
+      }
+
       Alert.alert(
         "Error de OCR",
-        `Error al procesar la imagen: ${error.message}\n\n¿Deseas ingresar los datos manualmente?`,
+        `${errorMessage}\n\n¿Deseas ingresar los datos manualmente?`,
         [
           { text: "Reintentar", onPress: () => setIsProcessing(false) },
           { text: "Ingresar manualmente", onPress: () => showManualEntry() },
@@ -162,7 +204,6 @@ export const OCRScanner = ({ visible, onClose, onScanSuccess }) => {
   };
 
   const showManualEntry = () => {
-    // Cerrar el escáner y permitir entrada manual
     setIsProcessing(false);
     onClose();
   };
@@ -218,18 +259,19 @@ export const OCRScanner = ({ visible, onClose, onScanSuccess }) => {
             <Text style={styles.scanAreaText}>
               Coloca el carnet dentro del marco
             </Text>
-            {!ocrAvailable && (
-              <Text style={styles.warningText}>
-                ⚠️ OCR automático no disponible
-              </Text>
-            )}
+            <Text style={styles.infoText}>✅ OCR con OCR.Space</Text>
           </View>
 
           {/* Procesando overlay */}
           {isProcessing && (
             <View style={styles.processingOverlay}>
               <ActivityIndicator size="large" color="#FFFFFF" />
-              <Text style={styles.processingText}>Procesando imagen...</Text>
+              <Text style={styles.processingText}>
+                Procesando con OCR.Space...
+              </Text>
+              <Text style={styles.apiInfoText}>
+                🔄 Analizando texto en la nube
+              </Text>
             </View>
           )}
         </View>
@@ -285,20 +327,22 @@ export const OCRScanner = ({ visible, onClose, onScanSuccess }) => {
 
 const parseBolivianIDCard = (text) => {
   try {
-    console.log("Parsing text:", text);
-
     // Limpiar el texto
-    const cleanText = text.replace(/\n/g, " ").replace(/\s+/g, " ").trim();
+    const cleanText = text
+      .replace(/\r\n/g, " ")
+      .replace(/\n/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
 
     // Patrones mejorados para el CI boliviano
     const patterns = {
       // Número de CI (buscar específicamente después de "N°" o números largos)
-      ci: /(?:N°\s*)?(\d{7,10})\s*(?:[A-Z]{2})?/i,
+      ci: /(?:N[°]?\s*)(\d{7,10})\s*(?:[A-Z]{2})?/i,
       // Buscar nombres después de "NOMBRES:"
-      firstName: /(?:NOMBRES?:?\s*)([A-ZÁÉÍÓÚÑ\s]+)(?=\s*APELLIDOS?)/i,
+      firstName: /(?:NOMBRES?:?\s*)([A-ZÁÉÍÓÚÑ\s]+?)(?=\s*APELLIDOS?|$)/i,
       // Buscar apellidos después de "APELLIDOS:"
       lastName:
-        /(?:APELLIDOS?:?\s*)([A-ZÁÉÍÓÚÑ\s]+)(?=\s*(?:FECHA|NACIMIENTO|$))/i,
+        /(?:APELLIDOS?:?\s*)([A-ZÁÉÍÓÚÑ\s]+?)(?=\s*(?:FECHA|NACIMIENTO|DOMICILIO|$))/i,
       // Fecha de nacimiento más específica
       birthDate:
         /(?:FECHA\s*DE\s*NACIMIENTO:?\s*)?(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{4})/i,
@@ -325,6 +369,10 @@ const parseBolivianIDCard = (text) => {
       birthDate = formatDate(birthMatch[1]);
     }
 
+    // Extraer extensión
+    const extensionMatch = cleanText.match(patterns.extension);
+    const extension = extensionMatch ? extensionMatch[1] : "";
+
     // Si no encontramos con patrones específicos, intentar extracción general
     if (!firstName && !lastName && !identityNumber) {
       return parseGeneralText(cleanText);
@@ -337,6 +385,7 @@ const parseBolivianIDCard = (text) => {
         lastName: lastName || "",
         identityNumber: identityNumber,
         birthDate: birthDate || "",
+        extension: extension || "",
       };
     }
 
@@ -358,17 +407,19 @@ const parseGeneralText = (text) => {
     // Filtrar palabras que no son datos comunes del CI
     const nameWords = words.filter(
       (word) =>
-        /^[A-ZÁÉÍÓÚÑ]+$/.test(word) &&
+        /^[A-ZÁÉÍÓÚÑ]+$/i.test(word) &&
         ![
           "ESTADO",
           "PLURINACIONAL",
           "BOLIVIA",
-          "CARNET",
+          "N°",
           "IDENTIDAD",
           "CEDULA",
           "SERVICIO",
           "GENERAL",
-        ].includes(word)
+          "REGISTRO",
+          "CIVIL",
+        ].includes(word.toUpperCase())
     );
 
     if (numbers.length > 0 && nameWords.length >= 2) {
@@ -379,6 +430,7 @@ const parseGeneralText = (text) => {
         lastName: nameWords.slice(Math.ceil(nameWords.length / 2)).join(" "),
         identityNumber: numbers[0],
         birthDate: dates.length > 0 ? formatDate(dates[0]) : "",
+        extension: "",
       };
     }
 
@@ -433,21 +485,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingTop: Platform.OS === "ios" ? 50 : 20,
     paddingHorizontal: 20,
-    paddingTop: 50,
     paddingBottom: 20,
     backgroundColor: "rgba(0, 0, 0, 0.8)",
   },
   closeButton: {
-    padding: 10,
+    padding: 8,
   },
   headerText: {
     color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "600",
   },
   placeholder: {
-    width: 44,
+    width: 40,
   },
   cameraContainer: {
     flex: 1,
@@ -457,77 +509,94 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: "center",
     alignItems: "center",
   },
   cardFrame: {
-    width: 300,
-    height: 190,
+    width: 280,
+    height: 180,
     position: "relative",
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.5)",
+    borderRadius: 12,
   },
   cornerTopLeft: {
     position: "absolute",
-    top: 0,
-    left: 0,
+    top: -2,
+    left: -2,
     width: 30,
     height: 30,
-    borderTopWidth: 3,
-    borderLeftWidth: 3,
-    borderColor: "#FFFFFF",
+    borderTopWidth: 4,
+    borderLeftWidth: 4,
+    borderColor: "#00FF00",
+    borderTopLeftRadius: 12,
   },
   cornerTopRight: {
     position: "absolute",
-    top: 0,
-    right: 0,
+    top: -2,
+    right: -2,
     width: 30,
     height: 30,
-    borderTopWidth: 3,
-    borderRightWidth: 3,
-    borderColor: "#FFFFFF",
+    borderTopWidth: 4,
+    borderRightWidth: 4,
+    borderColor: "#00FF00",
+    borderTopRightRadius: 12,
   },
   cornerBottomLeft: {
     position: "absolute",
-    bottom: 0,
-    left: 0,
+    bottom: -2,
+    left: -2,
     width: 30,
     height: 30,
-    borderBottomWidth: 3,
-    borderLeftWidth: 3,
-    borderColor: "#FFFFFF",
+    borderBottomWidth: 4,
+    borderLeftWidth: 4,
+    borderColor: "#00FF00",
+    borderBottomLeftRadius: 12,
   },
   cornerBottomRight: {
     position: "absolute",
-    bottom: 0,
-    right: 0,
+    bottom: -2,
+    right: -2,
     width: 30,
     height: 30,
-    borderBottomWidth: 3,
-    borderRightWidth: 3,
-    borderColor: "#FFFFFF",
+    borderBottomWidth: 4,
+    borderRightWidth: 4,
+    borderColor: "#00FF00",
+    borderBottomRightRadius: 12,
   },
   scanAreaText: {
     color: "#FFFFFF",
     fontSize: 16,
+    fontWeight: "500",
+    textAlign: "center",
     marginTop: 20,
-    textAlign: "center",
     backgroundColor: "rgba(0, 0, 0, 0.6)",
-    paddingHorizontal: 15,
+    paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 5,
+    borderRadius: 8,
   },
-  warningText: {
-    color: "#FFA500",
+  infoText: {
+    color: "#00FF00",
     fontSize: 14,
-    marginTop: 10,
+    fontWeight: "500",
     textAlign: "center",
+    marginTop: 8,
     backgroundColor: "rgba(0, 0, 0, 0.6)",
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 6,
   },
   processingOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: "rgba(0, 0, 0, 0.8)",
     justifyContent: "center",
     alignItems: "center",
@@ -535,78 +604,103 @@ const styles = StyleSheet.create({
   processingText: {
     color: "#FFFFFF",
     fontSize: 16,
-    marginTop: 20,
+    fontWeight: "500",
+    marginTop: 12,
+    textAlign: "center",
+  },
+  apiInfoText: {
+    color: "#00FF00",
+    fontSize: 14,
+    fontWeight: "400",
+    marginTop: 8,
+    textAlign: "center",
+    opacity: 0.8,
   },
   footer: {
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    backgroundColor: "rgba(0, 0, 0, 0.9)",
     paddingHorizontal: 20,
     paddingVertical: 20,
+    paddingBottom: Platform.OS === "ios" ? 40 : 20,
   },
   instructionText: {
     color: "#FFFFFF",
     fontSize: 14,
     textAlign: "center",
     marginBottom: 20,
+    opacity: 0.8,
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     marginBottom: 15,
   },
   captureButton: {
     backgroundColor: "#007AFF",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8,
+    flex: 0.48,
+    justifyContent: "center",
   },
   captureButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
     marginLeft: 8,
   },
   imageButton: {
     backgroundColor: "#34C759",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8,
+    flex: 0.48,
+    justifyContent: "center",
   },
   imageButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
     marginLeft: 8,
   },
   disabledButton: {
     opacity: 0.5,
   },
   retryButton: {
+    backgroundColor: "#FF9500",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 6,
     alignItems: "center",
-    marginTop: 10,
+    marginBottom: 10,
   },
   retryText: {
-    color: "#007AFF",
-    fontSize: 16,
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "500",
   },
   manualButton: {
+    backgroundColor: "transparent",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#FFFFFF",
     alignItems: "center",
-    marginTop: 10,
-    padding: 10,
   },
   manualButtonText: {
-    color: "#FFA500",
-    fontSize: 16,
-    textDecorationLine: "underline",
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "500",
   },
   errorContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    paddingHorizontal: 20,
   },
   errorText: {
     color: "#FFFFFF",
@@ -616,13 +710,13 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#007AFF",
-    paddingHorizontal: 20,
     paddingVertical: 12,
+    paddingHorizontal: 24,
     borderRadius: 8,
   },
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
   },
 });
