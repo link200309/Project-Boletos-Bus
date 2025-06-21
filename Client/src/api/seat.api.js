@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://192.168.100.123:4000";
+const API = "http:///192.168.190.144:4000";
 
 export const getBusSeats = async (busId) => {
   try {

@@ -26,6 +26,15 @@ export const SeatSelection = ({ navigation, asientos, busData, travels }) => {
     setForceUpdate((prev) => prev + 1);
   };
 
+  const clearSelectedSeats = () => {
+    asientos.forEach((asiento) => {
+      if (asiento.estado === "No disponible") {
+        asiento.estado = "Disponible";
+      }
+    });
+    setForceUpdate((prev) => prev + 1);
+  };
+
   const hasTwoFloors =
     busData &&
     (busData.tipo_bus === "CAMA" ||
@@ -110,6 +119,14 @@ export const SeatSelection = ({ navigation, asientos, busData, travels }) => {
         selectedSeats={selectedSeats}
         onSeatSelect={handleSeatSelection}
         asientos={asientos}
+      />
+
+      <ButtonStyle
+        text={"Eliminar asientos seleccionados"}
+        width="100%"
+        onClick={clearSelectedSeats}
+        variant={3}
+        marginBottom={10}
       />
 
       <ButtonStyle

@@ -28,7 +28,11 @@ export default function StatisticsScreen() {
   const fetchStats = async () => {
     setLoading(true);
     try {
-      const data = await obtenerEstadisticasAgencia(user.token, fechaInicio, fechaFin);
+      const data = await obtenerEstadisticasAgencia(
+        user.token,
+        fechaInicio,
+        fechaFin
+      );
       setStats(data);
     } catch (err) {
       console.error("Error al cargar estadísticas:", err);
@@ -65,14 +69,20 @@ export default function StatisticsScreen() {
     <GenericContainer>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>
-          <Icon name="bar-chart-outline" size={24} color="#4318D1" /> Estadísticas de la Agencia
+          <Icon name="bar-chart-outline" size={24} color="#4318D1" />{" "}
+          Estadísticas de la Agencia
         </Text>
 
         <View style={styles.dateFilters}>
           <View style={styles.dateBox}>
             <Text style={styles.label}>Fecha de inicio</Text>
-            <Pressable style={styles.inputBox} onPress={() => setMostrarInicio(true)}>
-              <Text style={styles.dateText}>{fechaInicio.toLocaleDateString()}</Text>
+            <Pressable
+              style={styles.inputBox}
+              onPress={() => setMostrarInicio(true)}
+            >
+              <Text style={styles.dateText}>
+                {fechaInicio.toLocaleDateString()}
+              </Text>
             </Pressable>
             {mostrarInicio && (
               <DateTimePicker
@@ -86,8 +96,13 @@ export default function StatisticsScreen() {
 
           <View style={styles.dateBox}>
             <Text style={styles.label}>Fecha de fin</Text>
-            <Pressable style={styles.inputBox} onPress={() => setMostrarFin(true)}>
-              <Text style={styles.dateText}>{fechaFin.toLocaleDateString()}</Text>
+            <Pressable
+              style={styles.inputBox}
+              onPress={() => setMostrarFin(true)}
+            >
+              <Text style={styles.dateText}>
+                {fechaFin.toLocaleDateString()}
+              </Text>
             </Pressable>
             {mostrarFin && (
               <DateTimePicker
@@ -105,12 +120,27 @@ export default function StatisticsScreen() {
         </View>
 
         <View style={styles.cardGrid}>
-          <StatCard icon="bus" label="Buses registrados" value={stats.totalBuses} />
-          <StatCard icon="people" label="Choferes registrados" value={stats.totalChoferes} />
+          <StatCard
+            icon="bus"
+            label="Buses registrados"
+            value={stats.totalBuses}
+          />
+          <StatCard
+            icon="people"
+            label="Choferes registrados"
+            value={stats.totalChoferes}
+          />
           <StatCard icon="map" label="Rutas activas" value={stats.totalRutas} />
-          <StatCard icon="calendar" label="Viajes registrados" value={stats.totalViajes} />
-          <StatCard icon="ticket" label="Reservas totales" value={stats.totalReservas} />
-          <StatCard icon="cash" label="Ingresos (Bs.)" value={stats.ingresosTotales} />
+          <StatCard
+            icon="calendar"
+            label="Viajes registrados"
+            value={stats.totalViajes}
+          />
+          <StatCard
+            icon="ticket"
+            label="Reservas totales"
+            value={stats.totalReservas}
+          />
         </View>
       </ScrollView>
     </GenericContainer>
