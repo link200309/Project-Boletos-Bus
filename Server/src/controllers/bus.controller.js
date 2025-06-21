@@ -12,8 +12,6 @@ export const createBus = async (req, res) => {
   const asientos = data.asientos;
   delete data.asientos;
 
-  
-
   try {
     const nuevoBus = await prisma.bus.create({ data });
 
@@ -22,6 +20,8 @@ export const createBus = async (req, res) => {
         ...asiento,
         id_bus: nuevoBus.id_bus,
       }));
+
+      console.log("Los asientos despues de id_bus es", asientosConIdBus);
 
       await prisma.asiento.createMany({
         data: asientosConIdBus,

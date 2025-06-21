@@ -82,7 +82,7 @@ model Bus {
 }
 
 model Asiento {
-  id_asiento Int    @id @default(autoincrement())
+  id_asiento Int
   numero     String @db.VarChar(20)
   ubicacion  String @db.VarChar(20)
   estado     String @db.VarChar(20)
@@ -90,6 +90,7 @@ model Asiento {
   id_bus Int
   bus    Bus @relation(fields: [id_bus], references: [id_bus], onDelete: Cascade)
   pasajerosSecundarios PasajeroSecundario[]
+  @@id([id_bus, id_asiento])
 }
 
 model Viaje {
@@ -175,10 +176,10 @@ model PasajeroSecundario{
   apellido           String?  @db.VarChar(50)
   ci                 String?  @db.VarChar(20)
   fecha_nacimiento   DateTime
-
+  id_bus        Int 
   id_reserva         Int
   reserva   Reserva  @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
 
   id_asiento         Int
-  asiento   Asiento  @relation(fields: [id_asiento], references: [id_asiento], onDelete: Cascade)
+  asiento   Asiento   @relation(fields: [id_bus, id_asiento], references: [id_bus, id_asiento])
 }

@@ -18,7 +18,7 @@ async function main() {
   await prisma.usuario.deleteMany();
 
   const contraseñaHasheada = await bcrypt.hash("12345678", 10);
-  const contraseñaHasheadaPasajero = await bcrypt.hash("password123", 10); // Faltaba hashear
+  const contraseñaHasheadaPasajero = await bcrypt.hash("password123", 10);
 
   const usuarioAgencia = await prisma.usuario.create({
     data: {
@@ -58,7 +58,7 @@ async function main() {
       apellido: "García",
       ci: "9876543CB",
       correo_electronico: "maria@gmail.com",
-      contraseña: contraseñaHasheadaPasajero, // Usar contraseña hasheada
+      contraseña: contraseñaHasheadaPasajero,
       numero_celular: 78912345,
     },
   });
@@ -84,6 +84,7 @@ async function main() {
 
   await prisma.asiento.createMany({
     data: Array.from({ length: 40 }, (_, i) => ({
+      id_asiento: i + 1, // Especificar el id_asiento explícitamente
       numero: `${i + 1}`,
       ubicacion: i < 20 ? "Superior" : "Inferior",
       estado: "Disponible",
@@ -212,7 +213,12 @@ async function main() {
 
   if (asientoDisponible) {
     await prisma.asiento.update({
-      where: { id_asiento: asientoDisponible.id_asiento },
+      where: {
+        id_bus_id_asiento: {
+          id_bus: asientoDisponible.id_bus,
+          id_asiento: asientoDisponible.id_asiento,
+        },
+      },
       data: { estado: "Reservado" },
     });
   }
@@ -237,19 +243,25 @@ async function main() {
 
   if (asientoDisponible) {
     await prisma.asiento.update({
-      where: { id_asiento: asientoDisponible.id_asiento },
+      where: {
+        id_bus_id_asiento: {
+          id_bus: asientoDisponible.id_bus,
+          id_asiento: asientoDisponible.id_asiento,
+        },
+      },
       data: { estado: "Reservado" },
     });
 
-    // Crear pasajero secundario (ahora que tenemos reserva2 y asientoDisponible)
+    // Crear pasajero secundario (ahora incluyendo id_bus)
     const pasajeroSecundario = await prisma.pasajeroSecundario.create({
       data: {
         nombre: "Luis",
         apellido: "Lopez",
         ci: "4455667SC",
         fecha_nacimiento: new Date("2000-01-01"),
+        id_bus: asientoDisponible.id_bus, // Agregado el id_bus
         id_asiento: asientoDisponible.id_asiento,
-        id_reserva: reserva2.id_reserva, // Usar reserva2 en lugar de 'reserva'
+        id_reserva: reserva2.id_reserva,
       },
     });
 

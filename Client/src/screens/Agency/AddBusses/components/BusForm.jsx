@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Modal, TouchableOpacity, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  Text,
+  Pressable,
+} from "react-native";
 import { InputLabel } from "../../../../components/Input/InputLabel";
 import { Selector } from "../../../../components/Input/Selector";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 import { SeatSelection } from "./SeatSelection";
+import { ChairIcon } from "../../../../components/Icons";
 
 const BusForm = ({ formData, onChange, onSubmit, buttonText }) => {
   const [seatModalVisible, setSeatModalVisible] = useState(false);
@@ -85,12 +93,6 @@ const BusForm = ({ formData, onChange, onSubmit, buttonText }) => {
       />
 
       <InputLabel
-        label="Asientos"
-        placeholder="Selecciona los asientos"
-        onClick={() => setSeatModalVisible(true)}
-      />
-
-      <InputLabel
         label="Modelo *"
         placeholder="Modelo"
         value={formData.modelo}
@@ -111,6 +113,14 @@ const BusForm = ({ formData, onChange, onSubmit, buttonText }) => {
         value={formData.estado}
         onChange={handleChange("estado")}
       />
+
+      <Pressable
+        style={styles.button}
+        onPress={() => setSeatModalVisible(true)}
+      >
+        <ChairIcon />
+        <Text style={styles.buttonText}>Seleccionar Asientos</Text>
+      </Pressable>
 
       <ButtonStyle text={buttonText} onClick={onSubmit} />
 
@@ -195,6 +205,22 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "#6B7280",
     fontWeight: "bold",
+  },
+  button: {
+    backgroundColor: "transparent",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    borderWidth: 1,
+    borderColor: "black",
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
 

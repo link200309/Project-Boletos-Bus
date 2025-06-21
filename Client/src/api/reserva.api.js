@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.100.116:4000";
+const BASE_URL = "http:///192.168.190.144:4000";
 import axios from "axios";
 
 export const createReserva = (data) => {

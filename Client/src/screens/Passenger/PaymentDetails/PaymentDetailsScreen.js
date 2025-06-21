@@ -66,6 +66,9 @@ export default function PaymentDetailsScreen({ navigation, route }) {
         Alert.alert("Error", "Algunos pasajeros no tienen asientos asignados.");
         return;
       }
+
+      console.log("El travel id detail es", travelDetails.bus.id_bus);
+
       const dataToSend = {
         id_viaje: travelDetails.id_viaje,
         id_pasajero: userId,
@@ -78,8 +81,10 @@ export default function PaymentDetailsScreen({ navigation, route }) {
           ci: p.identityNumber?.trim() || "N/D",
           fecha_nacimiento: convertDateToISO(p.birthDate),
           id_asiento: parseInt(p.seat.id),
+          id_bus: travelDetails.bus.id_bus,
         })),
       };
+
       console.log("Datos a enviar:", dataToSend);
       if (
         !dataToSend.pasajeros_secundarios.every(
