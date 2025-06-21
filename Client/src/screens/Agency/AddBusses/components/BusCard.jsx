@@ -42,11 +42,6 @@ const BusCard = ({ bus, onEdit, onDelete }) => {
         <Text>{bus.estado}</Text>
       </View>
 
-      <View style={styles.row}>
-        <Text style={styles.label}>ID Agencia:</Text>
-        <Text>{bus.id_agencia}</Text>
-      </View>
-
       <View style={styles.buttonRow}>
         <ButtonStyle text="Editar" onClick={() => onEdit(bus)} width={120} backgroundColorcolor="#000" />
         <ButtonStyle text="Eliminar" variant={2} onClick={() => onDelete(bus.id_bus)} width={120} />

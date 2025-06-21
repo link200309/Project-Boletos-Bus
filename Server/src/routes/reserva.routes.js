@@ -1,10 +1,16 @@
 import express from "express";
-import { crearReserva, obtenerMisReservas } from "../controllers/reserva.controller.js";
-import { verificarToken } from "../middlewares/verificarToken.js";
+import {
+  createReserva,
+  obtenerMisReservasPasajero,
+  cancelarReserva,
+  changeStateReserve,
+} from "../controllers/reserva.controller.js";
 
 const router = express.Router();
 
-router.post("/", verificarToken, crearReserva);
-router.get("/mis-reservas", verificarToken, obtenerMisReservas);
+router.post("/", createReserva);
+router.get("/pasajero/:userId", obtenerMisReservasPasajero);
+router.put("/updateState", changeStateReserve);
+router.put("/cancel/:id_reserva", cancelarReserva);
 
 export default router;

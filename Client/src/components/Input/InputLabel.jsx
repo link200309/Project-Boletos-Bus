@@ -10,6 +10,7 @@ export const InputLabel = ({
   name,
   keyboardType = "default",
   secureTextEntry = false,
+  onClick,
 }) => {
   return (
     <View style={styles.container}>
@@ -17,10 +18,11 @@ export const InputLabel = ({
       <TextInput
         placeholder={placeholder}
         style={styles.input}
-        value={value}
+        value={value?.toString() ?? ""}
         onChangeText={onChange}
         keyboardType={keyboardType}
         secureTextEntry={secureTextEntry}
+        onPress={onClick}
       />
       {error && error[name] && (
         <Text style={styles.errorText}>{error[name].message}</Text>

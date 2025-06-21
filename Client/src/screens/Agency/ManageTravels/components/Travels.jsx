@@ -8,7 +8,7 @@ import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 //utils
 import { formatDate, formatTime } from "../../../../utils/dateTime.util";
 
-export const Travels = ({ travelInfo, navigation, onClick }) => {
+export const Travels = ({ travelInfo, navigation, onClick, fetchTravels }) => {
   const [travel, setTravel] = useState({});
   useEffect(() => {
     setTravel(travelInfo.item);
@@ -19,6 +19,16 @@ export const Travels = ({ travelInfo, navigation, onClick }) => {
       (a) => a.estado === "Disponible"
     ).length;
     return disponibles;
+  };
+
+  const seeDetailTravel = () => {
+    navigation.navigate("DetailsTravel", travel);
+  };
+  const seeReservationsTravel = () => {
+    navigation.navigate("ReservationsTravel", travel);
+  };
+  const seeEditTravel = () => {
+    navigation.navigate("EditTravel", { travel, fetchTravels });
   };
 
   return (
@@ -70,16 +80,20 @@ export const Travels = ({ travelInfo, navigation, onClick }) => {
               text={"Reservas"}
               style={Style.reserveButton}
               styleText={Style.reserveButtonText}
+              onClick={seeReservationsTravel}
             />
             <ButtonStyle
               text={"Detalles"}
               style={Style.detailsButton}
               styleText={Style.detailsButtonText}
+              onClick={seeDetailTravel}
             />
             <ButtonStyle
               text={"Editar"}
+              variant={2}
               style={Style.editButton}
               styleText={Style.editButtonText}
+              onClick={seeEditTravel}
             />
           </View>
         </View>
@@ -180,7 +194,7 @@ const Style = StyleSheet.create({
     gap: 12,
   },
   reserveButton: {
-    backgroundColor: "#7C3AED",
+    backgroundColor: "#5B21B6",
     paddingHorizontal: 17,
     paddingVertical: 12,
     borderRadius: 12,
@@ -194,7 +208,7 @@ const Style = StyleSheet.create({
     textAlign: "center",
   },
   detailsButton: {
-    backgroundColor: "#5B21B6",
+    backgroundColor: "#7C3AED",
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 12,
@@ -207,9 +221,6 @@ const Style = StyleSheet.create({
     textAlign: "center",
   },
   editButton: {
-    backgroundColor: "#E5E7EB",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
     borderRadius: 12,
     flex: 1,
     justifyContent: "center",

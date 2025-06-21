@@ -2,7 +2,9 @@
 CREATE TABLE "Usuario" (
     "id_usuario" SERIAL NOT NULL,
     "tipo_usuario" VARCHAR(30) NOT NULL,
-    "nombre_usuario" VARCHAR(80) NOT NULL,
+    "nombre" VARCHAR(50),
+    "apellido" VARCHAR(50),
+    "ci" VARCHAR(20),
     "correo_electronico" VARCHAR(80) NOT NULL,
     "contraseña" VARCHAR(100) NOT NULL,
     "numero_celular" INTEGER NOT NULL,
@@ -12,17 +14,30 @@ CREATE TABLE "Usuario" (
 
 -- CreateTable
 CREATE TABLE "Agencia" (
-    "id_agencia" SERIAL NOT NULL,
-    "id_usuario" INTEGER NOT NULL,
+    "id_agencia" INTEGER NOT NULL,
     "nombre_agencia" VARCHAR(80) NOT NULL,
-    "tipo_sociedad" VARCHAR(30) NOT NULL,
+    "tipo_sociedad" VARCHAR(60) NOT NULL,
     "NIT" VARCHAR(20) NOT NULL,
-    "departamento" VARCHAR(30) NOT NULL,
+    "departamento" VARCHAR(50) NOT NULL,
     "ciudad" VARCHAR(40) NOT NULL,
     "direccion" VARCHAR(100) NOT NULL,
     "estado" VARCHAR(30) NOT NULL,
+    "correo_electronico_agencia" VARCHAR(80) NOT NULL,
+    "numero_celular_agencia" INTEGER NOT NULL,
+    "nombre_representante" VARCHAR(50),
+    "apellido_representante" VARCHAR(50),
+    "ci_representante" VARCHAR(20),
+    "celular_representante" VARCHAR(15),
 
     CONSTRAINT "Agencia_pkey" PRIMARY KEY ("id_agencia")
+);
+
+-- CreateTable
+CREATE TABLE "Pasajero" (
+    "id_pasajero" INTEGER NOT NULL,
+    "fecha_nacimiento" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Pasajero_pkey" PRIMARY KEY ("id_pasajero")
 );
 
 -- CreateTable
@@ -54,8 +69,8 @@ CREATE TABLE "Asiento" (
 CREATE TABLE "Viaje" (
     "id_viaje" SERIAL NOT NULL,
     "fecha_salida" TIMESTAMP(3) NOT NULL,
-    "hora_salida_programada" VARCHAR(15) NOT NULL,
-    "hora_salida_real" VARCHAR(15) NOT NULL,
+    "hora_salida_programada" VARCHAR(30) NOT NULL,
+    "hora_salida_real" VARCHAR(30) NOT NULL,
     "costo" DECIMAL(5,2) NOT NULL,
     "id_bus" INTEGER NOT NULL,
     "id_ruta" INTEGER NOT NULL,
@@ -74,6 +89,7 @@ CREATE TABLE "Ruta" (
     "distancia" VARCHAR(20) NOT NULL,
     "tiempo_estimado" VARCHAR(20) NOT NULL,
     "camino" VARCHAR(50) NOT NULL,
+    "id_agencia" INTEGER NOT NULL,
 
     CONSTRAINT "Ruta_pkey" PRIMARY KEY ("id_ruta")
 );
@@ -104,14 +120,39 @@ CREATE TABLE "Chofer" (
     CONSTRAINT "Chofer_pkey" PRIMARY KEY ("id_chofer")
 );
 
+-- CreateTable
+CREATE TABLE "Reserva" (
+    "id_reserva" SERIAL NOT NULL,
+    "id_pasajero" INTEGER NOT NULL,
+    "id_viaje" INTEGER NOT NULL,
+    "estado" TEXT NOT NULL DEFAULT 'pendiente',
+    "comprobante" TEXT,
+    "fecha_reserva" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Reserva_pkey" PRIMARY KEY ("id_reserva")
+);
+
+-- CreateTable
+CREATE TABLE "PasajeroSecundario" (
+    "id_pasec" SERIAL NOT NULL,
+    "nombre" VARCHAR(50),
+    "apellido" VARCHAR(50),
+    "ci" VARCHAR(20),
+    "fecha_nacimiento" TIMESTAMP(3) NOT NULL,
+    "id_reserva" INTEGER NOT NULL,
+    "id_asiento" INTEGER NOT NULL,
+
+    CONSTRAINT "PasajeroSecundario_pkey" PRIMARY KEY ("id_pasec")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Usuario_correo_electronico_key" ON "Usuario"("correo_electronico");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Agencia_id_usuario_key" ON "Agencia"("id_usuario");
+-- AddForeignKey
+ALTER TABLE "Agencia" ADD CONSTRAINT "Agencia_id_agencia_fkey" FOREIGN KEY ("id_agencia") REFERENCES "Usuario"("id_usuario") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Agencia" ADD CONSTRAINT "Agencia_id_usuario_fkey" FOREIGN KEY ("id_usuario") REFERENCES "Usuario"("id_usuario") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Pasajero" ADD CONSTRAINT "Pasajero_id_pasajero_fkey" FOREIGN KEY ("id_pasajero") REFERENCES "Usuario"("id_usuario") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Bus" ADD CONSTRAINT "Bus_id_agencia_fkey" FOREIGN KEY ("id_agencia") REFERENCES "Agencia"("id_agencia") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -132,7 +173,22 @@ ALTER TABLE "Viaje" ADD CONSTRAINT "Viaje_id_chofer_fkey" FOREIGN KEY ("id_chofe
 ALTER TABLE "Viaje" ADD CONSTRAINT "Viaje_id_pago_fkey" FOREIGN KEY ("id_pago") REFERENCES "Configuracion_Pago"("id_pago") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Ruta" ADD CONSTRAINT "Ruta_id_agencia_fkey" FOREIGN KEY ("id_agencia") REFERENCES "Agencia"("id_agencia") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Configuracion_Pago" ADD CONSTRAINT "Configuracion_Pago_id_agencia_fkey" FOREIGN KEY ("id_agencia") REFERENCES "Agencia"("id_agencia") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Chofer" ADD CONSTRAINT "Chofer_id_agencia_fkey" FOREIGN KEY ("id_agencia") REFERENCES "Agencia"("id_agencia") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Reserva" ADD CONSTRAINT "Reserva_id_pasajero_fkey" FOREIGN KEY ("id_pasajero") REFERENCES "Pasajero"("id_pasajero") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Reserva" ADD CONSTRAINT "Reserva_id_viaje_fkey" FOREIGN KEY ("id_viaje") REFERENCES "Viaje"("id_viaje") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PasajeroSecundario" ADD CONSTRAINT "PasajeroSecundario_id_reserva_fkey" FOREIGN KEY ("id_reserva") REFERENCES "Reserva"("id_reserva") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PasajeroSecundario" ADD CONSTRAINT "PasajeroSecundario_id_asiento_fkey" FOREIGN KEY ("id_asiento") REFERENCES "Asiento"("id_asiento") ON DELETE CASCADE ON UPDATE CASCADE;

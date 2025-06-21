@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://192.168.1.6:4000/bus"; // Cambia si usas IP local en dispositivo
+const API = "http:///192.168.190.144:4000/bus"; // Cambia si usas IP local en dispositivo
 
 export const getBuses = () => axios.get(API);
 

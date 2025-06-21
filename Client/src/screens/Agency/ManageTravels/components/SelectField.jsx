@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-export const SelectField = ({ label, onPress, value }) => {
+export const SelectField = ({ label, onPress, value, name, error }) => {
   return (
     <View style={styles.inputGroup}>
       <Text style={styles.label}>{label} *</Text>
@@ -9,6 +9,9 @@ export const SelectField = ({ label, onPress, value }) => {
           {value ? value : `Seleccionar ${label}`}
         </Text>
       </TouchableOpacity>
+      {error && error[name] && (
+        <Text style={styles.errorText}>{error[name].message}</Text>
+      )}
     </View>
   );
 };
@@ -33,5 +36,11 @@ const styles = StyleSheet.create({
   selectButtonText: {
     fontSize: 16,
     color: "#333",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 10,
   },
 });

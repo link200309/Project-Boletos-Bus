@@ -12,6 +12,8 @@ import reservaRoutes from "./routes/reserva.routes.js";
 import dotenv from "dotenv";
 import estadisticasRoutes from "./routes/estadisticas.routes.js";
 import reporteRoutes from "./routes/reporte.routes.js";
+import agencyRoutes from "./routes/agency.routes.js";
+import routeRoutes from "./routes/route.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -23,15 +25,15 @@ console.log(`Server is running on port ${PORT}`);
 app.use(cors());
 app.use(express.json());
 app.use(userRoutes);
-app.use("/travel", travelRouter);
 app.use(busStationRoute);
 app.use(authRoutes);
-
+app.use("/travel", travelRouter);
+app.use("/route", routeRoutes);
 app.use("/choferes", choferRoutes);
 app.use("/bus", busRoutes);
 app.use("/asiento", asientoRoutes);
 app.use("/viajes", viajeRoutes);
-app.use("/reserva", reservaRoutes);
+app.use("/reservas", reservaRoutes);
 app.use("/estadistica", estadisticasRoutes);
 app.use("/reporte", reporteRoutes);
-
+app.use("/agency", agencyRoutes);

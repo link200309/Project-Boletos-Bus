@@ -3,7 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { formatTime, formatDate } from "../../../../utils/dateTime.util";
 
-const TabsContainer = ({ passengers = [], travelDetails = {} }) => {
+const TabsContainer = ({
+  passengers = [],
+  travelDetails = {},
+  reserve = false,
+  Reserva = [],
+}) => {
   const [activeTab, setActiveTab] = useState("detalles");
   const dateObject = formatDate(travelDetails[0].fecha_salida);
 
@@ -40,73 +45,101 @@ const TabsContainer = ({ passengers = [], travelDetails = {} }) => {
       </View>
 
       {activeTab === "detalles" ? (
-        <View style={styles.detailsContainer}>
-          <View style={styles.detailItem}>
-            <View style={styles.iconWrapper}>
-              <Icon name="location-outline" style={styles.icon} />
-            </View>
-            <View style={styles.textWrapper}>
-              <Text style={styles.detailTitle}>Origen y destino</Text>
-              <Text style={styles.detailContent}>
-                {travelDetails[0].ruta.origen} - {travelDetails[0].ruta.destino}
-              </Text>
-            </View>
-          </View>
+        <>
+          {reserve && (
+            <>
+              <View style={styles.detailItem}>
+                <View style={styles.iconWrapper}>
+                  <Icon name="calendar-outline" style={styles.icon} />
+                </View>
+                <View style={styles.textWrapper}>
+                  <Text style={styles.detailTitle}>Fecha de reserva</Text>
+                  <Text style={styles.detailContent}>
+                    {Reserva.formatedDate}
+                  </Text>
+                </View>
+              </View>
 
-          <View style={styles.detailItem}>
-            <View style={styles.iconWrapper}>
-              <Icon name="calendar-outline" style={styles.icon} />
+              <View style={styles.detailItem}>
+                <View style={styles.iconWrapper}>
+                  <Icon name="checkmark-circle-outline" style={styles.icon} />
+                </View>
+                <View style={styles.textWrapper}>
+                  <Text style={styles.detailTitle}>Estado de reserva</Text>
+                  <Text style={styles.detailContent}>{Reserva.estado}</Text>
+                </View>
+              </View>
+            </>
+          )}
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailItem}>
+              <View style={styles.iconWrapper}>
+                <Icon name="location-outline" style={styles.icon} />
+              </View>
+              <View style={styles.textWrapper}>
+                <Text style={styles.detailTitle}>Origen y destino</Text>
+                <Text style={styles.detailContent}>
+                  {travelDetails[0].ruta.origen} -{" "}
+                  {travelDetails[0].ruta.destino}
+                </Text>
+              </View>
             </View>
-            <View style={styles.textWrapper}>
-              <Text style={styles.detailTitle}>Horario de viaje</Text>
-              <Text style={styles.detailContent}>
-                {dateObject.formatedDate}
-                {"     "}
-                {travelDetails[0].hora_salida_programada.slice(0, 5)} -{" "}
-                {formatTime(
-                  travelDetails[0].hora_salida_programada,
-                  travelDetails[0].ruta.tiempo_estimado
-                )}
-              </Text>
-            </View>
-          </View>
 
-          <View style={styles.detailItem}>
-            <View style={styles.iconWrapper}>
-              <Icon name="business-outline" style={styles.icon} />
+            <View style={styles.detailItem}>
+              <View style={styles.iconWrapper}>
+                <Icon name="calendar-outline" style={styles.icon} />
+              </View>
+              <View style={styles.textWrapper}>
+                <Text style={styles.detailTitle}>Horario de viaje</Text>
+                <Text style={styles.detailContent}>
+                  {dateObject.formatedDate}
+                  {"     "}
+                  {travelDetails[0].hora_salida_programada.slice(0, 5)} -{" "}
+                  {formatTime(
+                    travelDetails[0].hora_salida_programada,
+                    travelDetails[0].ruta.tiempo_estimado
+                  )}
+                </Text>
+              </View>
             </View>
-            <View style={styles.textWrapper}>
-              <Text style={styles.detailTitle}>Agencia</Text>
-              <Text style={styles.detailContent}>
-                {travelDetails[0].bus.agencia.nombre_agencia}
-              </Text>
-            </View>
-          </View>
 
-          <View style={styles.detailItem}>
-            <View style={styles.iconWrapper}>
-              <Icon name="bus-outline" style={styles.icon} />
+            <View style={styles.detailItem}>
+              <View style={styles.iconWrapper}>
+                <Icon name="business-outline" style={styles.icon} />
+              </View>
+              <View style={styles.textWrapper}>
+                <Text style={styles.detailTitle}>Agencia</Text>
+                <Text style={styles.detailContent}>
+                  {travelDetails[0].bus.agencia.nombre_agencia}
+                </Text>
+              </View>
             </View>
-            <View style={styles.textWrapper}>
-              <Text style={styles.detailTitle}>Asientos</Text>
-              <Text style={styles.detailContent}>
-                {travelDetails[0].bus.tipo_bus}
-              </Text>
-            </View>
-          </View>
 
-          <View style={styles.detailItem}>
-            <View style={styles.iconWrapper}>
-              <Icon name="pricetag-outline" style={styles.icon} />
+            <View style={styles.detailItem}>
+              <View style={styles.iconWrapper}>
+                <Icon name="bus-outline" style={styles.icon} />
+              </View>
+              <View style={styles.textWrapper}>
+                <Text style={styles.detailTitle}>Asientos</Text>
+                <Text style={styles.detailContent}>
+                  {travelDetails[0].bus.tipo_bus}
+                </Text>
+              </View>
             </View>
-            <View style={styles.textWrapper}>
-              <Text style={styles.detailTitle}>Precio por pasaje</Text>
-              <Text style={styles.detailContent}>
-                Bs. {travelDetails[0].costo}
-              </Text>
+
+            <View style={styles.detailItem}>
+              <View style={styles.iconWrapper}>
+                <Icon name="pricetag-outline" style={styles.icon} />
+              </View>
+              <View style={styles.textWrapper}>
+                <Text style={styles.detailTitle}>Precio por pasaje</Text>
+                <Text style={styles.detailContent}>
+                  Bs. {travelDetails[0].costo}
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
+        </>
       ) : (
         <View style={styles.passengersContainer}>
           <Text style={styles.sectionHeader}>Pasajeros</Text>
@@ -116,7 +149,7 @@ const TabsContainer = ({ passengers = [], travelDetails = {} }) => {
                 <Text style={styles.passengerName}>
                   {passenger.firstName} {passenger.lastName}
                 </Text>
-                <Text style={styles.seatLabel}>Asiento {passenger.seat}</Text>
+                <Text style={styles.seatLabel}>Asiento {passenger.seat.numero}</Text>
               </View>
               <Text style={styles.passengerDetail}>
                 CI: {passenger.identityNumber}

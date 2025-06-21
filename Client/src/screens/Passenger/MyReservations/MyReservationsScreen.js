@@ -1,123 +1,172 @@
-import React, { useState } from "react";
-import { View, FlatList, StyleSheet, Modal, Text } from "react-native";
+import React, { useState, useContext, useEffect, useCallback } from "react";
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Text,
+  Alert,
+  RefreshControl,
+  ActivityIndicator,
+} from "react-native";
 import TripCard from "./components/TripCard";
 import { BlobBg } from "../../../components/Background/BlobBg";
-import { ButtonStyle } from "../../../components/Button/ButtonStyle";
-import { GlobalStyles } from "../../../components/Style/GlobalStyles";
 import { GenericContainer } from "../../../components/GenericContainer";
+import { AuthContext } from "../../../context/AuthContext";
+import { obtenerMisReservasPasajero } from "../../../api/reserva.api";
+import { InformativeTitle } from "../../../components/InformativeTitle";
 
-const initialTrips = [
-  {
-    id: 1,
-    from: "Cochabamba",
-    to: "La Paz",
-    date: "18 de Abril",
-    time: "07:30",
-    agency: "El Dorado",
-    type: "CAMA",
-    seats: 2,
-    total: 190,
-  },
-  {
-    id: 2,
-    from: "Cochabamba",
-    to: "La Paz",
-    date: "18 de Abril",
-    time: "07:30",
-    agency: "El Dorado",
-    type: "CAMA",
-    seats: 2,
-    total: 190,
-  },
-  {
-    id: 3,
-    from: "Santa Cruz",
-    to: "Cochabamba",
-    date: "20 de Abril",
-    time: "11:00",
-    agency: "El Dorado",
-    type: "SEMI-CAMA",
-    seats: 1,
-    total: 95,
-  },
-  {
-    id: 4,
-    from: "Santa Cruz",
-    to: "Cochabamba",
-    date: "30 de Abril",
-    time: "11:00",
-    agency: "El Dorado",
-    type: "SEMI-CAMA",
-    seats: 1,
-    total: 95,
-  },
-];
+export default function MyReservationsScreen({ navigation }) {
+  const { user } = useContext(AuthContext);
+  const [trips, setTrips] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [reservasData, setReservasData] = useState([]);
 
-export default function MyReservationsScreen() {
-  const [trips, setTrips] = useState(initialTrips);
-  const [cancelId, setCancelId] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
+  const transformReservaToTrip = useCallback((reserva) => {
+    return {
+      id: reserva.id_reserva,
+      from: reserva.viaje.ruta.origen,
+      to: reserva.viaje.ruta.destino,
+      date: new Date(reserva.viaje.fecha_salida).toLocaleDateString("es-ES", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
+      time: reserva.viaje.hora_salida_programada.slice(0, 5),
+      agency: reserva.viaje.bus.agencia.nombre_agencia,
+      type: reserva.viaje.bus.tipo_bus,
+      seats: reserva.resumen_asientos.total_asientos,
+      total:
+        parseFloat(reserva.viaje.costo) *
+        reserva.resumen_asientos.total_asientos,
+      numeroAsiento: reserva.resumen_asientos.numeros_asientos,
+      fechaReserva: reserva.fecha_reserva,
+      estado: reserva.estado,
+      ubicaciones_asientos: reserva.resumen_asientos.ubicaciones,
+    };
+  }, []);
 
-  const handleEdit = (id) => {
-    console.log("Editar reserva con ID:", id);
-  };
+  const cargarReservas = useCallback(
+    async (isRefreshing = false) => {
+      try {
+        if (isRefreshing) {
+          setRefreshing(true);
+        } else {
+          setLoading(true);
+        }
+        const userId = user?.datos_pasajero?.id_pasajero;
+        if (!userId) {
+          Alert.alert(
+            "Error",
+            "No se pudo obtener la información del pasajero. Inicia sesión nuevamente."
+          );
+          return;
+        }
+        const response = await obtenerMisReservasPasajero(userId);
+        const reservasData = response.data || response;
+        const reservasDataRaw = response.data?.reservas || [];
+        setReservasData(reservasDataRaw);
+        const tripsTransformados = reservasDataRaw.map(transformReservaToTrip);
+        setTrips(tripsTransformados);
+        if (
+          reservasData &&
+          reservasData.reservas &&
+          Array.isArray(reservasData.reservas)
+        ) {
+          const tripsTransformados = reservasData.reservas.map(
+            transformReservaToTrip
+          );
+          setTrips(tripsTransformados);
+        } else {
+          setTrips([]);
+        }
+      } catch (error) {
+        console.error("Error al cargar reservas:", error);
+        Alert.alert(
+          "Error",
+          "No se pudieron cargar las reservas. Por favor, verifica tu conexión e inténtalo nuevamente."
+        );
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    },
+    [user?.datos_pasajero?.id_pasajero, transformReservaToTrip]
+  );
 
-  const confirmCancel = (id) => {
-    setCancelId(id);
-    setModalVisible(true);
-  };
+  useEffect(() => {
+    cargarReservas();
+  }, [cargarReservas]);
 
-  const handleConfirmCancel = () => {
-    const updatedTrips = trips.filter((trip) => trip.id !== cancelId);
-    setTrips(updatedTrips);
-    setModalVisible(false);
-  };
+  const onRefresh = useCallback(() => {
+    cargarReservas(true);
+  }, [cargarReservas]);
+
+  const renderTripCard = useCallback(
+    ({ item }) => {
+      const reservaCompleta = reservasData.find(
+        (r) => r.id_reserva === item.id
+      );
+      return (
+        <TripCard
+          trip={item}
+          navigation={navigation}
+          reservaCompleta={reservaCompleta}
+        />
+      );
+    },
+    [navigation, reservasData]
+  );
+
+  const keyExtractor = useCallback((item) => item.id.toString(), []);
+
+  if (loading) {
+    return (
+      <GenericContainer style={styles.container}>
+        <BlobBg />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0066cc" />
+          <Text style={styles.loadingText}>Cargando reservas...</Text>
+        </View>
+      </GenericContainer>
+    );
+  }
 
   return (
     <GenericContainer style={styles.container}>
       <BlobBg />
-      <FlatList
-        data={trips}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TripCard trip={item} onEdit={handleEdit} onCancel={confirmCancel} />
-        )}
+      <InformativeTitle
+        title={"Mis Reservas"}
+        description={"Aquí puedes ver todas tus reservas activas."}
       />
-
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={GlobalStyles.formCard}>
-            <Text style={styles.modalTitle}>Cancelar Reserva</Text>
-            <Text style={styles.modalText}>
-              ¿Estás seguro de que deseas cancelar tu reserva de asiento? Esta
-              acción no se puede deshacer y el asiento volverá a estar
-              disponible para otros usuarios.
-            </Text>
-            <View style={styles.modalButtons}>
-              <ButtonStyle
-                text="Confirmar"
-                onClick={handleConfirmCancel}
-                width="47%"
-                height={40}
-                sizeText={16}
-              />
-              <ButtonStyle
-                text="Cancelar"
-                onClick={() => setModalVisible(false)}
-                variant={2}
-                width="47%"
-                height={40}
-                sizeText={16}
-              />
-            </View>
-          </View>
+      {trips.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No tienes reservas activas</Text>
+          <Text style={styles.emptySubtext}>
+            Cuando hagas una reserva, aparecerá aquí
+          </Text>
         </View>
-      </Modal>
+      ) : (
+        <FlatList
+          data={trips.filter(
+            (trip) =>
+              trip.estado?.toLowerCase() === "pendiente" ||
+              trip.estado?.toLowerCase() === "confirmado"
+          )}
+          keyExtractor={keyExtractor}
+          renderItem={renderTripCard}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["#0066cc"]}
+              tintColor="#0066cc"
+            />
+          }
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listContainer}
+        />
+      )}
     </GenericContainer>
   );
 }
@@ -125,29 +174,36 @@ export default function MyReservationsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 10,
-    paddingBottom: 10,
   },
-  modalOverlay: {
+  loadingContainer: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.3)",
     justifyContent: "center",
     alignItems: "center",
   },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  modalText: {
+  loadingText: {
+    marginTop: 10,
     fontSize: 16,
-    textAlign: "center",
-    marginBottom: 20,
+    color: "#666",
   },
-  modalButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 8,
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+  },
+  listContainer: {
+    paddingVertical: 10,
   },
 });

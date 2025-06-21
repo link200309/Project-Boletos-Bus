@@ -1,3 +1,4 @@
+//React
 import React from "react";
 import {
   Modal,
@@ -7,6 +8,9 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+
+//Components
+import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 
 export const RutaModal = ({
   visible,
@@ -23,14 +27,10 @@ export const RutaModal = ({
           <FlatList
             data={rutas}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id_ruta}
           />
-          <TouchableOpacity style={styles.createButton} onPress={onCreateRuta}>
-            <Text style={styles.createButtonText}>+ Crear Nueva Ruta</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
-            <Text style={styles.cancelButtonText}>Cancelar</Text>
-          </TouchableOpacity>
+          <ButtonStyle onClick={onCreateRuta} text={"+ Crear Nueva Ruta"} />
+          <ButtonStyle onClick={onCancel} text={"Cancelar"} variant={2} />
         </View>
       </View>
     </Modal>

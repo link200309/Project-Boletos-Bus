@@ -4,6 +4,9 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import Fontisto from "@expo/vector-icons/Fontisto";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export const HomeIcon = (props) => (
   <Entypo name="home" size={30} color="black" {...props} />
@@ -56,10 +59,26 @@ export const BackIcon = (props) => (
 );
 
 export const ScanQRIcon = (props) => (
-  <MaterialCommunityIcons
-    name="qrcode-scan"
-    size={24}
-    color="#000"
-    {...props}
-  />
+  <MaterialCommunityIcons name="card-account-details" size={20} {...props} />
+);
+export const DateIcon = (props) => (
+  <Fontisto name="date" size={24} color="black" {...props} />
+);
+export const TimeIcon = (props) => (
+  <AntDesign name="clockcircleo" size={24} color="black" {...props} />
+);
+export const GlobalInformationIcon = (props) => (
+  <MaterialIcons name="travel-explore" size={24} color="black" {...props} />
+);
+export const DriverIcon = (props) => (
+  <FontAwesome6 name="drivers-license" size={24} color="black" {...props} />
+);
+export const ScheduleIcon = (props) => (
+  <MaterialIcons name="schedule" size={24} color="black" {...props} />
+);
+export const PerfilIcon = (props) => (
+  <MaterialIcons name="person-outline" size={24} color="black" {...props} />
+);
+export const TicketIcon = (props) => (
+  <Ionicons name="ticket-outline" size={24} color="black" {...props} />
 );

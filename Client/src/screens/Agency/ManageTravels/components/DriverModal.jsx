@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { ButtonStyle } from "../../../../components/Button/ButtonStyle";
 
-export const ModalGeneric = ({
+export const DriverModal = ({
   title,
   visible,
   data,
@@ -36,9 +36,9 @@ export const ModalGeneric = ({
           <FlatList
             data={data}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id_chofer}
           />
-          <ButtonStyle onClick={setShowModal} text={"Cancelar"} />
+          <ButtonStyle onClick={setShowModal} text={"Cancelar"} variant={2} />
         </View>
       </View>
     </Modal>

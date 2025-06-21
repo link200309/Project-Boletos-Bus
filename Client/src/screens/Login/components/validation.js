@@ -18,8 +18,8 @@ export const validateAge = (birthdate) => {
 };
 
 export const validateCI = (ci) => {
-  if (!/^[0-9]{7,8}$/.test(ci)) {
-    return "La cédula debe tener entre 7 y 8 dígitos";
+  if (!/^[0-9]{7,10}$/.test(ci)) {
+    return "La cédula debe tener entre 7 y 10 dígitos";
   }
   return true;
 };
@@ -58,15 +58,34 @@ export const accountValidationRules = {
   },
 
   ci: {
-    required: "El ci es obligatorio",
-    validate: validateCI,
+    required: {
+      value: true,
+      message: "El ci es obligatorio",
+    },
+    pattern: {
+      value: /^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ .,;'"`'Üü]*$/,
+      message: "Solo se permiten caracteres alfanumericos",
+    },
+    maxLength: {
+      value: 10,
+      message: "El ci no debe ser mayor a 10 caracteres",
+    },
+    minLength: {
+      value: 7,
+      message: "El ci debe tener al menos 7 caracteres",
+    },
+    validate: {
+      noMultipleSpaces: (value) =>
+        !/\s{1,}/.test(value) ||
+        "No se permiten espacios en blanco consecutivos",
+    },
   },
 
   birthdate: {
     required: "La fecha de nacimiento es obligatoria",
     pattern: {
-      value: /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d\d$/,
-      message: "Formato inválido. Use DD/MM/AAAA",
+      value: /^((19|20)\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/,
+      message: "Formato inválido. Use AAAA-MM-DD",
     },
     validate: validateAge,
   },

@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseURL = process.env.BASE_URL || "http://192.168.1.6:4000";
+const baseURL = process.env.BASE_URL || "http:///192.168.190.144:4000";
 
 const travelApi = axios.create({
   baseURL,
@@ -26,5 +26,19 @@ export const getTravels = async (origen, destino, asientos) => {
 
 export const getTravelsByAgency = async (id) => {
   const res = await travelApi.get(`/travel/${id}/get`);
+  return res.data;
+};
+
+export const addTravel = async (data) => {
+  const res = await travelApi.post("/travel/add", data);
+  return res.data;
+};
+export const updateStateReserve = async (data) => {
+  const res = await travelApi.put(`/reservas/updateState`, data);
+  return res.data;
+};
+
+export const updateTravel = async (id, data) => {
+  const res = await travelApi.put(`/travel/${id}`, data);
   return res.data;
 };

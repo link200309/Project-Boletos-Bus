@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { GenericContainer } from "../../../components/GenericContainer";
 import { BlobBg } from "../../../components/Background/BlobBg";
@@ -6,17 +6,17 @@ import { InformativeTitle } from "../../../components/InformativeTitle";
 import PassengerCard from "./components/PassengerCard";
 import ContactCard from "./components/ContactCard";
 import { ButtonStyle } from "../../../components/Button/ButtonStyle";
-import { formatDate } from "../../../utils/dateTime.util";
+import { formatDate, formatFechaParaVista } from "../../../utils/dateTime.util";
 import { useForm, FormProvider } from "react-hook-form";
+import { AuthContext } from "../../../context/AuthContext";
 
 export default function PassengerDataScreen({ navigation, route }) {
   const methods = useForm();
+
   const onSubmit = async (data) => {
     const isValid = await methods.trigger();
     if (!isValid) return;
-
     const passengers = methods.getValues("passengers");
-
     navigation.navigate("TripSummary", {
       formData: { passengers, contact },
       travels,
@@ -40,7 +40,24 @@ export default function PassengerDataScreen({ navigation, route }) {
   const handlePassengerChange = (index, field, value) => {
     setValue(`passengers.${index}.${field}`, value);
   };
+  const handleContactChange = (field, value) => {
+    setValue(field, value);
+  };
   const passengers = methods.watch("passengers") || [];
+  const { user } = useContext(AuthContext);
+
+  const userAccountData = {
+    firstName: user?.usuario?.nombre || "",
+    lastName: user?.usuario?.apellido || "",
+    identityNumber: user?.usuario?.ci || "",
+    birthDate:
+      formatFechaParaVista(user?.datos_pasajero?.fecha_nacimiento) || "",
+  };
+
+  const contactAccountData = {
+    correo: user?.usuario?.correo_electronico || "",
+    celular: user?.usuario?.numero_celular || "",
+  };
 
   return (
     <GenericContainer>
@@ -60,10 +77,16 @@ export default function PassengerDataScreen({ navigation, route }) {
               index={index}
               passenger={passenger}
               handlePassengerChange={handlePassengerChange}
+              userAccountData={userAccountData}
+              selectedSeats={selectedSeats[index]}
             />
           ))}
 
-          <ContactCard contact={contact} setContact={setContact} />
+          <ContactCard
+            contactAccountData={contactAccountData}
+            setContact={setContact}
+            handlePassengerChange={handleContactChange}
+          />
 
           <ButtonStyle text="Continuar" onClick={onSubmit} />
         </FormProvider>
