@@ -10,7 +10,7 @@ export default function TripCard({ trip, navigation, reservaCompleta }) {
         return { backgroundColor: "#4CAF50", color: "#fff" };
       case "pendiente":
         return { backgroundColor: "#FF9800", color: "#fff" };
-      case "cancelada":
+      case "cancelado":
         return { backgroundColor: "#F44336", color: "#fff" };
       default:
         return { backgroundColor: "#9E9E9E", color: "#fff" };
@@ -22,8 +22,8 @@ export default function TripCard({ trip, navigation, reservaCompleta }) {
         return "Confirmado";
       case "pendiente":
         return "Pendiente";
-      case "cancelada":
-        return "Cancelada";
+      case "cancelado":
+        return "Cancelado";
       default:
         return "Desconocido";
     }

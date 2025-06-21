@@ -12,7 +12,7 @@ export const SeatGrid = ({
     switch (estado) {
       case "Disponible":
         return "available";
-      case "Reservado":
+      case "Reservado" :
         return "occupied";
       case "No disponible":
       case "Mantenimiento":

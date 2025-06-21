@@ -354,12 +354,12 @@ export const cancelarReserva = async (req, res) => {
     if (!reserva) {
       return res.status(404).json({ mensaje: "Reserva no encontrada." });
     }
-    if (reserva.estado === "cancelada") {
+    if (reserva.estado === "cancelado") {
       return res.status(400).json({ mensaje: "La reserva ya está cancelada." });
     }
     const reservaActualizada = await prisma.reserva.update({
       where: { id_reserva: Number(id_reserva) },
-      data: { estado: "cancelada" },
+      data: { estado: "cancelado" },
     });
     // Liberar los asientos reservados
     const paSec = await prisma.pasajeroSecundario.findMany({
